@@ -12,10 +12,28 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: clamp(600px, 85vh, 920px);
+  height: clamp(680px, 84vh, 940px);
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
 }
 
 .stationaryMotionWrapper {
@@ -64,26 +82,10 @@
   }
 }
 
-.detailHero::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(80px, 10vh, 112px);
-  background: linear-gradient(180deg,
-      rgba(6, 14, 27, 0) 0%,
-      rgba(6, 14, 27, 0.35) 55%,
-      rgba(6, 14, 27, 0.72) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
-
 .heroBgOverlay {
   position: absolute;
   inset: 0;
   background:
-    /* Horizontal readability gradient: balanced navy behind left text, clear on right image */
     linear-gradient(90deg,
       rgba(8, 20, 38, 0.90) 0%,
       rgba(8, 20, 38, 0.84) 34%,
@@ -91,11 +93,28 @@
       rgba(8, 20, 38, 0.16) 66%,
       rgba(8, 20, 38, 0.03) 82%,
       transparent 100%),
-    /* Top edge blend */
     linear-gradient(180deg,
       rgba(8, 20, 38, 0.60) 0%,
       rgba(8, 20, 38, 0.14) 12%,
       transparent 24%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
   pointer-events: none;
   z-index: 1;
 }
@@ -157,7 +176,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(var(--white-rgb), 0.65);
+  color: var(--v2-muted, rgba(var(--white-rgb), 0.65));
   margin-bottom: 14px;
 }
 
@@ -167,21 +186,21 @@
   font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.02em;
-  color: var(--white);
+  color: var(--v2-heading, var(--white));
   margin: 0 0 16px 0;
   max-width: 760px;
-  text-shadow: 0 2px 14px rgba(var(--black-rgb), 0.6);
+  text-shadow: none;
 }
 
 /* Complementary Subtitle */
 .heroSubTitle {
   font-size: clamp(14.5px, 1.3vw, 16.5px);
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.84);
+  color: var(--v2-subtitle, rgba(var(--white-rgb), 0.84));
   line-height: 1.6;
   margin: 0 0 32px 0;
   max-width: 640px;
-  text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.5);
+  text-shadow: none;
 }
 
 /* Actions Row: NH Brand Blue Curved CTA + Clean Phone Number (No second pill button) */
@@ -322,7 +341,7 @@
   top: 12%;
   height: 76%;
   width: 1px;
-  background: rgba(var(--white-rgb), 0.14);
+  background: var(--stat-divider-color, rgba(var(--white-rgb), 0.14));
 }
 
 @media (max-width: 1024px) {
@@ -335,14 +354,14 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(22px, 2vw, 28px);
   font-weight: 500;
-  color: rgba(var(--white-rgb), 0.76);
+  color: var(--stat-num-color, rgba(var(--white-rgb), 0.76));
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 .statLabel {
   font-size: var(--font-size-xs, 12px);
-  color: rgba(var(--white-rgb), 0.46);
+  color: var(--stat-label-color, rgba(var(--white-rgb), 0.46));
   font-weight: 500;
   line-height: 1.35;
   text-transform: uppercase;
@@ -350,6 +369,13 @@
   margin: 0;
 }
 
+.detailHeroV2 {
+  position: relative;
+}
+
+.detailHeroV2::after {
+  display: none;
+}
 
 /* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (SMOOTH BLENDED READING SHEET) ─── */
 .readingExperienceWrapper {
@@ -363,6 +389,53 @@
   box-shadow:
     0 -24px 64px rgba(6, 14, 27, 0.45),
     0 -1px 0 rgba(var(--white-rgb), 0.9) inset;
+}
+
+/* ─── V2: SCROLL-DRIVEN UNIFIED CANVAS COLOUR CHANGE ─── */
+.readingExperienceWrapperV2 {
+  margin-top: -1px;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--v2-bg, #060c18);
+}
+
+.readingExperienceWrapperV2 .sectionHeading,
+.readingExperienceWrapperV2 .mainSectionTitle,
+.readingExperienceWrapperV2 .subSectionTitle {
+  color: var(--v2-heading, #111827);
+}
+
+.readingExperienceWrapperV2 .leadParagraph,
+.readingExperienceWrapperV2 .bodyParagraph {
+  color: var(--v2-body, #374151);
+}
+
+.readingExperienceWrapperV2 .tocEyebrow,
+.readingExperienceWrapperV2 .tocEyebrowIcon {
+  color: var(--v2-muted, var(--slate-500));
+  border-bottom-color: var(--v2-border, rgba(var(--slate-900-rgb), 0.08));
+}
+
+.readingExperienceWrapperV2 .tocNavRail {
+  border-left-color: var(--v2-border, rgba(var(--slate-900-rgb), 0.10));
+}
+
+.readingExperienceWrapperV2 .tocLink {
+  color: var(--v2-toc-link, #4b5563);
+}
+
+.readingExperienceWrapperV2 .tocLink:hover {
+  color: var(--v2-toc-active, var(--blue-brand));
+  background: var(--v2-toc-active-bg, rgba(var(--blue-brand-rgb), 0.05));
+}
+
+.readingExperienceWrapperV2 .tocLinkActive {
+  color: var(--v2-toc-active, var(--blue-brand));
+  background: var(--v2-toc-active-bg, rgba(var(--blue-brand-rgb), 0.08));
+}
+
+.readingExperienceWrapperV2 .tocIndicatorMarker {
+  background: var(--v2-toc-active, var(--blue-brand));
 }
 
 /* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */

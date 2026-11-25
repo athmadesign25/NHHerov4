@@ -1,12 +1,8 @@
 "use client";
 
 import React, { Suspense, useState, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
 import { motion, useTransform, useMotionValue } from "framer-motion";
-import BlogHero from "@/components/blog/BlogHero";
-import BlogHeroV2 from "@/components/blog/BlogHeroV2";
 import BlogHeroV3 from "@/components/blog/BlogHeroV3";
-import BlogVersionController, { BlogVersionId } from "@/components/blog/BlogVersionController";
 import BlogCategoryExplore from "@/components/blog/BlogCategoryExplore";
 import BlogMedicalExperts from "@/components/blog/BlogMedicalExperts";
 import BlogBentoGrid from "@/components/blog/BlogBentoGrid";
@@ -15,41 +11,34 @@ import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideAct
 import { ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 
 function ArticlesLibraryInner() {
-  const searchParams = useSearchParams();
-  const queryVersion = searchParams?.get("v") || searchParams?.get("version");
-
-  const [activeVersion, setActiveVersion] = useState<BlogVersionId>(3); // Default to V3 (Clean Generic Hero + Featured Carousel Below)
-
-  // Initialize from query param
-  useEffect(() => {
-    if (queryVersion === "3") {
-      setActiveVersion(3);
-    } else if (queryVersion === "2") {
-      setActiveVersion(2);
-    } else if (queryVersion === "1") {
-      setActiveVersion(1);
-    }
-  }, [queryVersion]);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const transitionRef = useRef<HTMLDivElement>(null);
   const bgTransitionProgress = useMotionValue(0);
+  const unifiedWhiteProgress = useMotionValue(0);
 
   useEffect(() => {
     const updateTransition = () => {
-      const el = transitionRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight || 900;
+      const sy = window.scrollY || 0;
+      setIsScrolled(sy > 300);
 
-      // Keep background 100% pure white (#ffffff) while viewing BlogCategoryExplore
-      // and BlogMedicalExperts. Only transition when the sentinel below the doctor
-      // cards rises from 68% vh to 28% vh as the Bento section enters the viewport.
-      const startY = vh * 0.68;
-      const endY = vh * 0.28;
-      const raw = (startY - rect.top) / (startY - endY);
-      const clamped = Math.max(0, Math.min(1, raw));
-      bgTransitionProgress.set(clamped);
+      // Top fold transition: 0..36px stays dark (#060c18), 36..360px transitions to white (#ffffff)
+      const topWhite = Math.max(0, Math.min(1, (sy - 36) / (360 - 36)));
+
+      // Bottom fold transition: when sentinel below doctor cards rises from 68% vh to 28% vh, return to dark (#060c18)
+      let bottomDark = 0;
+      const el = transitionRef.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 900;
+        const startY = vh * 0.68;
+        const endY = vh * 0.28;
+        const raw = (startY - rect.top) / (startY - endY);
+        bottomDark = Math.max(0, Math.min(1, raw));
+      }
+
+      bgTransitionProgress.set(bottomDark);
+      unifiedWhiteProgress.set(Math.max(0, Math.min(topWhite, 1 - bottomDark)));
     };
 
     updateTransition();
@@ -59,57 +48,22 @@ function ArticlesLibraryInner() {
       window.removeEventListener("scroll", updateTransition);
       window.removeEventListener("resize", updateTransition);
     };
-  }, [bgTransitionProgress]);
+  }, [bgTransitionProgress, unifiedWhiteProgress]);
 
+  // Single unified V2 dynamism canvas for the entire page: Dark (#060c18) -> Deep Black (#020408) -> Alabaster (#f4f7fb) -> Pure White (#ffffff)
   const pageBgColor = useTransform(
-    bgTransitionProgress,
-    [0, 1],
-    ["#ffffff", "#060c18"]
+    unifiedWhiteProgress,
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
   );
 
-  const handleVersionChange = (newVersion: BlogVersionId) => {
-    setActiveVersion(newVersion);
-    try {
-      localStorage.setItem("nh_blog_version", String(newVersion));
-    } catch {
-      // Ignore
-    }
-
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("v", String(newVersion));
-      window.history.replaceState(null, "", url.toString());
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <main style={{ minHeight: "100vh", backgroundColor: "var(--color-bg, #ffffff)" }}>
-      {/* ── FLOATING VERSION CONTROLLER (ON SCREEN AT SIDE: V1 / V2 SWITCHER) ── */}
-      <BlogVersionController
-        activeVersion={activeVersion}
-        onVersionChange={handleVersionChange}
-      />
-
-      {/* ── SECTION 1: HERO (V1 GRID SHOWCASE, V2 IMMERSIVE DECK, OR V3 GENERIC HEADER + FEATURED CAROUSEL) ── */}
-      {activeVersion === 1 ? (
-        <BlogHero />
-      ) : activeVersion === 2 ? (
-        <BlogHeroV2 />
-      ) : (
-        <BlogHeroV3 />
-      )}
+    <motion.main style={{ minHeight: "100vh", backgroundColor: pageBgColor }}>
+      {/* ── SECTION 1: HERO (PERMANENT FINAL V3 CLEAN GENERIC HEADER + FEATURED CAROUSEL) ── */}
+      <BlogHeroV3 />
 
       {/* ── SECTIONS 2, 3, 4 & 5: UNIFIED SCROLL-DRIVEN CANVAS (Zero Horizontal Cuts) ── */}
-      <motion.div style={{ backgroundColor: pageBgColor }}>
+      <div>
         {/* ── SECTION 2: EXPLORE BY CATEGORY (Circle Category Select + 3-Col Cards Grid) ── */}
         <BlogCategoryExplore articles={ARTICLES_DIRECTORY_DATA} />
 
@@ -128,7 +82,7 @@ function ArticlesLibraryInner() {
 
         {/* ── SECTION 5: CTA BANNER (Talk to a Specialist / Book Appointment) ── */}
         <BlogCtaBanner bg="transparent" />
-      </motion.div>
+      </div>
 
       {/* ── FLOATING CLINICAL SIDE ACTIONS (Book Consultation, Call, Ask Pulse AI) ── */}
       <ClinicalFloatingSideActions
@@ -138,7 +92,7 @@ function ArticlesLibraryInner() {
         pulseQuery="I have questions about a recent symptom or want to know more about Narayana Health clinical guides."
         isScrolled={isScrolled}
       />
-    </main>
+    </motion.main>
   );
 }
 

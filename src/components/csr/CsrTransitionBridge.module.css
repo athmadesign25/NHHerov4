@@ -8,20 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    180deg,
-    #060c18 0%,
-    #07152b 10%,
-    #0a1d3a 22%,
-    #0f2a52 35%,
-    #163a6e 48%,
-    #224f8a 60%,
-    #4371a7 72%,
-    #799ec5 82%,
-    #b4cde2 90%,
-    #e0ecf5 96%,
-    #f1f5f9 100%
-  );
+  background: transparent;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -98,9 +85,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.72);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--blue-brand, #034EA2);
+  background: rgba(3, 78, 162, 0.08);
+  border: 1px solid rgba(3, 78, 162, 0.18);
   padding: 6px 16px;
   border-radius: 999px;
   backdrop-filter: blur(8px);
@@ -113,8 +100,8 @@
   font-weight: 500;
   line-height: 1.42;
   letter-spacing: -0.018em;
-  color: #ffffff;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+  color: var(--dyn-heading, #0f172a);
+  text-shadow: none;
   font-style: italic;
 }
 
@@ -137,12 +124,12 @@
   font-size: var(--font-size-sm, 14px);
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--dyn-heading, #0f172a);
 }
 
 .authorTitle {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs, 12px);
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--dyn-subtitle, #64748b);
   letter-spacing: 0.01em;
 }

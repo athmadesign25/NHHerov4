@@ -230,9 +230,9 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Senior Consultant - Paediatric Surgery",
       experience: "25+ Years Experience",
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-      image: "/images/doctors/d20-real/dr-sanjay-rao.webp",
+      image: "/images/doctors/dr_sanjay_rao_hd.jpg",
       speciality: "Paediatric Surgery",
-      bio: "Dr. Sanjay Rao stands as a pioneer in advanced paediatric laparoscopy and neonatal surgical care. As Senior Consultant at Narayana Health, he brings over 25 years of mastery in treating congenital abdominal anomalies, neonatal intestinal atresia, and complex reconstructive procedures.",
+      bio: "Dr. Sanjay Rao stands as a pioneer in advanced paediatric laparoscopy and neonatal surgical care. As Senior Consultant at Narayana Health, he brings over 25 years of surgical mastery in treating congenital abdominal anomalies, neonatal intestinal atresia, and complex gastrointestinal conditions. He has spearheaded structured pediatric surgical pathways that prioritize minimally invasive precision, ensuring significantly reduced post-operative discomfort and rapid clinical recovery for young infants.",
       profileSlug: "dr-sanjay-rao",
     },
     {
@@ -240,9 +240,9 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Consultant - Paediatric & Neonatal Surgery",
       experience: "18+ Years Experience",
       hospital: "Narayana Health City, Bangalore",
-      image: "/images/doctors/d20-real/dr-anup-charles-s.webp",
+      image: "/images/doctors/dr_anup_charles_hd.jpg",
       speciality: "Paediatric Surgery",
-      bio: "Dr. Anup Charles is an experienced paediatric and neonatal surgeon dedicated to emergency surgical care in infants. His expertise spans congenital diaphragmatic hernia, Hirschsprung disease, and minimally invasive abdominal wall reconstruction.",
+      bio: "Dr. Anup Charles is an experienced paediatric and neonatal surgeon dedicated to emergency and corrective surgical care in infants. His clinical expertise spans congenital diaphragmatic hernia, Hirschsprung disease, and advanced abdominal wall reconstruction. With 18+ years of dedicated paediatric surgical practice, he collaborates seamlessly with neonatal intensive care boards to manage delicate surgical interventions with world-class clinical outcomes.",
       profileSlug: "dr-anup-charles-s",
     },
     {
@@ -250,9 +250,9 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Consultant - Paediatric Surgery",
       experience: "16+ Years Experience",
       hospital: "Narayana Multispeciality Hospital, Bangalore",
-      image: "/images/doctors/d20-real/dr-deepthi-laldayal.webp",
+      image: "/images/doctors/dr_deepthi_laldayal_hd.jpg",
       speciality: "Paediatric Surgery",
-      bio: "Dr. Deepthi Laldayal is an accomplished paediatric surgeon specializing in acute paediatric appendicitis, intussusception reduction, and gentle neonatal gastrointestinal interventions with exceptional clinical recovery pathways.",
+      bio: "Dr. Deepthi Laldayal is an accomplished paediatric surgeon specializing in acute paediatric appendicitis, intussusception reduction, and gentle neonatal gastrointestinal interventions. With 16+ years of clinical experience, she champions compassionate, family-centered paediatric care, employing child-friendly diagnostic protocols and minimally invasive keyhole techniques that accelerate pediatric recovery and reassure young families.",
       profileSlug: "dr-deepthi-laldayal",
     },
   ],
@@ -441,7 +441,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
       shortTitle: proc.shortTitle,
       speciality: proc.speciality,
       specialitySlug: proc.specialitySlug,
-      heroImage: "/images/procedures/heart_transplant_hero.jpg",
+      heroImage: "/images/procedures/hero_heart_transplant_v3.jpg",
       heroTitle: proc.title,
       heroSubtitle: proc.summary,
       leadParagraph: HEART_TRANSPLANT_DETAIL.leadParagraph,
@@ -488,7 +488,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
         ...SPECIALTY_DOCTORS_MAP.urology.slice(0, 2),
         ...SPECIALTY_DOCTORS_MAP.neurology.slice(0, 1),
       ],
-      topDoctors: SPECIALTY_DOCTORS_MAP.cardiology.slice(0, 3),
+      topDoctors: FLAGSHIP_TOP_DOCTORS,
       hospitals: HOSPITALS_DATA.slice(0, 8),
       faqs: HEART_TRANSPLANT_DETAIL.faqs,
       toc,
@@ -525,7 +525,12 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
     shortTitle: proc.shortTitle,
     speciality: proc.speciality,
     specialitySlug: proc.specialitySlug,
-    heroImage: proc.image,
+    heroImage:
+      proc.slug === "abdominal-aortic-aneurysm-repair"
+        ? "/images/procedures/hero_aortic_aneurysm_v3.jpg"
+        : proc.slug === "abdominal-issues-children"
+        ? "/images/procedures/hero_pediatric_abdomen_v3.jpg"
+        : proc.image,
     heroTitle: proc.title,
     heroSubtitle: proc.summary,
     leadParagraph: `${proc.overview} At Narayana Health, multidisciplinary surgical boards employ advanced minimally invasive technologies, high-precision imaging, and structured clinical pathways to achieve superior patient outcomes with rapid post-operative recovery.`,

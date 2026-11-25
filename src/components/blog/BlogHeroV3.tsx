@@ -17,12 +17,12 @@ export default function BlogHeroV3() {
 
   useEffect(() => {
     const updateTransition = () => {
-      // At scrollY = 0..24px, keep background 100% dark (#060c18) so the hero photo
-      // has zero white/grey band at the bottom and Featured Blogs starts in crisp dark mode.
-      // As the user scrolls down from 24px to 320px, smoothly morph #060c18 -> #ffffff.
+      // Exact Procedure Detail V2 transition:
+      // At scrollY = 0..36px, keep background 100% dark (#060c18) so Hero and Featured Blogs start in unified dark mode.
+      // From 36px to 360px, smoothly morph #060c18 -> #020408 -> #f4f7fb -> #ffffff while crossfading the hero photo out.
       const sy = window.scrollY || 0;
-      const startScroll = 24;
-      const endScroll = 320;
+      const startScroll = 36;
+      const endScroll = 360;
       const raw = (sy - startScroll) / (endScroll - startScroll);
       const clamped = Math.max(0, Math.min(1, raw));
       heroTransitionProgress.set(clamped);
@@ -39,8 +39,32 @@ export default function BlogHeroV3() {
 
   const sectionBgColor = useTransform(
     heroTransitionProgress,
-    [0, 0.42, 0.78, 1],
-    ["#060c18", "#0d2142", "#eef4fb", "#ffffff"]
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
+  );
+
+  // Smoothly crossfade hero photo into the unified dynamic canvas so there is ZERO gradient mist band or horizontal seam
+  const heroCanvasOpacity = useTransform(
+    heroTransitionProgress,
+    [0, 0.38, 0.68],
+    [1, 0.75, 0]
+  );
+
+  // Hero bottom metrics dynamic color inversion as the unified canvas transitions from dark/black to white
+  const heroStatNumColor = useTransform(
+    heroTransitionProgress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
+  );
+  const heroStatLabelColor = useTransform(
+    heroTransitionProgress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
+  );
+  const heroStatDividerColor = useTransform(
+    heroTransitionProgress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
   );
 
   const featuredArticles = React.useMemo(() => {
@@ -60,13 +84,15 @@ export default function BlogHeroV3() {
   return (
     <motion.div
       style={{
-        backgroundColor: sectionBgColor,
-        ["--hero-bottom-bg" as string]: sectionBgColor,
+        backgroundColor: "transparent",
+        ["--stat-num-color" as string]: heroStatNumColor,
+        ["--stat-label-color" as string]: heroStatLabelColor,
+        ["--stat-divider-color" as string]: heroStatDividerColor,
       }}
     >
       {/* ── SECTION 1: CLEAN GENERIC BLOGS PAGE HEADER HERO BANNER ── */}
       <section className={styles.heroSection} data-nav-theme="dark">
-        <div className={styles.heroBg}>
+        <motion.div className={styles.heroBg} style={{ opacity: heroCanvasOpacity }}>
           <Image
             src="/images/specialities/Advance Heart Care.jpg"
             alt="Narayana Health Blogs & Medical Insights"
@@ -77,7 +103,7 @@ export default function BlogHeroV3() {
             className={styles.heroBgImage}
           />
           <div className={styles.scrimOverlay} />
-        </div>
+        </motion.div>
 
         <div className={styles.heroInner}>
           <motion.div

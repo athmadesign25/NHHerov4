@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
@@ -11,9 +11,10 @@ import styles from "./CsrHero.module.css";
 
 interface CsrHeroProps {
   data: CsrHeroData;
+  canvasOpacity?: MotionValue<number>;
 }
 
-export default function CsrHero({ data }: CsrHeroProps) {
+export default function CsrHero({ data, canvasOpacity }: CsrHeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -34,8 +35,11 @@ export default function CsrHero({ data }: CsrHeroProps) {
 
   return (
     <section ref={sectionRef} className={styles.heroSection} data-nav-theme="dark">
-      {/* Background Video with Dynamic Scroll Transform */}
-      <div className={styles.videoWrapper}>
+      {/* Background Video & Scrim with V2 Dynamic Scroll Crossfade */}
+      <motion.div
+        className={styles.videoWrapper}
+        style={canvasOpacity ? { opacity: canvasOpacity } : undefined}
+      >
         <motion.video
           autoPlay
           loop
@@ -51,12 +55,8 @@ export default function CsrHero({ data }: CsrHeroProps) {
         >
           <source src={data.videoUrl} type="video/mp4" />
         </motion.video>
-      </div>
-
-      {/* Atmospheric Overlays anchored firmly to the section */}
-      <div className={styles.heroOverlay} />
-      <div className={styles.bottomBlend} />
-      <div className={styles.ambientGlow} />
+        <div className={styles.heroOverlay} />
+      </motion.div>
 
       {/* Main Container with subtle scroll elevation */}
       <motion.div 

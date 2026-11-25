@@ -12,10 +12,28 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: clamp(600px, 85vh, 920px);
+  height: clamp(680px, 84vh, 940px);
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
 }
 
 .stationaryMotionWrapper {
@@ -27,16 +45,16 @@
 
 .stationaryImage {
   object-fit: cover;
-  object-position: 30% 25%;
+  object-position: right 35%;
   width: 100%;
   height: 100%;
-  filter: brightness(0.88) saturate(1.10) contrast(1.03);
+  filter: brightness(1.02) saturate(1.08) contrast(1.02);
 }
 
 .stationaryCanvasOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 75% 30%, transparent 50%, rgba(6, 14, 27, 0.18) 100%);
+  background: radial-gradient(circle at 75% 35%, transparent 65%, rgba(6, 18, 38, 0.10) 100%);
   pointer-events: none;
 }
 
@@ -64,46 +82,49 @@
   }
 }
 
-.detailHero::after {
-  content: "";
+.heroBgOverlay {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(80px, 10vh, 112px);
-  background: linear-gradient(
-    180deg,
-    rgba(6, 14, 27, 0) 0%,
-    rgba(6, 14, 27, 0.35) 55%,
-    rgba(6, 14, 27, 0.72) 100%
+  inset: 0;
+  background:
+    linear-gradient(90deg,
+      rgba(22, 25, 32, 0.88) 0%,
+      rgba(22, 25, 32, 0.64) 24%,
+      rgba(6, 16, 31, 0.24) 40%,
+      rgba(6, 16, 31, 0) 54%),
+    linear-gradient(180deg,
+      rgba(6, 18, 38, 0.36) 0%,
+      transparent 18%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
   );
   pointer-events: none;
   z-index: 1;
 }
 
-.heroBgOverlay {
+.heroBgOverlay::before {
+  content: "";
   position: absolute;
   inset: 0;
-  background: 
-    /* Horizontal readability gradient: balanced navy behind left text, clear on right image */
-    linear-gradient(
-      90deg,
-      rgba(8, 20, 38, 0.90) 0%,
-      rgba(8, 20, 38, 0.84) 34%,
-      rgba(8, 20, 38, 0.54) 50%,
-      rgba(8, 20, 38, 0.16) 66%,
-      rgba(8, 20, 38, 0.03) 82%,
-      transparent 100%
-    ),
-    /* Top edge blend */
-    linear-gradient(
-      180deg,
-      rgba(8, 20, 38, 0.60) 0%,
-      rgba(8, 20, 38, 0.14) 12%,
-      transparent 24%
-    );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.75) 26%, rgba(0, 0, 0, 0.25) 42%, transparent 54%);
+  mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.75) 26%, rgba(0, 0, 0, 0.25) 42%, transparent 54%);
   pointer-events: none;
-  z-index: 1;
 }
 
 /* Hero Inner Container (Matching CSR Hero 1320px Architecture) */
@@ -144,7 +165,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(var(--white-rgb), 0.65);
+  color: var(--v2-muted, rgba(var(--white-rgb), 0.65));
   margin-bottom: 14px;
 }
 
@@ -154,28 +175,28 @@
   font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.02em;
-  color: var(--white);
+  color: var(--v2-heading, var(--white));
   margin: 0 0 16px 0;
   max-width: 760px;
-  text-shadow: 0 2px 14px rgba(var(--black-rgb), 0.6);
+  text-shadow: none;
 }
 
-/* Complementary Subtitle */
+/* Complementary 4-Line Small Summary Subtext */
 .heroSubTitle {
-  font-size: clamp(14.5px, 1.3vw, 16.5px);
+  font-size: clamp(13.5px, 1.05vw, 14.5px);
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.84);
-  line-height: 1.6;
-  margin: 0 0 32px 0;
-  max-width: 640px;
-  text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.5);
+  color: var(--v2-subtitle, rgba(var(--white-rgb), 0.74));
+  line-height: 1.62;
+  margin: 0 0 24px 0;
+  max-width: 580px;
+  text-shadow: none;
 }
 
-/* Actions Row: NH Brand Blue Curved CTA + Clean Phone Number (No second pill button) */
+/* Actions Row: Primary CTA only (No secondary phone link) */
 .heroActionsRow {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
@@ -307,7 +328,7 @@
   top: 12%;
   height: 76%;
   width: 1px;
-  background: rgba(var(--white-rgb), 0.14);
+  background: var(--stat-divider-color, rgba(var(--white-rgb), 0.14));
 }
 
 @media (max-width: 1024px) {
@@ -320,14 +341,14 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(22px, 2vw, 28px);
   font-weight: 500;
-  color: rgba(var(--white-rgb), 0.76);
+  color: var(--stat-num-color, rgba(var(--white-rgb), 0.76));
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 .statLabel {
   font-size: var(--font-size-xs, 12px);
-  color: rgba(var(--white-rgb), 0.46);
+  color: var(--stat-label-color, rgba(var(--white-rgb), 0.46));
   font-weight: 500;
   line-height: 1.35;
   text-transform: uppercase;
@@ -335,25 +356,13 @@
   margin: 0;
 }
 
-/* ─── V2: SCROLL-DRIVEN SECTION COLOUR-CHANGE LANGUAGE ─── */
+/* ─── V2: SCROLL-DRIVEN UNIFIED CANVAS COLOUR CHANGE (ZERO HORIZONTAL BAND) ─── */
 .detailHeroV2 {
   position: relative;
 }
 
 .detailHeroV2::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: clamp(140px, 18vh, 190px);
-  background: linear-gradient(180deg,
-      transparent 0%,
-      color-mix(in srgb, var(--v2-bg, #0a1128) 38%, transparent) 38%,
-      color-mix(in srgb, var(--v2-bg, #0a1128) 76%, transparent) 72%,
-      var(--v2-bg, #0a1128) 100%);
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 /* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (SMOOTH BLENDED READING SHEET) ─── */

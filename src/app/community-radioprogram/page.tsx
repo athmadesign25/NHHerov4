@@ -26,6 +26,7 @@ import {
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import {
@@ -50,18 +51,33 @@ export default function CommunityRadioPage() {
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(true);
 
-  // Hero transition progress (matching BlogHeroV3)
+  // Unified V2 detail page dynamism across the entire page (Dark -> Black -> White -> Black -> Dark at CTA)
   const heroTransitionProgress = useMotionValue(0);
+  const unifiedWhiteProgress = useMotionValue(0);
+  const ctaSentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const updateTransition = () => {
       const sy = window.scrollY || 0;
-      const startScroll = 24;
-      const endScroll = 320;
-      const raw = (sy - startScroll) / (endScroll - startScroll);
-      const clamped = Math.max(0, Math.min(1, raw));
-      heroTransitionProgress.set(clamped);
       setIsScrolled(sy > 300);
+
+      const startScroll = 36;
+      const endScroll = 360;
+      const topWhite = Math.max(0, Math.min(1, (sy - startScroll) / (endScroll - startScroll)));
+      heroTransitionProgress.set(topWhite);
+
+      let bottomDark = 0;
+      const el = ctaSentinelRef.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 900;
+        const startY = vh * 0.72;
+        const endY = vh * 0.28;
+        const raw = (startY - rect.top) / (startY - endY);
+        bottomDark = Math.max(0, Math.min(1, raw));
+      }
+
+      unifiedWhiteProgress.set(Math.max(0, Math.min(topWhite, 1 - bottomDark)));
     };
 
     updateTransition();
@@ -71,26 +87,49 @@ export default function CommunityRadioPage() {
       window.removeEventListener("scroll", updateTransition);
       window.removeEventListener("resize", updateTransition);
     };
-  }, [heroTransitionProgress]);
+  }, [heroTransitionProgress, unifiedWhiteProgress]);
 
-  // Scroll-driven background color transition (#060c18 -> #ffffff)
-  const sectionBgColor = useTransform(
-    heroTransitionProgress,
-    [0, 0.42, 0.78, 1],
-    ["#060c18", "#0d2142", "#eef4fb", "#ffffff"]
+  // Single unified V2 background color transition (#060c18 -> #020408 -> #f4f7fb -> #ffffff)
+  const pageBgColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
   );
 
-  // Dynamic colors for Featured Podcasts title over changing background
-  const carouselTitleColor = useTransform(
+  // Smoothly crossfade hero photo into the unified dynamic canvas so there is ZERO gradient mist band or horizontal cut
+  const heroCanvasOpacity = useTransform(
     heroTransitionProgress,
-    [0, 0.45, 0.85, 1],
-    ["#ffffff", "#cbd5e1", "#1e293b", "#0f172a"]
+    [0, 0.38, 0.68],
+    [1, 0.75, 0]
+  );
+
+  // Dynamic colors for Featured Podcasts title & hero metrics over changing background
+  const carouselTitleColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.44, 0.64, 1],
+    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
   );
 
   const carouselSubtitleColor = useTransform(
-    heroTransitionProgress,
-    [0, 0.45, 0.85, 1],
-    ["rgba(255, 255, 255, 0.82)", "rgba(255, 255, 255, 0.65)", "#475569", "#64748b"]
+    unifiedWhiteProgress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.82)", "rgba(255, 255, 255, 0.86)", "#475569", "#64748b"]
+  );
+
+  const heroStatNumColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
+  );
+  const heroStatLabelColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
+  );
+  const heroStatDividerColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
   );
 
   // Featured episodes for carousel
@@ -162,18 +201,22 @@ export default function CommunityRadioPage() {
   };
 
   return (
-    <main className={styles.pageMain}>
+    <motion.main
+      className={styles.pageMain}
+      style={{
+        backgroundColor: pageBgColor,
+        ["--stat-num-color" as string]: heroStatNumColor,
+        ["--stat-label-color" as string]: heroStatLabelColor,
+        ["--stat-divider-color" as string]: heroStatDividerColor,
+        ["--featured-title-color" as string]: carouselTitleColor,
+      }}
+    >
       {/* ──────────────────────────────────────────────────────────────────
           1. HERO SECTION & FEATURED PODCASTS CAROUSEL (Blog V3 Parity)
           ────────────────────────────────────────────────────────────────── */}
-      <motion.div
-        style={{
-          backgroundColor: sectionBgColor,
-          ["--hero-bottom-bg" as string]: sectionBgColor,
-        }}
-      >
+      <div>
         <section className={styles.heroSection} data-nav-theme="dark">
-          <div className={styles.heroBg}>
+          <motion.div className={styles.heroBg} style={{ opacity: heroCanvasOpacity }}>
             <Image
               src={COMMUNITY_RADIO_HERO.image}
               alt="Narayana Health Community Radio Broadcast"
@@ -184,7 +227,7 @@ export default function CommunityRadioPage() {
               className={styles.heroBgImage}
             />
             <div className={styles.scrimOverlay} />
-          </div>
+          </motion.div>
 
           <div className={styles.heroInner}>
             <motion.div
@@ -261,7 +304,7 @@ export default function CommunityRadioPage() {
                   <TextSweepEffect
                     words={["Featured & Suggested Podcasts"]}
                     sweepMs={1600}
-                    finalColor="#FFFFFF"
+                    finalColor="var(--featured-title-color, #0f172a)"
                   />
                 </motion.h2>
                 <motion.p
@@ -300,8 +343,21 @@ export default function CommunityRadioPage() {
                         </span>
 
                         <div className={styles.cardContent}>
-                          <h3 className={styles.cardTitle}>{ep.title}</h3>
-                          <p className={styles.cardSub}>{ep.summary}</p>
+                          <h3 className={styles.cardTitle}>
+                            <CardTitleText title={ep.title} />
+                          </h3>
+                          <div className={styles.cardSubReveal}>
+                            <div className={styles.cardSubInner}>
+                              <p className={styles.cardSub}>
+                                {buildCardHoverReading([
+                                  ep.summary,
+                                  `Hosted by ${ep.doctor}, ${ep.doctorRole}`,
+                                  `Broadcast in ${ep.language} · Duration: ${ep.duration} · Aired ${ep.airDate}`,
+                                  `Over ${ep.listenCount} community listeners`,
+                                ])}
+                              </p>
+                            </div>
+                          </div>
 
                           {/* Dual-Slot Resting vs Hover Action Button */}
                           <div className={styles.cardBottomSlot}>
@@ -360,12 +416,14 @@ export default function CommunityRadioPage() {
             </div>
           </section>
         </div>
-      </motion.div>
+      </div>
 
-      {/* ──────────────────────────────────────────────────────────────────
-          2. EXPLORE PODCASTS BY CATEGORY & LIBRARY (Universal Card Syntax)
-          ────────────────────────────────────────────────────────────────── */}
-      <section className={styles.exploreSection} id="explore-podcasts">
+      {/* ── SECTIONS 2, 3, 4 & 5: DYNAMIC CONTENT CANVAS (White -> Dark for CTA Card) ── */}
+      <div>
+        {/* ──────────────────────────────────────────────────────────────────
+            2. EXPLORE PODCASTS BY CATEGORY & LIBRARY (Universal Card Syntax)
+            ────────────────────────────────────────────────────────────────── */}
+        <section className={styles.exploreSection} id="explore-podcasts">
         <div className={styles.exploreContainer}>
           <div className={styles.sectionHeaderCenter}>
             <h2 className={styles.sectionTitle}>
@@ -489,8 +547,21 @@ export default function CommunityRadioPage() {
                 </span>
 
                 <div className={styles.cardContent}>
-                  <h3 className={styles.cardTitle}>{ep.title}</h3>
-                  <p className={styles.cardSub}>{ep.summary}</p>
+                  <h3 className={styles.cardTitle}>
+                    <CardTitleText title={ep.title} />
+                  </h3>
+                  <div className={styles.cardSubReveal}>
+                    <div className={styles.cardSubInner}>
+                      <p className={styles.cardSub}>
+                        {buildCardHoverReading([
+                          ep.summary,
+                          `Hosted by ${ep.doctor}, ${ep.doctorRole}`,
+                          `Broadcast in ${ep.language} · Duration: ${ep.duration} · Aired ${ep.airDate}`,
+                          `Over ${ep.listenCount} community listeners`,
+                        ])}
+                      </p>
+                    </div>
+                  </div>
 
                   {/* Dual-Slot Resting vs Hover Action Button */}
                   <div className={styles.cardBottomSlot}>
@@ -673,10 +744,18 @@ export default function CommunityRadioPage() {
         </div>
       </section>
 
+      {/* Sentinel for smooth pre-footer CTA background return to dark */}
+      <div
+        ref={ctaSentinelRef}
+        style={{ height: "1px", width: "100%", pointerEvents: "none" }}
+        aria-hidden="true"
+      />
+
       {/* ──────────────────────────────────────────────────────────────────
           5. PRE-FOOTER CTA BANNER (Universal Narayana Health Banner)
           ────────────────────────────────────────────────────────────────── */}
       <BlogCtaBanner bg="transparent" />
+      </div>
 
       {/* ──────────────────────────────────────────────────────────────────
           6. FLOATING MINI AUDIO PLAYER (Docked when active)
@@ -743,6 +822,6 @@ export default function CommunityRadioPage() {
         pulseQuery="I have questions about Narayana Health's Namma Naadi 90.4 FM broadcasts, doctor podcast schedule, and preventive care programs."
         isScrolled={isScrolled}
       />
-    </main>
+    </motion.main>
   );
 }

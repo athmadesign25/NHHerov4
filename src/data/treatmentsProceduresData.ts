@@ -30,7 +30,7 @@ export const TREATMENTS_PROCEDURES_DATA: TreatmentProcedureItem[] = [
     letter: "H",
     summary: "Surgery, Cost & Success Rate for End-Stage Heart Failure",
     overview: "A heart transplant is a life-saving surgical procedure for patients with end-stage heart failure when medical therapies and devices no longer suffice. Donor matching and precision surgical care deliver high long-term success.",
-    image: "/images/procedures/heart_transplant_hero.jpg",
+    image: "/images/procedures/card_heart_transplant_white.jpg",
     duration: "4 - 6 Hours",
     hospitalStay: "14 - 21 Days",
     recoveryTime: "3 - 6 Months",
@@ -49,7 +49,7 @@ export const TREATMENTS_PROCEDURES_DATA: TreatmentProcedureItem[] = [
     letter: "A",
     summary: "Open Surgery & EVAR for Abdominal Aorta Aneurysm",
     overview: "Comprehensive surgical repair and minimally invasive endovascular aneurysm repair (EVAR) to reinforce dilated aorta sections and prevent fatal rupture.",
-    image: "/images/procedures/procedure_cardiology.png",
+    image: "/images/procedures/card_aortic_aneurysm_white.jpg",
     duration: "2 - 4 Hours",
     hospitalStay: "3 - 7 Days",
     recoveryTime: "4 - 6 Weeks",
@@ -68,7 +68,7 @@ export const TREATMENTS_PROCEDURES_DATA: TreatmentProcedureItem[] = [
     letter: "A",
     summary: "Abdominal issues in children: diagnosis, neonatal care & corrective surgery",
     overview: "Expert pediatric surgical intervention for congenital and acquired abdominal disorders, intestinal atresia, appendicitis, and diaphragmatic hernia in infants and children.",
-    image: "/images/procedures/pediatric_abdomen_clean.jpg",
+    image: "/images/procedures/card_pediatric_abdomen_white.jpg",
     duration: "1 - 3 Hours",
     hospitalStay: "2 - 5 Days",
     recoveryTime: "2 - 4 Weeks",
@@ -258,7 +258,7 @@ export const TREATMENTS_PROCEDURES_DATA: TreatmentProcedureItem[] = [
     letter: "C",
     summary: "Off-pump beating heart bypass and minimally invasive direct coronary artery bypass",
     overview: "Pioneered by Dr. Devi Shetty at Narayana Health, beating heart CABG creates arterial bridges around clogged coronary vessels without arresting the heart, dramatically improving recovery.",
-    image: "/images/procedures/heart_transplant_hero.jpg",
+    image: "/images/procedures/card_heart_transplant_white.jpg",
     duration: "3 - 5 Hours",
     hospitalStay: "5 - 7 Days",
     recoveryTime: "4 - 8 Weeks",
@@ -486,7 +486,7 @@ export const TREATMENTS_PROCEDURES_DATA: TreatmentProcedureItem[] = [
     letter: "M",
     summary: "Keyhole thoracotomy coronary revascularization without sternotomy",
     overview: "Advanced beating-heart and minimally invasive CABG surgical protocols re-routing blood flow around blocked arteries to restore optimal cardiac perfusion through a tiny 5cm left chest incision.",
-    image: "/images/procedures/heart_transplant_hero.jpg",
+    image: "/images/procedures/card_heart_transplant_white.jpg",
     duration: "2 - 4 Hours",
     hospitalStay: "3 - 5 Days",
     recoveryTime: "2 - 3 Weeks",
@@ -505,7 +505,7 @@ export const TREATMENTS_PROCEDURES_DATA: TreatmentProcedureItem[] = [
     letter: "L",
     summary: "Surgery, Cost & Success Rate for End-Stage Heart Failure",
     overview: "Mechanical circulatory support providing continuous pump assist for severe left ventricular failure as destination therapy or bridge to transplant.",
-    image: "/images/procedures/heart_transplant_hero.jpg",
+    image: "/images/procedures/card_heart_transplant_white.jpg",
     duration: "4 - 6 Hours",
     hospitalStay: "14 - 21 Days",
     recoveryTime: "6 - 12 Weeks",
@@ -556,6 +556,6 @@ export const SPECIALITY_FILTER_OPTIONS: SpecialityBubbleOption[] = [
 ];
 
 export const ALPHABET_LIST = [
-  "#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
+  "#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
   "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 ];

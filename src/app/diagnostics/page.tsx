@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useTransition, useCallback } from "react";
+import React, { useState, useMemo, useEffect, useTransition, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   Search,
   X,
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import OrganSystemChipsCarousel, {
@@ -51,26 +52,6 @@ export default function DiagnosticsLibraryPage() {
   const [isPageOpening, setIsPageOpening] = useState<boolean>(true);
   const [, startTransition] = useTransition();
 
-  // Stats layout variation: 'c1' (spread across bottom) vs 'c2' (compact left-aligned below search)
-  const [statsLayout, setStatsLayout] = useState<"c1" | "c2">("c1");
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const val = params.get("stats")?.toLowerCase();
-    if (val === "c1" || val === "c2") {
-      setStatsLayout(val);
-    }
-  }, []);
-
-  const handleStatsLayoutChange = useCallback((layout: "c1" | "c2") => {
-    setStatsLayout(layout);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("stats", layout);
-      window.history.replaceState(null, "", url.toString());
-    }
-  }, []);
-
   // Screen width detection for automatic mweb switching
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -82,26 +63,6 @@ export default function DiagnosticsLibraryPage() {
     window.addEventListener("resize", checkMobile, { passive: true });
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
-  // Keyboard shortcut 'c' or 'C' to quickly toggle between C1 and C2 for review
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target &&
-        (target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.isContentEditable)
-      ) {
-        return;
-      }
-      if (e.key === "c" || e.key === "C") {
-        handleStatsLayoutChange(statsLayout === "c1" ? "c2" : "c1");
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [statsLayout, handleStatsLayoutChange]);
 
   // Progressive scroll reveal for directory sub-filters & A–Z rail (desktop only, always visible on mobile)
   const [isFilterRevealed, setIsFilterRevealed] = useState<boolean>(false);
@@ -267,11 +228,127 @@ export default function DiagnosticsLibraryPage() {
     setSelectedLetter(null);
   };
 
+  // 1. Unified Dark -> White -> Dark V2 dynamism across the entire page
+  const topProgress = useMotionValue(0);
+  const unifiedWhiteProgress = useMotionValue(0);
+  const ctaSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sy = window.scrollY || 0;
+      const topWhite = Math.max(0, Math.min(1, (sy - 36) / (360 - 36)));
+      topProgress.set(topWhite);
+
+      let bottomDark = 0;
+      const el = ctaSentinelRef.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 900;
+        const startY = vh * 0.72;
+        const endY = vh * 0.28;
+        const raw = (startY - rect.top) / (startY - endY);
+        bottomDark = Math.max(0, Math.min(1, raw));
+      }
+
+      unifiedWhiteProgress.set(Math.max(0, Math.min(topWhite, 1 - bottomDark)));
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [topProgress, unifiedWhiteProgress]);
+
+  // V2 dynamism palette: Dark Navy -> Deep Black -> Alabaster -> Pure White
+  const pageBgColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
+  );
+
+  const heroCanvasOpacity = useTransform(
+    topProgress,
+    [0, 0.38, 0.68],
+    [1, 0.75, 0]
+  );
+
+  // Dynamic text, chip, filter & rail color inversions matching Procedure Detail V2
+  const dynHeading = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynSubtitle = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.78)", "rgba(255, 255, 255, 0.84)", "#475569", "#64748b"]);
+  const dynMuted = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.60)", "rgba(255, 255, 255, 0.66)", "#64748b", "#64748b"]);
+  const dynEyebrow = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.56)", "rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]);
+  const dynBubbleLabel = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.74)", "rgba(255, 255, 255, 0.82)", "#334155", "#334155"]);
+  const dynBubbleHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynBubbleActive = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#034EA2", "#034EA2"]);
+  const dynBubbleBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.22)", "rgba(255, 255, 255, 0.26)", "rgba(15, 23, 42, 0.14)", "rgba(15, 23, 42, 0.12)"]);
+  const dynBubbleBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.08)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynArrow = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.80)", "#475569", "#475569"]);
+  const dynArrowHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynFilterBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.14)", "rgba(15, 23, 42, 0.12)"]);
+  const dynFilterBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.08)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynFilterText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.74)", "rgba(255, 255, 255, 0.82)", "#334155", "#334155"]);
+  const dynFilterBgHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.10)", "rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.08)"]);
+  const dynFilterTextHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynRailAll = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.58)", "rgba(255, 255, 255, 0.68)", "#475569", "#475569"]);
+  const dynRailLetter = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.48)", "rgba(255, 255, 255, 0.58)", "#64748b", "#64748b"]);
+  const dynRailHoverBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.08)", "rgba(255, 255, 255, 0.12)", "rgba(15, 23, 42, 0.06)", "rgba(15, 23, 42, 0.06)"]);
+  const dynRailHoverText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.08)"]);
+  const dynSearchBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.07)", "rgba(255, 255, 255, 0.09)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynSearchBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.22)", "rgba(255, 255, 255, 0.26)", "rgba(15, 23, 42, 0.16)", "rgba(15, 23, 42, 0.14)"]);
+  const dynSearchText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynSearchPlaceholder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.78)", "#64748b", "#64748b"]);
+  const dynRedSelBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(237, 28, 36, 0.15)", "rgba(237, 28, 36, 0.18)", "rgba(237, 28, 36, 0.06)", "rgba(237, 28, 36, 0.06)"]);
+  const dynRedSelBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(248, 113, 113, 0.75)", "rgba(248, 113, 113, 0.80)", "rgba(220, 38, 38, 0.65)", "rgba(220, 38, 38, 0.65)"]);
+  const dynRedSelText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ff7b82", "#ff7b82", "#cf171f", "#cf171f"]);
+  const heroStatNumColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]);
+  const heroStatLabelColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]);
+  const heroStatDividerColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]);
+
   return (
-    <div className={styles.pageContainer}>
+    <motion.div
+      className={styles.pageContainer}
+      style={{
+        backgroundColor: pageBgColor,
+        ["--dyn-heading" as string]: dynHeading,
+        ["--dyn-subtitle" as string]: dynSubtitle,
+        ["--dyn-muted" as string]: dynMuted,
+        ["--dyn-eyebrow" as string]: dynEyebrow,
+        ["--dyn-bubble-label" as string]: dynBubbleLabel,
+        ["--dyn-bubble-hover" as string]: dynBubbleHover,
+        ["--dyn-bubble-active" as string]: dynBubbleActive,
+        ["--dyn-bubble-border" as string]: dynBubbleBorder,
+        ["--dyn-bubble-bg" as string]: dynBubbleBg,
+        ["--dyn-arrow" as string]: dynArrow,
+        ["--dyn-arrow-hover" as string]: dynArrowHover,
+        ["--dyn-filter-border" as string]: dynFilterBorder,
+        ["--dyn-filter-bg" as string]: dynFilterBg,
+        ["--dyn-filter-text" as string]: dynFilterText,
+        ["--dyn-filter-bg-hover" as string]: dynFilterBgHover,
+        ["--dyn-filter-text-hover" as string]: dynFilterTextHover,
+        ["--dyn-rail-all" as string]: dynRailAll,
+        ["--dyn-rail-letter" as string]: dynRailLetter,
+        ["--dyn-rail-hover-bg" as string]: dynRailHoverBg,
+        ["--dyn-rail-hover-text" as string]: dynRailHoverText,
+        ["--dyn-border" as string]: dynBorder,
+        ["--dyn-search-bg" as string]: dynSearchBg,
+        ["--dyn-search-border" as string]: dynSearchBorder,
+        ["--dyn-search-text" as string]: dynSearchText,
+        ["--dyn-search-placeholder" as string]: dynSearchPlaceholder,
+        ["--dyn-red-sel-bg" as string]: dynRedSelBg,
+        ["--dyn-red-sel-border" as string]: dynRedSelBorder,
+        ["--dyn-red-sel-text" as string]: dynRedSelText,
+        ["--stat-num-color" as string]: heroStatNumColor,
+        ["--stat-label-color" as string]: heroStatLabelColor,
+        ["--stat-divider-color" as string]: heroStatDividerColor,
+      }}
+    >
       {/* ─── TWO-COLUMN HERO SECTION (SIGNATURE DARK MODE) ───────────────── */}
       <section className={styles.hero} data-nav-theme="dark">
-        <div className={styles.heroBg}>
+        <motion.div className={styles.heroBg} style={{ opacity: heroCanvasOpacity }}>
           <motion.div
             className={styles.heroBgMotion}
             initial={{ opacity: 0, scale: 1.02 }}
@@ -279,7 +356,7 @@ export default function DiagnosticsLibraryPage() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Image
-              src="/doctor_patient.png"
+              src="/images/heroes/diagnostics_hero_v3.jpg"
               alt="Medical laboratory scientist analyzing test specimen"
               fill
               priority
@@ -288,7 +365,7 @@ export default function DiagnosticsLibraryPage() {
             />
             <div className={styles.heroBgOverlay} />
           </motion.div>
-        </div>
+        </motion.div>
 
         <div className={styles.heroInner}>
           {/* Left Column */}
@@ -298,7 +375,6 @@ export default function DiagnosticsLibraryPage() {
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.08 }}
-              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}
             >
               <Breadcrumbs
                 items={[
@@ -307,7 +383,6 @@ export default function DiagnosticsLibraryPage() {
                 ]}
                 theme="dark"
               />
-
             </motion.div>
 
             <motion.h1
@@ -321,7 +396,7 @@ export default function DiagnosticsLibraryPage() {
                   words={["Diagnostics & Lab Tests"]}
                   sweepMs={2400}
                   delayMs={80}
-                  finalColor="#FFFFFF"
+                  finalColor="var(--dyn-heading, #FFFFFF)"
                 />
               </span>
               <span className={styles.mobileTitleText}>
@@ -329,7 +404,7 @@ export default function DiagnosticsLibraryPage() {
                   words={["Diagnostics & Lab Tests"]}
                   sweepMs={2400}
                   delayMs={80}
-                  finalColor="#FFFFFF"
+                  finalColor="var(--dyn-heading, #FFFFFF)"
                 />
               </span>
             </motion.h1>
@@ -431,61 +506,30 @@ export default function DiagnosticsLibraryPage() {
 
             {/* Mobile Web Rolling Single-Row Credential Ticker (One by one in same space on mobile) */}
             <MobileRollingStats items={HERO_ANALYTICS_PARAMETERS} />
-
-            {/* C2: Compact Left-Aligned Metrics Row (Directly below Search) */}
-            {statsLayout === "c2" && (
-              <motion.div
-                key="stats-c2"
-                className={styles.compactStatsWrap}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className={styles.compactStatsGrid}>
-                  {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
-                    <div key={index} className={styles.compactStatBlock}>
-                      <span className={styles.compactStatNumber}>
-                        {item.staticValue ? (
-                          item.staticValue
-                        ) : (
-                          <MetricValueReveal value={item.value!} suffix={item.suffix} />
-                        )}
-                      </span>
-                      <span className={styles.compactStatLabel}>{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
           </div>
 
           {/* C1: Full-Width Spread Metrics Row across bottom */}
-          {statsLayout === "c1" && (
-            <motion.div
-              key="stats-c1"
-              className={styles.metricsBottomWrap}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className={styles.statsGrid}>
-                {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
-                  <div key={index} className={styles.statBlock}>
-                    <span className={styles.statNumber}>
-                      {item.staticValue ? (
-                        item.staticValue
-                      ) : (
-                        <MetricValueReveal value={item.value!} suffix={item.suffix} />
-                      )}
-                    </span>
-                    <span className={styles.statLabel}>{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
+          <motion.div
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.statsGrid}>
+              {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
+                <div key={index} className={styles.statBlock}>
+                  <span className={styles.statNumber}>
+                    {item.staticValue ? (
+                      item.staticValue
+                    ) : (
+                      <MetricValueReveal value={item.value!} suffix={item.suffix} />
+                    )}
+                  </span>
+                  <span className={styles.statLabel}>{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -697,13 +741,23 @@ export default function DiagnosticsLibraryPage() {
 
                           <Link href={detailUrl} className={styles.cardTitleLink}>
                             <h2 className={styles.cardTitle}>
-                              {item.title}
+                              <CardTitleText title={item.title} />
                             </h2>
                           </Link>
 
-                          <p className={styles.cardSub}>
-                            {item.summary}
-                          </p>
+                          <div className={styles.cardSubReveal}>
+                            <div className={styles.cardSubInner}>
+                              <p className={styles.cardSub}>
+                                {buildCardHoverReading([
+                                  item.overview,
+                                  item.summary,
+                                  item.testProcedure,
+                                  item.turnaroundTime ? `Report turnaround: ${item.turnaroundTime}` : null,
+                                  item.preparation ? `Preparation: ${item.preparation}` : null,
+                                ])}
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
                         <div className={styles.cardBottomSlot}>
@@ -740,9 +794,16 @@ export default function DiagnosticsLibraryPage() {
         )}
       </AnimatePresence>
 
+      {/* Sentinel for smooth pre-footer CTA background return to dark */}
+      <div
+        ref={ctaSentinelRef}
+        style={{ height: "1px", width: "100%", pointerEvents: "none" }}
+        aria-hidden="true"
+      />
+
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner
-        bg="dark"
+        bg="transparent"
         eyebrow="NABL ACCREDITED LABORATORY NETWORK"
         title="Need Doorstep Home Sample Collection or Specialist Advice?"
         subtitle="Our trained, vaccinated phlebotomists collect blood and pathology samples directly from your home with barcode verification and automated temperature-controlled transit."
@@ -838,6 +899,6 @@ export default function DiagnosticsLibraryPage() {
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

@@ -12,10 +12,29 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: clamp(600px, 85vh, 920px);
+  height: clamp(680px, 84vh, 940px);
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  /* Smoothly feather bottom edge to 0% alpha so there is NEVER a sharp horizontal cut at the bottom of the hero */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
 }
 
 .stationaryMotionWrapper {
@@ -27,16 +46,16 @@
 
 .stationaryImage {
   object-fit: cover;
-  object-position: 30% 25%;
+  object-position: right 35%;
   width: 100%;
   height: 100%;
-  filter: brightness(0.88) saturate(1.10) contrast(1.03);
+  filter: brightness(1.02) saturate(1.08) contrast(1.02);
 }
 
 .stationaryCanvasOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 75% 30%, transparent 50%, rgba(6, 14, 27, 0.18) 100%);
+  background: radial-gradient(circle at 75% 35%, transparent 65%, rgba(6, 18, 38, 0.10) 100%);
   pointer-events: none;
 }
 
@@ -64,49 +83,51 @@
   }
 }
 
-.detailHero::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(80px, 10vh, 112px);
-  background: linear-gradient(180deg,
-      rgba(6, 14, 27, 0) 0%,
-      rgba(6, 14, 27, 0.35) 55%,
-      rgba(6, 14, 27, 0.72) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
-
 .heroBgOverlay {
   position: absolute;
   inset: 0;
   background:
-    /* Horizontal readability gradient: dark behind left typography */
+    /* Exact Figma 524:2 Left Photo Edge Blend (no hard bottom bar so bottom feathers seamlessly with stationaryCanvas) */
     linear-gradient(90deg,
-      rgba(6, 14, 27, 0.94) 0%,
-      rgba(6, 14, 27, 0.88) 32%,
-      rgba(6, 14, 27, 0.55) 48%,
-      rgba(6, 14, 27, 0.18) 64%,
-      rgba(6, 14, 27, 0.03) 80%,
-      transparent 100%),
-    /* Full-width 0deg bottom anchor scrim: guarantees dark navy foundation behind all 4 stats */
-    linear-gradient(0deg,
-      #060c18 0%,
-      #060c18 10%,
-      rgba(6, 14, 27, 0.94) 22%,
-      rgba(6, 14, 27, 0.78) 36%,
-      rgba(6, 14, 27, 0.45) 52%,
-      rgba(6, 14, 27, 0.15) 68%,
-      transparent 82%),
-    /* Top edge blend */
+      rgba(22, 25, 32, 0.88) 0%,
+      rgba(22, 25, 32, 0.64) 24%,
+      rgba(6, 16, 31, 0.24) 40%,
+      rgba(6, 16, 31, 0) 54%),
     linear-gradient(180deg,
-      rgba(6, 14, 27, 0.60) 0%,
-      rgba(6, 14, 27, 0.12) 14%,
-      transparent 24%);
+      rgba(6, 18, 38, 0.36) 0%,
+      transparent 18%);
+  /* Match stationaryCanvas vertical feather so the overlay never creates a horizontal cut at the bottom of detailHero */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
   pointer-events: none;
   z-index: 1;
+}
+
+.heroBgOverlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.75) 26%, rgba(0, 0, 0, 0.25) 42%, transparent 54%);
+  mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.75) 26%, rgba(0, 0, 0, 0.25) 42%, transparent 54%);
+  pointer-events: none;
 }
 
 /* Two-column layout identical to Treatments Library page */
@@ -148,7 +169,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(var(--white-rgb), 0.65);
+  color: var(--v2-muted, rgba(var(--white-rgb), 0.65));
   margin-bottom: 14px;
 }
 
@@ -158,28 +179,28 @@
   font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.02em;
-  color: var(--white);
+  color: var(--v2-heading, var(--white));
   margin: 0 0 16px 0;
   max-width: 760px;
-  text-shadow: 0 2px 14px rgba(var(--black-rgb), 0.6);
+  text-shadow: none;
 }
 
-/* Complementary Subtitle */
+/* Complementary 4-Line Small Summary Subtext */
 .heroSubTitle {
-  font-size: clamp(14.5px, 1.3vw, 16.5px);
+  font-size: clamp(13.5px, 1.05vw, 14.5px);
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.84);
-  line-height: 1.6;
-  margin: 0 0 32px 0;
-  max-width: 640px;
-  text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.5);
+  color: var(--v2-subtitle, rgba(var(--white-rgb), 0.74));
+  line-height: 1.62;
+  margin: 0 0 24px 0;
+  max-width: 580px;
+  text-shadow: none;
 }
 
-/* Actions Row: NH Brand Blue Curved CTA + Clean Phone Number (No second pill button) */
+/* Actions Row: Primary CTA only (No secondary phone link) */
 .heroActionsRow {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
@@ -316,7 +337,7 @@
   top: 12%;
   height: 76%;
   width: 1px;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--stat-divider-color, rgba(255, 255, 255, 0.12));
 }
 
 @media (max-width: 1024px) {
@@ -327,45 +348,33 @@
 
 .statNumber {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(24px, 2.2vw, 30px);
-  font-weight: 600;
-  color: #ffffff;
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 500;
+  color: var(--stat-num-color, rgba(255, 255, 255, 0.76));
   line-height: 1.15;
-  letter-spacing: -0.015em;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+  letter-spacing: -0.01em;
+  text-shadow: none;
 }
 
 .statLabel {
   font-size: var(--font-size-xs, 12px);
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--stat-label-color, rgba(255, 255, 255, 0.46));
   font-weight: 500;
   line-height: 1.35;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   margin: 0;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  text-shadow: none;
 }
 
 
-/* ─── V2: SCROLL-DRIVEN SECTION COLOUR-CHANGE LANGUAGE (MATCHING SPECIALITY PAGE) ─── */
+/* ─── V2: SCROLL-DRIVEN UNIFIED CANVAS COLOUR CHANGE (ZERO HORIZONTAL BAND / MATCHING BLOGS PAGE) ─── */
 .detailHeroV2 {
   /* Inherits standard 84vh height and 36vh top artwork breathing room */
 }
 
 .detailHeroV2::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: clamp(100px, 14vh, 140px);
-  background: linear-gradient(180deg,
-      transparent 0%,
-      color-mix(in srgb, var(--v2-bg, #0a1128) 38%, transparent) 38%,
-      color-mix(in srgb, var(--v2-bg, #0a1128) 76%, transparent) 72%,
-      var(--v2-bg, #0a1128) 100%);
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 /* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (V1: ELEVATED CURVED READING SHEET) ─── */
@@ -522,22 +531,7 @@
 }
 
 .detailHeroV4::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: clamp(100px, 14vh, 140px);
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, var(--v4-bg, #060c18) 22%, transparent) 30%,
-    color-mix(in srgb, var(--v4-bg, #060c18) 62%, transparent) 64%,
-    color-mix(in srgb, var(--v4-bg, #060c18) 90%, transparent) 86%,
-    var(--v4-bg, #060c18) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 .readingExperienceWrapperV4 {
@@ -747,7 +741,7 @@
   margin: 0;
 }
 
-/* 2 Large Spacious Cards in Desktop Row (Matching Older Narayana Design) */
+/* 2 Large Spacious Cards in Desktop Row (Dr. Devi Prasad Shetty & Dr. Varun Shetty) */
 .topDoctorsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -859,29 +853,35 @@
   flex-wrap: wrap;
 }
 
-.doctorExperiencePill {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--blue-brand, #034EA2);
-  background: rgba(3, 78, 162, 0.08);
-  padding: 3px 9px;
-  border-radius: 6px;
-  letter-spacing: 0.01em;
-  flex-shrink: 0;
+.doctorExperienceText {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.doctorMetaDot {
+  color: #94a3b8;
+  font-size: 12px;
+  user-select: none;
 }
 
 .doctorHospitalName {
-  font-size: 12.5px;
+  font-size: 13px;
   color: #64748b;
   font-weight: 500;
+  line-height: 1.4;
 }
 
+/* Auto-layout equally spaced CTA */
 .doctorCtaContainer {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  gap: 0;
   padding-top: 16px;
   border-top: 1px solid rgba(15, 23, 42, 0.08);
   width: 100%;
+  transition: gap 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .doctorProfileLink {
@@ -905,11 +905,12 @@
   font-weight: 400;
   font-size: 14px;
   opacity: 0;
-  max-width: 0;
-  margin: 0;
+  width: 0;
   overflow: hidden;
+  text-align: center;
   display: inline-block;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  transition: opacity 0.25s ease, width 0.25s ease;
 }
 
 .doctorConsultLink {
@@ -925,8 +926,7 @@
   overflow: hidden;
   white-space: nowrap;
   pointer-events: none;
-  transform: translateX(10px);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.25s ease, max-width 0.25s ease;
 }
 
 .ctaArrow {
@@ -942,32 +942,35 @@
   transform: translate(2px, -2px);
 }
 
-/* On hover of card: smooth split into "View Profile | Consult Now" */
+/* On hover of card: smooth split into auto-layout spaced "View Profile | Consult Now" */
+.doctorBlendCard:hover .doctorCtaContainer {
+  gap: 16px;
+}
+
 .doctorBlendCard:hover .doctorCtaDivider {
   opacity: 1;
-  max-width: 20px;
-  margin: 0 10px;
+  width: 10px;
 }
 
 .doctorBlendCard:hover .doctorConsultLink {
   opacity: 1;
-  max-width: 150px;
+  max-width: 160px;
   pointer-events: auto;
-  transform: translateX(0);
 }
 
 /* Touch & mobile fallback: always keep both visible */
 @media (hover: none) {
+  .doctorCtaContainer {
+    gap: 12px;
+  }
   .doctorCtaDivider {
     opacity: 1;
-    max-width: 20px;
-    margin: 0 10px;
+    width: 8px;
   }
   .doctorConsultLink {
     opacity: 1;
     max-width: 150px;
     pointer-events: auto;
-    transform: translateX(0);
   }
 }
 

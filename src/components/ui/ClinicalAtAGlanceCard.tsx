@@ -14,39 +14,30 @@ interface ClinicalAtAGlanceCardProps {
 
 export default function ClinicalAtAGlanceCard({
   bookingHref = "/book-an-appointment",
-  secondOpinionHref = "/book-an-appointment?flow=second-opinion",
   className = "",
 }: ClinicalAtAGlanceCardProps) {
   return (
     <div 
       className={`${styles.actionStripContainer} ${className}`}
       role="region"
-      aria-label="Clinical Consultation & Second Opinion Access"
+      aria-label="Clinical Care & Priority Consultations"
     >
       <div className={styles.labelGroup}>
-        <span className={styles.stripBadge}>Clinical Care</span>
+        <h4 className={styles.bannerTitle}>Clinical Care</h4>
         <span className={styles.stripDivider} aria-hidden="true">&bull;</span>
-        <span className={styles.stripText}>
-          Priority OPD consultation, multidisciplinary second opinions &amp; cashless insurance (30+ TPAs).
-        </span>
+        <p className={styles.stripText}>
+          Priority OPD consultations, multidisciplinary second opinions &amp; cashless hospital admission (30+ TPAs).
+        </p>
       </div>
 
       <div className={styles.buttonGroup}>
         <Link
           href={bookingHref}
-          className={styles.bookBtn}
-          title="Book Doctor Consultation"
+          className={styles.checkConsultBtn}
+          title="Check Specialist Consultations"
         >
-          <span>Book Consultation</span>
+          <span>Check Consultations</span>
           <ArrowUpRight size={13} className={styles.btnArrow} />
-        </Link>
-
-        <Link
-          href={secondOpinionHref}
-          className={styles.opinionBtn}
-          title="Request a Second Opinion"
-        >
-          <span>Second Opinion</span>
         </Link>
       </div>
     </div>

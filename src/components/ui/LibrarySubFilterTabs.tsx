@@ -20,6 +20,7 @@ interface LibrarySubFilterTabsProps {
   ariaLabel?: string;
   defaultTab?: string;
   allowDeselect?: boolean;
+  eyebrow?: string;
 }
 
 export default function LibrarySubFilterTabs({
@@ -30,8 +31,8 @@ export default function LibrarySubFilterTabs({
   ariaLabel = "Filter category tabs",
   defaultTab,
   allowDeselect = true,
+  eyebrow,
 }: LibrarySubFilterTabsProps) {
-  // Determine baseline default tab (e.g. "all", or the first tab)
   const resolvedDefaultTab =
     defaultTab !== undefined
       ? defaultTab
@@ -40,7 +41,6 @@ export default function LibrarySubFilterTabs({
   const handleTabClick = (tabId: string) => {
     if (activeTab === tabId) {
       if (allowDeselect && tabId !== resolvedDefaultTab) {
-        // Toggle/deselect back to default baseline ("all")
         onTabChange(resolvedDefaultTab);
       }
     } else {
@@ -49,51 +49,54 @@ export default function LibrarySubFilterTabs({
   };
 
   return (
-    <div
-      className={`${styles.subFilterContainer} ${className}`}
-      role="group"
-      aria-label={ariaLabel}
-    >
-      {tabs.map((tab) => {
-        const isActive = activeTab === tab.id;
-        const isDefault = tab.id === resolvedDefaultTab;
-        const showClear = isActive && !isDefault && allowDeselect;
+    <div className={`${styles.subFilterOuter} ${className}`}>
+      {eyebrow && <span className={styles.eyebrowLabel}>{eyebrow}</span>}
+      <div
+        className={styles.subFilterContainer}
+        role="group"
+        aria-label={ariaLabel}
+      >
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          const isDefault = tab.id === resolvedDefaultTab;
+          const showClear = isActive && !isDefault && allowDeselect;
 
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            className={`${styles.chip} ${isActive ? styles.chipActive : ""}`}
-            aria-pressed={isActive}
-            title={
-              showClear
-                ? `Remove ${tab.label} filter`
-                : `Filter by ${tab.label}`
-            }
-            onClick={() => handleTabClick(tab.id)}
-          >
-            {tab.icon && <span className={styles.tabIcon}>{tab.icon}</span>}
-            <span className={styles.tabLabel}>
-              {tab.shortLabel ? (
-                <>
-                  <span className={styles.tabLabelFull}>{tab.label}</span>
-                  <span className={styles.tabLabelShort}>{tab.shortLabel}</span>
-                </>
-              ) : (
-                tab.label
-              )}
-            </span>
-            {typeof tab.count === "number" && (
-              <span className={styles.tabCount}>{tab.count}</span>
-            )}
-            {showClear && (
-              <span className={styles.selectionClear} aria-hidden>
-                <X size={13} strokeWidth={2.2} />
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              className={`${styles.chip} ${isActive ? styles.chipActive : ""}`}
+              aria-pressed={isActive}
+              title={
+                showClear
+                  ? `Remove ${tab.label} filter`
+                  : `Filter by ${tab.label}`
+              }
+              onClick={() => handleTabClick(tab.id)}
+            >
+              {tab.icon && <span className={styles.tabIcon}>{tab.icon}</span>}
+              <span className={styles.tabLabel}>
+                {tab.shortLabel ? (
+                  <>
+                    <span className={styles.tabLabelFull}>{tab.label}</span>
+                    <span className={styles.tabLabelShort}>{tab.shortLabel}</span>
+                  </>
+                ) : (
+                  tab.label
+                )}
               </span>
-            )}
-          </button>
-        );
-      })}
+              {typeof tab.count === "number" && (
+                <span className={styles.tabCount}>{tab.count}</span>
+              )}
+              {showClear && (
+                <span className={styles.selectionClear} aria-hidden>
+                  <X size={13} strokeWidth={2.2} />
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

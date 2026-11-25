@@ -5,7 +5,7 @@
   width: 100%;
   padding-top: clamp(100px, 12vh, 140px);
   padding-bottom: clamp(100px, 12vh, 140px);
-  background: linear-gradient(180deg, #f1f5f9 0%, var(--color-bg-alt) 30%, var(--slate-50) 65%, #ffffff 100%);
+  background: transparent;
   overflow: visible;
   box-sizing: border-box;
 }

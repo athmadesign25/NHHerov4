@@ -388,7 +388,7 @@
 }
 
 .cardLink:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
   box-shadow: none !important;
 }
 
@@ -406,31 +406,47 @@
 
 .cardLink:hover .cardBgImage {
   transform: scale(1.05);
-  filter: brightness(1.00) saturate(1.12) contrast(1.03);
+  filter: brightness(0.84) saturate(1.06) contrast(1.03);
 }
 
-/* Atmospheric Gradient Scrim (Exact Figma Node 468:385 / 486:770 Specification) */
+/* Atmospheric Gradient Scrim — seamless fade from transparent top, expands full-card on hover */
 .cardGradient {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 281px;
+  height: 220px;
   max-height: 100%;
   background: linear-gradient(
     180deg,
-    rgba(7, 19, 34, 0) 7.95%,
-    rgba(7, 19, 34, 0.677) 46.73%,
-    rgba(7, 19, 34, 0.859) 73.41%,
+    rgba(7, 19, 34, 0) 0%,
+    rgba(7, 19, 34, 0.22) 26%,
+    rgba(7, 19, 34, 0.68) 56%,
     rgba(7, 19, 34, 0.94) 100%
   );
   pointer-events: none;
   z-index: 2;
+  transition: height 0.48s var(--ease-spring);
+}
+
+.cardGradient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 13, 26, 0) 0%,
+    rgba(5, 13, 26, 0.16) 18%,
+    rgba(5, 13, 26, 0.60) 46%,
+    rgba(5, 13, 26, 0.89) 72%,
+    rgba(5, 13, 26, 0.97) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.42s ease;
 }
 
 .cardContent {
-  position: relative;
-  z-index: 3;
+  position: static;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -441,58 +457,90 @@
 }
 
 .cardTextGroup {
+  position: static;
   display: flex;
   flex-direction: column;
   margin-top: auto;
+  margin-bottom: 12px;
 }
 
 .cardEyebrow {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--white);
+  color: rgba(var(--white-rgb), 0.88);
   margin-bottom: 8px;
-  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.75);
+  text-shadow: none;
+  transition: color var(--duration-base) ease;
 }
 
 .cardTitleLink {
+  position: static;
   text-decoration: none;
   color: inherit;
 }
 
+.cardTitleLink::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  cursor: pointer;
+}
+
 .cardTitle {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xl);
   font-weight: 700;
   color: var(--white);
   line-height: var(--leading-snug);
   letter-spacing: -0.015em;
-  margin: 0 0 8px 0;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 52px;
-  text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.80);
+  text-shadow: none;
+}
+
+.cardSubReveal {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.36s var(--ease-spring), opacity 0.28s ease;
+}
+
+.cardSubInner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .cardSub {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: var(--font-size-xs);
+  font-size: 13px;
   font-weight: 400;
-  line-height: var(--leading-normal);
-  color: rgba(var(--white-rgb), 0.78);
-  margin: 0 0 16px 0;
+  line-height: 1.52;
+  color: rgba(var(--white-rgb), 0.86);
+  margin: 8px 0 4px 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 7;
+  line-clamp: 7;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 38px;
-  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.65);
+  text-shadow: none;
 }
 
 /* Top Right Date Badge from Figma 468:624 */
@@ -525,6 +573,7 @@
 /* ─── CARD BOTTOM SLOT: RESTING (AUTHOR + ARROW) VS HOVER FULL CTA ─────── */
 .cardBottomSlot {
   position: relative;
+  z-index: 6;
   width: 100%;
   height: 38px;
   display: flex;
@@ -540,6 +589,7 @@
   width: 100%;
   height: 38px;
   padding-top: 6px;
+  pointer-events: none;
   transition: opacity var(--duration-moderate) var(--ease-spring),
               transform var(--duration-moderate) var(--ease-spring);
 }
@@ -607,9 +657,32 @@
 }
 
 @media (min-width: 1025px) and (hover: hover) {
+  .cardLink:hover .cardGradient,
+  .cardLink:focus-within .cardGradient {
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .cardLink:hover .cardGradient::after,
+  .cardLink:focus-within .cardGradient::after {
+    opacity: 1;
+  }
+
+  .cardLink:hover .cardEyebrow,
+  .cardLink:focus-within .cardEyebrow {
+    color: #7dd3fc;
+  }
+
+  .cardLink:hover .cardSubReveal,
+  .cardLink:focus-within .cardSubReveal {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
   .cardActions {
     position: absolute;
     inset: 0;
+    z-index: 6;
     opacity: 0;
     transform: translateY(6px);
     pointer-events: none;
@@ -633,12 +706,17 @@
 }
 
 @media (max-width: 1024px), (hover: none) {
+  .cardSubReveal {
+    display: none !important;
+  }
+
   .cardRestingBottom {
     display: none;
   }
 
   .cardActions {
     position: relative;
+    z-index: 6;
     opacity: 1;
     transform: none;
     pointer-events: auto;

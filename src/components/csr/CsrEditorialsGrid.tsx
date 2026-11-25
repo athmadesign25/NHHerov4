@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Download, Calendar, FileText } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText } from "@/components/ui/CardTitleText";
 import { CsrEditorialItem } from "@/data/csrData";
 import styles from "./CsrEditorialsGrid.module.css";
 
@@ -52,7 +53,7 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
             <TextSweepEffect
               words={["Downloadable CSR Editorials"]}
               sweepMs={1400}
-              finalColor="#FFFFFF"
+              finalColor="var(--dyn-heading, #0f172a)"
             />
           </h2>
           <p className={styles.sectionSubtitle}>
@@ -99,12 +100,16 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
                   </div>
 
                   <h3 className={styles.cardTitle} title={item.title}>
-                    {item.title}
+                    <CardTitleText title={item.title} />
                   </h3>
 
-                  <p className={styles.cardDesc}>
-                    {item.description}
-                  </p>
+                  <div className={styles.cardSubReveal}>
+                    <div className={styles.cardSubInner}>
+                      <p className={styles.cardDesc}>
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Card Bottom Slot: Resting Meta vs Hover Download CTA */}

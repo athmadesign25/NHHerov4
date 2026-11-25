@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -52,40 +52,99 @@ export default function SymptomDetailPage({ params }: PageProps) {
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // V2: Scroll-driven section colour transition (#0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
-  const { scrollY } = useScroll();
-  const v2BgColor = useTransform(scrollY, [0, 110, 220, 320], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
-  const v2HeadingColor = useTransform(scrollY, [0, 140, 260], ["#ffffff", "#f1f5f9", "#111827"]);
+  // V2: Scroll-driven section colour transition (#060c18 -> #020408 -> #f4f7fb -> #ffffff)
+  const v4Progress = useMotionValue(0);
+
+  useEffect(() => {
+    const updateV4Transition = () => {
+      const sy = window.scrollY || 0;
+      const startScroll = 36;
+      const endScroll = 360;
+      const raw = (sy - startScroll) / (endScroll - startScroll);
+      const clamped = Math.max(0, Math.min(1, raw));
+      v4Progress.set(clamped);
+      setIsScrolled(sy > 300);
+    };
+
+    updateV4Transition();
+    window.addEventListener("scroll", updateV4Transition, { passive: true });
+    window.addEventListener("resize", updateV4Transition, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateV4Transition);
+      window.removeEventListener("resize", updateV4Transition);
+    };
+  }, [v4Progress]);
+
+  // Smoothly crossfade stationary hero photo into the unified dynamic canvas so there is ZERO horizontal gradient seam
+  const heroCanvasOpacity = useTransform(v4Progress, [0, 0.38, 0.68], [1, 0.75, 0]);
+
+  // Hero bottom metrics dynamic color inversion as the unified canvas transitions from dark/black to white
+  const heroStatNumColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
+  );
+  const heroStatLabelColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
+  );
+  const heroStatDividerColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
+  );
+
+  // V2: Smooth Dark -> Deep Black -> Pure White transition (exact V2 detail standard)
+  const v2BgColor = useTransform(
+    v4Progress,
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
+  );
+  const v2HeadingColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
+  );
+  const v2SubtitleColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.76)", "rgba(255, 255, 255, 0.82)", "#475569", "#64748b"]
+  );
   const v2BodyColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.84)", "rgba(241, 245, 249, 0.90)", "#374151"]
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.84)", "rgba(255, 255, 255, 0.86)", "#334155", "#374151"]
   );
   const v2MutedColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.62)", "rgba(203, 213, 225, 0.85)", "#64748b"]
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.62)", "rgba(255, 255, 255, 0.68)", "#64748b", "#64748b"]
   );
   const v2TocLinkColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.78)", "rgba(226, 232, 240, 0.88)", "#4b5563"]
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.78)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
   );
-  const v2TocActiveColor = useTransform(scrollY, [0, 140, 260], ["#38bdf8", "#7dd3fc", "#034EA2"]);
+  const v2TocActiveColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["#38bdf8", "#38bdf8", "#034EA2", "#034EA2"]
+  );
   const v2TocActiveBg = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)"]
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
   );
   const v2BorderColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.20)", "rgba(15, 23, 42, 0.10)"]
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.16)", "rgba(15, 23, 42, 0.09)", "rgba(15, 23, 42, 0.08)"]
   );
   const v2CardBg = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.12)", "#f8fafc"]
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.10)", "#f8fafc", "#f8fafc"]
   );
 
   useEffect(() => {
@@ -145,8 +204,10 @@ export default function SymptomDetailPage({ params }: PageProps) {
       className={styles.detailPageContainer}
       style={
         {
+          backgroundColor: v2BgColor,
           "--v2-bg": v2BgColor,
           "--v2-heading": v2HeadingColor,
+          "--v2-subtitle": v2SubtitleColor,
           "--v2-body": v2BodyColor,
           "--v2-muted": v2MutedColor,
           "--v2-toc-link": v2TocLinkColor,
@@ -154,11 +215,19 @@ export default function SymptomDetailPage({ params }: PageProps) {
           "--v2-toc-active-bg": v2TocActiveBg,
           "--v2-border": v2BorderColor,
           "--v2-card-bg": v2CardBg,
-        } as any
+          "--hero-bottom-bg": v2BgColor,
+          "--stat-num-color": heroStatNumColor,
+          "--stat-label-color": heroStatLabelColor,
+          "--stat-divider-color": heroStatDividerColor,
+        } as unknown as React.CSSProperties
       }
     >
       {/* ─── STATIONARY ATMOSPHERIC CANVAS ─────────────────────────────────── */}
-      <div className={styles.stationaryCanvas} aria-hidden="true">
+      <motion.div
+        className={styles.stationaryCanvas}
+        aria-hidden="true"
+        style={{ opacity: heroCanvasOpacity }}
+      >
         <motion.div
           className={styles.stationaryMotionWrapper}
           initial={{ scale: 1.12, opacity: 0.5 }}
@@ -175,11 +244,11 @@ export default function SymptomDetailPage({ params }: PageProps) {
           />
         </motion.div>
         <div className={styles.stationaryCanvasOverlay} />
-      </div>
+      </motion.div>
 
       {/* ─── DETAIL HERO ──────────────────────────────────────────────────── */}
       <section className={`${styles.detailHero} ${styles.detailHeroV2}`} data-nav-theme="dark">
-        <div className={styles.heroBgOverlay} />
+        <motion.div className={styles.heroBgOverlay} style={{ opacity: heroCanvasOpacity }} />
 
         <div className={styles.heroInner}>
           <motion.div
@@ -203,9 +272,15 @@ export default function SymptomDetailPage({ params }: PageProps) {
               {detail.speciality} &bull; {detail.severity} TRIAGE
             </div>
 
-            <h1 className={styles.heroMainTitle} style={{ marginBottom: "26px" }}>
+            <h1 className={styles.heroMainTitle}>
               {detail.heroTitle}
             </h1>
+
+            {(detail.leadParagraph || detail.heroSubtitle) && (
+              <p className={styles.heroSubTitle}>
+                {detail.leadParagraph || detail.heroSubtitle}
+              </p>
+            )}
 
             <div className={styles.heroActionsRow}>
               <Link
@@ -216,12 +291,6 @@ export default function SymptomDetailPage({ params }: PageProps) {
                 <span>Consult Specialist</span>
                 <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
-
-              <a href="tel:18003090309" className={styles.heroPhoneText}>
-                <PhoneCall size={14} className={styles.phoneIcon} />
-                <span className={styles.phoneDesktopSpan}>24×7 Emergency Helpline: <strong>1800 309 0309</strong></span>
-                <span className={styles.phoneMobileSpan}>Call 24×7 Helpline</span>
-              </a>
             </div>
           </motion.div>
 
@@ -263,7 +332,10 @@ export default function SymptomDetailPage({ params }: PageProps) {
       </section>
 
       {/* ─── MAIN CONTENT BODY ────────────────────────────────────────────── */}
-      <div className={`${styles.readingExperienceWrapper} ${styles.readingExperienceWrapperV2}`}>
+      <motion.div
+        className={`${styles.readingExperienceWrapper} ${styles.readingExperienceWrapperV2}`}
+        style={{ backgroundColor: v2BgColor }}
+      >
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
             {/* Sticky Table of Contents Sidebar */}
@@ -502,7 +574,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
             </div>
           </div>
         </main>
-      </div>
+      </motion.div>
 
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner

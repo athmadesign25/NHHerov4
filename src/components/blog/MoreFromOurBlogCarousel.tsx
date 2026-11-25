@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, useTransform, useMotionValue, MotionValue } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowRight, ArrowUpRight, Calendar } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import { ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import styles from "./MoreFromOurBlogCarousel.module.css";
 
@@ -27,21 +28,21 @@ export default function MoreFromOurBlogCarousel({
   const fallbackProgress = useMotionValue(1);
   const activeProgress = scrollYProgress || fallbackProgress;
 
-  // Dynamic text & control colors driven by scroll progress (0 = dark #060c18, 1 = light #ffffff)
+  // Dynamic text & control colors driven by scroll progress (exact V2 detail page curve: 0..0.44 dark/black, 0.64..1 white)
   const eyebrowColor = useTransform(
     activeProgress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.80)", "#034EA2", "#034EA2"]
   );
   const titleColor = useTransform(
     activeProgress,
-    [0, 0.55, 1],
-    ["#ffffff", "#1e293b", "#0f172a"]
+    [0, 0.44, 0.64, 1],
+    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
   );
   const subtitleColor = useTransform(
     activeProgress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.78)", "#475569", "#64748b"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.76)", "rgba(255, 255, 255, 0.82)", "#475569", "#64748b"]
   );
   const trackScale = useTransform(
     activeProgress,
@@ -50,23 +51,23 @@ export default function MoreFromOurBlogCarousel({
   );
   const navBtnBg = useTransform(
     activeProgress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.85)", "#ffffff"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "#ffffff", "#ffffff"]
   );
   const navBtnBorder = useTransform(
     activeProgress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.26)", "#cbd5e1", "#cbd5e1"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.26)", "rgba(255, 255, 255, 0.30)", "#cbd5e1", "#cbd5e1"]
   );
   const navBtnColor = useTransform(
     activeProgress,
-    [0, 0.55, 1],
-    ["#ffffff", "#0f172a", "#0f172a"]
+    [0, 0.44, 0.64, 1],
+    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
   );
   const dotsWrapBg = useTransform(
     activeProgress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.12)", "#e2e8f0", "#f1f5f9"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "#e2e8f0", "#f1f5f9"]
   );
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -183,7 +184,7 @@ export default function MoreFromOurBlogCarousel({
             <TextSweepEffect
               words={[title]}
               sweepMs={1400}
-              finalColor={seamless ? "#FFFFFF" : "#0f172a"}
+              finalColor="var(--featured-title-color, #0f172a)"
             />
           </motion.h2>
           {subtitle && (
@@ -235,13 +236,21 @@ export default function MoreFromOurBlogCarousel({
 
                         <Link href={`/blog/${item.slug}`} className={styles.cardTitleLink}>
                           <h3 className={styles.cardTitle} title={item.title}>
-                            {item.title}
+                            <CardTitleText title={item.title} />
                           </h3>
                         </Link>
 
-                        <p className={styles.cardSub}>
-                          {item.summary}
-                        </p>
+                        <div className={styles.cardSubReveal}>
+                          <div className={styles.cardSubInner}>
+                            <p className={styles.cardSub}>
+                              {buildCardHoverReading([
+                                item.overview,
+                                item.summary,
+                                item.sections?.[0]?.body,
+                              ])}
+                            </p>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Card Bottom Slot: Resting (Author + Arrow) vs Hover Full CTA ("Read more") */}

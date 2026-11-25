@@ -52,19 +52,19 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(4);
 
-  // V4 & V2: Scroll-driven dynamic transition progress matching Blog Hero V3
+  // V2: Scroll-driven dynamic transition progress matching Blogs page (dark -> black -> white)
   const v4Progress = useMotionValue(0);
 
   useEffect(() => {
     const updateV4Transition = () => {
-      // Exactly matching the smooth Blog page dynamism:
-      // As the user scrolls down from the hero (60px) into Our Doctors and the reading canvas (640px),
-      // smoothly morph: #060c18 -> #0d2142 -> #eef4fb -> #ffffff
+      // Replicating the smooth Blogs page transition:
+      // At scrollY = 0..36px, keep 100% dark (#060c18).
+      // From 36px to 360px as Our Doctors & reading canvas enter view, smoothly transition
+      // across one unified canvas: dark (#060c18) -> black (#03060c) -> pure white (#ffffff)
       const sy = window.scrollY || 0;
-      const startScroll = 60;
-      const endScroll = 640;
+      const startScroll = 36;
+      const endScroll = 360;
       const raw = (sy - startScroll) / (endScroll - startScroll);
       const clamped = Math.max(0, Math.min(1, raw));
       v4Progress.set(clamped);
@@ -79,199 +79,82 @@ export default function ProcedureDetailPage({ params }: PageProps) {
     };
   }, [v4Progress]);
 
-  // V2: Scroll-driven section colour transition synchronized with smooth 60px..640px range
+  // Smoothly crossfade stationary hero photo into the unified dynamic canvas so there is ZERO horizontal gradient seam
+  const heroCanvasOpacity = useTransform(v4Progress, [0, 0.38, 0.68], [1, 0.75, 0]);
+
+  // Hero bottom metrics dynamic color inversion as the unified canvas transitions from dark/black to white
+  const heroStatNumColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
+  );
+  const heroStatLabelColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
+  );
+  const heroStatDividerColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
+  );
+
+  // V2: Smooth Dark -> Deep Black -> Pure White transition (replicating Blogs page Medical Experts -> Why Choose NH)
+  // Holds deep black through 0.40 then smoothly crosses through crisp alabaster to pure white (never lingering in mid-gray)
   const v2BgColor = useTransform(
     v4Progress,
-    [0, 0.42, 0.78, 1],
-    ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
   );
   const v2HeadingColor = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["#ffffff", "#1e293b", "#0f172a"]
+    [0, 0.44, 0.64, 1],
+    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
   );
   const v2SubtitleColor = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.78)", "#475569", "#64748b"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.76)", "rgba(255, 255, 255, 0.82)", "#475569", "#64748b"]
   );
   const v2BodyColor = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.84)", "#334155", "#374151"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.84)", "rgba(255, 255, 255, 0.86)", "#334155", "#374151"]
   );
   const v2MutedColor = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.62)", "#64748b", "#64748b"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.62)", "rgba(255, 255, 255, 0.68)", "#64748b", "#64748b"]
   );
   const v2TocLinkColor = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.78)", "#475569", "#4b5563"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.78)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
   );
   const v2TocActiveColor = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["#38bdf8", "#0284c7", "#034EA2"]
+    [0, 0.44, 0.64, 1],
+    ["#38bdf8", "#38bdf8", "#034EA2", "#034EA2"]
   );
   const v2TocActiveBg = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(56, 189, 248, 0.12)", "rgba(56, 189, 248, 0.14)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
   );
   const v2BorderColor = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.16)", "rgba(15, 23, 42, 0.09)", "rgba(15, 23, 42, 0.08)"]
   );
   const v2CardBg = useTransform(
     v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.06)", "#f8fafc", "#ffffff"]
-  );
-
-  // V4 Dynamic Transforms (Exact Blog V3 stops: [0, 0.42, 0.78, 1])
-  const v4BgColor = useTransform(
-    v4Progress,
-    [0, 0.42, 0.78, 1],
-    ["#060c18", "#0d2142", "#eef4fb", "#ffffff"]
-  );
-  const v4HeadingColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["#ffffff", "#1e293b", "#0f172a"]
-  );
-  const v4SubtitleColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.78)", "#475569", "#64748b"]
-  );
-  const v4EyebrowColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
-  );
-  const v4BodyColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.86)", "#334155", "#1e293b"]
-  );
-  const v4MutedColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
-  );
-  const v4TocLinkColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
-  );
-  const v4TocActiveColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["#38bdf8", "#0284c7", "#034EA2"]
-  );
-  const v4TocActiveBg = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
-  );
-  const v4BorderColor = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
-  );
-  const v4CardBorder = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.09)"]
-  );
-  const v4SummaryBg = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
-  );
-  const v4BadgeBg = useTransform(
-    v4Progress,
-    [0, 0.55, 1],
-    ["rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.08)", "#f8fafc", "#ffffff"]
   );
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const qv = params.get("v") || params.get("design");
-      if (qv === "4") {
-        setBlendVersion(4);
-        return;
-      } else if (qv === "3") {
-        setBlendVersion(3);
-        return;
-      } else if (qv === "2") {
-        setBlendVersion(2);
-        return;
-      } else if (qv === "1") {
-        setBlendVersion(1);
-        return;
-      }
-
-      // Default to V4 style (matching Blog smooth dynamic background change)
-      if (slug === "abdominal-issues-children") {
-        try {
-          const saved = localStorage.getItem("nh_procedure_detail_blend");
-          if (saved === "1" || saved === "2" || saved === "3" || saved === "4") {
-            setBlendVersion(Number(saved) as 1 | 2 | 3 | 4);
-            return;
-          }
-        } catch {
-          // Ignore
-        }
-        setBlendVersion(4);
-        return;
-      }
-
-      try {
-        const saved = localStorage.getItem("nh_procedure_detail_blend");
-        if (saved === "4") setBlendVersion(4);
-        else if (saved === "3") setBlendVersion(3);
-        else if (saved === "2") setBlendVersion(2);
-        else if (saved === "1") setBlendVersion(1);
-      } catch {
-        // Ignore storage errors
-      }
-    }
   }, [slug]);
-
-  const handleBlendChange = (v: 1 | 2 | 3 | 4) => {
-    setBlendVersion(v);
-    try {
-      localStorage.setItem("nh_procedure_detail_blend", String(v));
-    } catch {
-      // Ignore
-    }
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("v", String(v));
-      window.history.replaceState(null, "", url.toString());
-    }
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
-        return;
-      }
-      if (e.key === "1") handleBlendChange(1);
-      else if (e.key === "2") handleBlendChange(2);
-      else if (e.key === "3") handleBlendChange(3);
-      else if (e.key === "4") handleBlendChange(4);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   // Scroll listener for:
   // 1. Sticky active Table of Contents
@@ -328,59 +211,37 @@ export default function ProcedureDetailPage({ params }: PageProps) {
     <motion.div
       className={styles.detailPageContainer}
       style={
-        blendVersion === 2
-          ? ({
-              "--v2-bg": v2BgColor,
-              "--v2-heading": v2HeadingColor,
-              "--v2-subtitle": v2SubtitleColor,
-              "--v2-body": v2BodyColor,
-              "--v2-muted": v2MutedColor,
-              "--v2-toc-link": v2TocLinkColor,
-              "--v2-toc-active": v2TocActiveColor,
-              "--v2-toc-active-bg": v2TocActiveBg,
-              "--v2-border": v2BorderColor,
-              "--v2-card-bg": v2CardBg,
-              "--hero-bottom-bg": v2BgColor,
-              "--summary-bg": "rgba(var(--slate-50-rgb), 0.85)",
-              "--summary-border": "rgba(var(--slate-900-rgb), 0.08)",
-              "--summary-accent": "var(--color-primary, var(--blue-brand))",
-              "--summary-text": "var(--slate-800)",
-              "--summary-badge-bg": "var(--white)",
-              "--summary-badge-text": "var(--slate-700)",
-            } as React.CSSProperties)
-          : blendVersion === 4
-          ? ({
-              "--v4-bg": v4BgColor,
-              "--v4-heading": v4HeadingColor,
-              "--v4-subtitle": v4SubtitleColor,
-              "--v4-eyebrow": v4EyebrowColor,
-              "--v4-body": v4BodyColor,
-              "--v4-muted": v4MutedColor,
-              "--v4-toc-link": v4TocLinkColor,
-              "--v4-toc-active": v4TocActiveColor,
-              "--v4-toc-active-bg": v4TocActiveBg,
-              "--v4-border": v4BorderColor,
-              "--v4-card-border": v4CardBorder,
-              "--hero-bottom-bg": v4BgColor,
-              "--summary-bg": v4SummaryBg,
-              "--summary-border": v4BorderColor,
-              "--summary-accent": v4TocActiveColor,
-              "--summary-text": v4BodyColor,
-              "--summary-badge-bg": v4BadgeBg,
-              "--summary-badge-text": v4BodyColor,
-            } as React.CSSProperties)
-          : ({
-              "--summary-bg": "rgba(var(--slate-50-rgb), 0.85)",
-              "--summary-border": "rgba(var(--slate-900-rgb), 0.08)",
-              "--summary-accent": "var(--color-primary, var(--blue-brand))",
-              "--summary-text": "var(--slate-800)",
-              "--summary-badge-bg": "var(--white)",
-              "--summary-badge-text": "var(--slate-700)",
-            } as React.CSSProperties)
+        {
+          backgroundColor: v2BgColor,
+          "--v2-bg": v2BgColor,
+          "--v2-heading": v2HeadingColor,
+          "--v2-subtitle": v2SubtitleColor,
+          "--v2-body": v2BodyColor,
+          "--v2-muted": v2MutedColor,
+          "--v2-toc-link": v2TocLinkColor,
+          "--v2-toc-active": v2TocActiveColor,
+          "--v2-toc-active-bg": v2TocActiveBg,
+          "--v2-border": v2BorderColor,
+          "--v2-card-bg": v2CardBg,
+          "--hero-bottom-bg": v2BgColor,
+          "--stat-num-color": heroStatNumColor,
+          "--stat-label-color": heroStatLabelColor,
+          "--stat-divider-color": heroStatDividerColor,
+          "--summary-bg": "rgba(var(--slate-50-rgb), 0.85)",
+          "--summary-border": "rgba(var(--slate-900-rgb), 0.08)",
+          "--summary-accent": "var(--color-primary, var(--blue-brand))",
+          "--summary-text": "var(--slate-800)",
+          "--summary-badge-bg": "var(--white)",
+          "--summary-badge-text": "var(--slate-700)",
+        } as unknown as React.CSSProperties
       }
     >
       {/* ─── STATIONARY ATMOSPHERIC BACKGROUND CANVAS (FIXED IN VIEWPORT) ──── */}
-      <div className={styles.stationaryCanvas} aria-hidden="true">
+      <motion.div
+        className={styles.stationaryCanvas}
+        aria-hidden="true"
+        style={{ opacity: heroCanvasOpacity }}
+      >
         <motion.div
           className={styles.stationaryMotionWrapper}
           initial={{ scale: 1.12, opacity: 0.5 }}
@@ -397,23 +258,18 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           />
         </motion.div>
         <div className={styles.stationaryCanvasOverlay} />
-      </div>
+      </motion.div>
 
       {/* ─── DETAIL HERO (FULL BACKGROUND ATMOSPHERIC GRADIENT & METRICS) ───── */}
       <section
-        className={`${styles.detailHero} ${
-          blendVersion === 2
-            ? styles.detailHeroV2
-            : blendVersion === 3
-            ? styles.detailHeroV3
-            : blendVersion === 4
-            ? styles.detailHeroV4
-            : ""
-        }`}
+        className={`${styles.detailHero} ${styles.detailHeroV2}`}
         data-nav-theme="dark"
       >
-        {/* Hero contrast overlay (ensures left-column typography is crisp) */}
-        <div className={styles.heroBgOverlay} />
+        {/* Hero contrast overlay (crossfades seamlessly into unified dynamic canvas on scroll) */}
+        <motion.div
+          className={styles.heroBgOverlay}
+          style={{ opacity: heroCanvasOpacity }}
+        />
 
         <div className={styles.heroInner}>
           <motion.div 
@@ -438,12 +294,19 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               {detail.speciality}
             </div>
 
-            {/* Refined, Balanced Title (Subtext removed per stakeholder feedback) */}
-            <h1 className={styles.heroMainTitle} style={{ marginBottom: "26px" }}>
+            {/* Refined, Balanced Title */}
+            <h1 className={styles.heroMainTitle}>
               {detail.heroTitle}
             </h1>
 
-            {/* Actions Row: Primary CTA (NH Blue) + Call Helpline Text */}
+            {/* 4-Line Small Summary Subtext of Detail Page */}
+            {(detail.leadParagraph || detail.heroSubtitle) && (
+              <p className={styles.heroSubTitle}>
+                {detail.leadParagraph || detail.heroSubtitle}
+              </p>
+            )}
+
+            {/* Actions Row: Primary CTA Only */}
             <div className={styles.heroActionsRow}>
               <Link 
                 href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`} 
@@ -453,12 +316,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 <span>Book Consultation</span>
                 <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
-
-              <a href="tel:18003090309" className={styles.heroPhoneText}>
-                <PhoneCall size={14} className={styles.phoneIcon} />
-                <span className={styles.phoneDesktopSpan}>24×7 Care Helpline: <strong>1800 309 0309</strong></span>
-                <span className={styles.phoneMobileSpan}>Call 24×7 Helpline</span>
-              </a>
             </div>
           </motion.div>
 
@@ -509,22 +366,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
       {/* ─── MAIN CONTENT BODY OVER STATIONARY ATMOSPHERIC CANVAS ────────── */}
       <motion.div
-        className={`${styles.readingExperienceWrapper} ${
-          blendVersion === 2
-            ? styles.readingExperienceWrapperV2
-            : blendVersion === 3
-            ? styles.readingExperienceWrapperV3
-            : blendVersion === 4
-            ? styles.readingExperienceWrapperV4
-            : ""
-        }`}
-        style={
-          blendVersion === 4
-            ? { backgroundColor: v4BgColor }
-            : blendVersion === 2
-            ? { backgroundColor: v2BgColor }
-            : undefined
-        }
+        className={`${styles.readingExperienceWrapper} ${styles.readingExperienceWrapperV2}`}
+        style={{ backgroundColor: v2BgColor }}
       >
         <main className={styles.mainLayoutContainer}>
           {/* ─── TOP FEATURED DOCTORS SECTION (SHOWN FOR THIS PROCEDURE DIRECTLY BELOW HERO) ─── */}
@@ -534,7 +377,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 <motion.h2 
                   className={styles.topDoctorsTitle}
                   style={{
-                    color: blendVersion === 4 ? v4HeadingColor : blendVersion === 2 ? v2HeadingColor : undefined,
+                    color: v2HeadingColor,
+                    ["--sweep-final-color" as string]: v2HeadingColor,
                   }}
                 >
                   <TextSweepEffect
@@ -542,13 +386,13 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                     sweepMs={1500}
                     sweepColor="#034EA2"
                     sweepHighlightColor="#ED1C24"
-                    finalColor="#0f172a"
+                    finalColor="var(--sweep-final-color, #0f172a)"
                   />
                 </motion.h2>
                 <motion.p 
                   className={styles.topDoctorsSubtitle}
                   style={{
-                    color: blendVersion === 4 ? v4SubtitleColor : blendVersion === 2 ? v2SubtitleColor : undefined,
+                    color: v2SubtitleColor,
                   }}
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -593,9 +437,10 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                           {doc.designation}
                         </div>
                         <div className={styles.doctorMetaBlock}>
-                          <span className={styles.doctorExperiencePill}>
+                          <span className={styles.doctorExperienceText}>
                             {doc.experience}
                           </span>
+                          <span className={styles.doctorMetaDot} aria-hidden="true">•</span>
                           <span className={styles.doctorHospitalName}>
                             {doc.hospital.replace(", Bangalore", "").replace(", Bengaluru", "")}
                           </span>
@@ -624,7 +469,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <motion.div 
                 className={styles.topDoctorsDivider} 
                 style={{
-                  backgroundColor: blendVersion === 4 ? v4BorderColor : blendVersion === 2 ? v2BorderColor : undefined,
+                  backgroundColor: v2BorderColor,
                 }}
               />
             </section>
@@ -684,7 +529,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <ShareWidget shareTitle={detail.title} />
 
               {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
-              <ContactCareSidebarCard theme={blendVersion === 2 || blendVersion === 4 ? "dynamic" : "white"} />
+              <ContactCareSidebarCard theme="dynamic" />
             </aside>
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
@@ -693,7 +538,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             <ClinicalAtAGlanceCard
               bookingHref="/book-an-appointment"
               secondOpinionHref="/book-an-appointment?flow=second-opinion"
-              theme={blendVersion === 2 || blendVersion === 4 ? "dynamic" : "white"}
+              theme="dynamic"
             />
 
             {/* 1. Overview & Clinical Executive Summary */}
@@ -704,7 +549,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <ClinicalSummaryBanner
                 summary={`${detail.leadParagraph} ${detail.whatIsIt.description}`}
                 reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
-                theme={blendVersion === 2 || blendVersion === 4 ? "dynamic" : "white"}
+                theme="dynamic"
               />
 
               {/* Clean Clinical Figure (No nested cards or duplicate metrics) */}
@@ -1042,48 +887,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         phoneText="Surgical Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
-
-      {/* Small V1 / V2 / V3 Blend Variation Toggle for Stakeholder Review */}
-      <div className={styles.blendVersionToggle} role="group" aria-label="Hero to Content Blend Variation">
-        <span className={styles.blendToggleLabel}>
-          <span className={styles.blendToggleDot} />
-          <span>Blend</span>
-        </span>
-        <div className={styles.blendToggleButtons}>
-          <button
-            type="button"
-            className={`${styles.blendToggleBtn} ${blendVersion === 1 ? styles.blendToggleBtnActive : ""}`}
-            onClick={() => handleBlendChange(1)}
-            title="V1: Elevated Curved Reading Sheet"
-          >
-            V1
-          </button>
-          <button
-            type="button"
-            className={`${styles.blendToggleBtn} ${blendVersion === 2 ? styles.blendToggleBtnActive : ""}`}
-            onClick={() => handleBlendChange(2)}
-            title="V2: Scroll-Driven Section Colour Change"
-          >
-            V2
-          </button>
-          <button
-            type="button"
-            className={`${styles.blendToggleBtn} ${blendVersion === 3 ? styles.blendToggleBtnActive : ""}`}
-            onClick={() => handleBlendChange(3)}
-            title="V3: Soft Atmospheric Blur Mist Band"
-          >
-            V3
-          </button>
-          <button
-            type="button"
-            className={`${styles.blendToggleBtn} ${blendVersion === 4 ? styles.blendToggleBtnActive : ""}`}
-            onClick={() => handleBlendChange(4)}
-            title="V4: Dynamic BG Change + TextSweepEffect Blend (Like Blog V3)"
-          >
-            V4
-          </button>
-        </div>
-      </div>
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions

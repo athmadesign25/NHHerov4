@@ -1,12 +1,9 @@
 "use client";
 
 import React from "react";
-import { X } from "lucide-react";
 import styles from "./AlphabeticalFilterRail.module.css";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const ROW_1_LETTERS = "ABCDEFGHIJKLM".split("");
-const ROW_2_LETTERS = "NOPQRSTUVWXYZ".split("");
 
 interface AlphabeticalFilterRailProps {
   availableLetters?: Set<string>;
@@ -14,6 +11,7 @@ interface AlphabeticalFilterRailProps {
   onSelectLetter: (letter: string | null) => void;
   className?: string;
   resultCount?: number;
+  eyebrow?: string;
 }
 
 export default function AlphabeticalFilterRail({
@@ -21,7 +19,7 @@ export default function AlphabeticalFilterRail({
   selectedLetter,
   onSelectLetter,
   className = "",
-  resultCount,
+  eyebrow,
 }: AlphabeticalFilterRailProps) {
   const renderLetterBtn = (char: string) => {
     const isAvailable = availableLetters ? availableLetters.has(char) : true;
@@ -47,7 +45,9 @@ export default function AlphabeticalFilterRail({
   const renderAllBtn = () => (
     <button
       type="button"
-      className={`${styles.allBtn} ${selectedLetter === null ? styles.allBtnActive : ""}`}
+      className={`${styles.letterBtn} ${styles.allBtn} ${
+        selectedLetter === null ? styles.letterBtnActive : ""
+      }`}
       onClick={() => onSelectLetter(null)}
       aria-pressed={selectedLetter === null}
       aria-label="Show all letters"
@@ -58,39 +58,19 @@ export default function AlphabeticalFilterRail({
 
   return (
     <div className={`${styles.alphabetRailSection} ${className}`} aria-label="Alphabetical Filter">
-      {/* Desktop View: Single Flat Horizontal Rail (Unchanged) */}
-      <div className={`${styles.alphabetRailContainer} ${styles.desktopRail}`} role="toolbar" aria-label="A to Z alphabetical filter">
+      {eyebrow && (
+        <div className={styles.eyebrowRow}>
+          <span className={styles.eyebrowLabel}>{eyebrow}</span>
+        </div>
+      )}
+      <div
+        className={styles.alphabetRailContainer}
+        role="toolbar"
+        aria-label="A to Z alphabetical filter"
+      >
         {renderAllBtn()}
         {ALPHABET.map(renderLetterBtn)}
       </div>
-
-      {/* Mobile Web View: Two-Row 13-Column Grid */}
-      <div className={`${styles.alphabetRailContainer} ${styles.mobileStackedRail}`} role="toolbar" aria-label="A to Z alphabetical filter (mobile 2-row)">
-        <div className={styles.mobileRailGrid}>
-          {ROW_1_LETTERS.map(renderLetterBtn)}
-        </div>
-        <div className={styles.mobileRailGrid}>
-          {ROW_2_LETTERS.map(renderLetterBtn)}
-        </div>
-      </div>
-
-      {selectedLetter && (
-        <div className={styles.letterStatusRow}>
-          <span className={styles.letterStatusText}>
-            Showing items starting with letter <strong className={styles.letterHighlight}>&ldquo;{selectedLetter}&rdquo;</strong>
-            {typeof resultCount === "number" && ` (${resultCount} found)`}
-          </span>
-          <button
-            type="button"
-            className={styles.clearLetterBtn}
-            onClick={() => onSelectLetter(null)}
-            aria-label="Clear letter filter"
-          >
-            <X size={12} />
-            <span>Clear A&ndash;Z</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 }

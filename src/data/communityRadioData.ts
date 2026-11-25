@@ -40,7 +40,7 @@ export const COMMUNITY_RADIO_HERO = {
   title: "Community Waves Broadcasting Initiatives",
   subtitle:
     "Explore doctor-curated radio broadcasts, clinical wellness masterclasses, and community health explainers on Namma Naadi 90.4 FM and leading podcast networks.",
-  image: "/images/csr/csr-community-radio.jpg",
+  image: "/images/csr/community_radio_hero_v4.jpg",
   stats: [
     { value: "90.4 FM", label: "Broadcast Frequency" },
     { value: "400K+", label: "Active Daily Listeners" },
@@ -199,7 +199,7 @@ export const RADIO_EPISODES: RadioEpisode[] = [
     language: "Kannada",
     summary:
       "Community-level water chlorination practices, identifying stagnant mosquito breeding sites around village wells, and coordinated seasonal epidemic preparedness.",
-    image: "/images/csr/csr-community-radio.jpg",
+    image: "/images/csr/community_radio_hero_v4.jpg",
     spotifyUrl: "https://open.spotify.com",
     appleUrl: "https://podcasts.apple.com",
     isFeatured: false,

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
@@ -460,13 +461,22 @@ export default function HospitalsLibraryPage() {
 
                           <Link href={detailUrl} className={styles.cardTitleLink}>
                             <h2 className={styles.cardTitle}>
-                              {item.name}
+                              <CardTitleText title={item.name} />
                             </h2>
                           </Link>
 
-                          <p className={styles.cardSub}>
-                            {item.summary}
-                          </p>
+                          <div className={styles.cardSubReveal}>
+                            <div className={styles.cardSubInner}>
+                              <p className={styles.cardSub}>
+                                {buildCardHoverReading([
+                                  item.overview,
+                                  item.summary,
+                                  item.keySpecialities?.length ? `Centres of excellence: ${item.keySpecialities.slice(0, 4).join(", ")}` : null,
+                                  item.accreditations?.length ? `Accreditations: ${item.accreditations.join(", ")}` : null,
+                                ])}
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
                         <div className={styles.cardBottomSlot}>

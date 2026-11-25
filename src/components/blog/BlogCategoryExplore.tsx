@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight, Clock, Calendar } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
 import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
 import { ArticleItem } from "@/data/articlesDirectoryData";
@@ -250,13 +251,21 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
 
                         <Link href={`/blog/${article.slug}`} className={styles.cardTitleLink}>
                           <h3 className={styles.cardTitle} title={article.title}>
-                            {article.title}
+                            <CardTitleText title={article.title} />
                           </h3>
                         </Link>
 
-                        <p className={styles.cardSub}>
-                          {article.summary}
-                        </p>
+                        <div className={styles.cardSubReveal}>
+                          <div className={styles.cardSubInner}>
+                            <p className={styles.cardSub}>
+                              {buildCardHoverReading([
+                                article.overview,
+                                article.summary,
+                                article.sections?.[0]?.body,
+                              ])}
+                            </p>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Card Bottom Slot: Resting (Author + Arrow) vs Hover Full CTA ("Read more") */}

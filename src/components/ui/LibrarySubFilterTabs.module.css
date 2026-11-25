@@ -1,3 +1,18 @@
+.subFilterOuter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.eyebrowLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dyn-eyebrow, rgba(var(--white-rgb), 0.56));
+}
+
 .subFilterContainer {
   display: inline-flex;
   align-items: center;
@@ -13,7 +28,7 @@
   display: none;
 }
 
-/* Quick Filter Capsule Pill — matching Book Appointment Doctor Library chips */
+/* Quick Filter Capsule Pill — matching Book Appointment Red Outline Selection */
 .chip,
 .tabBtn {
   position: relative;
@@ -22,14 +37,14 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-height: 32px;
+  min-height: 34px;
   padding: 5px 14px;
   border-radius: var(--radius-full, 9999px);
-  border: 1px solid rgba(var(--white-rgb), 0.12);
-  background: rgba(var(--white-rgb), 0.04);
-  color: rgba(var(--white-rgb), 0.70);
+  border: 1px solid var(--dyn-filter-border, rgba(var(--white-rgb), 0.16));
+  background: var(--dyn-filter-bg, rgba(var(--white-rgb), 0.04));
+  color: var(--dyn-filter-text, rgba(var(--white-rgb), 0.78));
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: var(--font-size-xs, 12px);
+  font-size: var(--font-size-xs, 12.5px);
   font-weight: 500;
   line-height: 1.25;
   white-space: nowrap;
@@ -44,9 +59,9 @@
 
 .chip:hover,
 .tabBtn:hover {
-  background: rgba(var(--white-rgb), 0.08);
-  border-color: rgba(var(--white-rgb), 0.22);
-  color: #ffffff;
+  background: var(--dyn-filter-bg-hover, rgba(var(--white-rgb), 0.08));
+  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.45));
+  color: var(--dyn-filter-text-hover, #ffffff);
 }
 
 .chip:active,
@@ -60,21 +75,21 @@
   outline-offset: 2px;
 }
 
-/* Active / Pressed state */
+/* Active / Pressed state — Book Appointment Red Outline Selection Style */
 .chipActive,
 .tabBtnActive,
 .chip[aria-pressed="true"] {
-  background: rgba(var(--white-rgb), 0.14) !important;
-  border-color: rgba(var(--white-rgb), 0.35) !important;
-  color: #ffffff !important;
-  font-weight: 500;
+  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.12)) !important;
+  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.68)) !important;
+  color: var(--dyn-red-sel-text, #ef4444) !important;
+  font-weight: 600;
 }
 
 .chipActive:hover,
 .tabBtnActive:hover,
 .chip[aria-pressed="true"]:hover {
-  background: rgba(var(--white-rgb), 0.18) !important;
-  border-color: rgba(var(--white-rgb), 0.45) !important;
+  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.16)) !important;
+  border-color: var(--dyn-red-sel-border, #ED1C24) !important;
 }
 
 /* Numeric Count Badge */
@@ -84,23 +99,25 @@
   justify-content: center;
   font-size: 11px;
   font-weight: 500;
-  color: rgba(var(--white-rgb), 0.42);
+  color: currentColor;
+  opacity: 0.72;
   margin-inline-start: 1px;
   transition: color var(--duration-fast, 150ms) ease;
 }
 
 .chip:hover .tabCount,
 .tabBtn:hover .tabCount {
-  color: rgba(var(--white-rgb), 0.65);
+  opacity: 0.90;
 }
 
 .chipActive .tabCount,
 .tabBtnActive .tabCount,
 .chip[aria-pressed="true"] .tabCount {
-  color: rgba(var(--white-rgb), 0.75);
+  color: currentColor;
+  opacity: 0.92;
 }
 
-/* Dismiss / Clear affordance ('X' icon) matching Doctor quick filters */
+/* Dismiss / Clear affordance ('X' icon) matching Book Appointment quick filters */
 .selectionClear {
   display: inline-flex;
   align-items: center;
@@ -109,17 +126,14 @@
   width: 14px;
   height: 14px;
   margin-inline-start: 2px;
-  color: rgba(var(--white-rgb), 0.75);
+  color: currentColor;
+  opacity: 0.85;
   border-radius: var(--radius-full, 9999px);
-  transition: color var(--duration-fast, 150ms) ease, transform var(--duration-fast, 150ms) ease;
-}
-
-.chip:hover .selectionClear,
-.tabBtn:hover .selectionClear {
-  color: #ffffff;
+  transition: opacity var(--duration-fast, 150ms) ease, transform var(--duration-fast, 150ms) ease;
 }
 
 .selectionClear:hover {
+  opacity: 1;
   transform: scale(1.15);
 }
 
@@ -144,9 +158,19 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .subFilterContainer {
-    gap: 9px;
+    display: flex;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .chip,
+  .tabBtn {
+    min-height: 30px;
+    padding: 4px 11px;
+    font-size: 11.5px;
+    gap: 5px;
   }
 
   .tabLabelFull {
@@ -157,30 +181,7 @@
     display: inline;
   }
 
-  .chip,
-  .tabBtn {
-    min-height: 28px;
-    height: 28px;
-    padding: 0 12px;
-    font-size: 11px;
-    border-radius: 16px;
-    background: #0d1724;
-    border: 1px solid #36404e;
-    color: #bbc3d0;
-    gap: 5px;
-  }
-
-  .chipActive,
-  .tabBtnActive,
-  .chip[aria-pressed="true"] {
-    background: #28313d !important;
-    border-color: #6b7380 !important;
-    color: #ffffff !important;
-  }
-
   .tabCount {
-    font-size: 11px;
-    color: inherit;
-    opacity: 0.8;
+    font-size: 10.5px;
   }
 }

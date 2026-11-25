@@ -8,25 +8,26 @@ import styles from "./OrganSystemChipsCarousel.module.css";
 
 export interface OrganFilterOption {
   label: string;
+  shortLabel?: string;
   value: string;
   image: string;
 }
 
+// Pure Organ-Only Circular Filters using unified Red (#ED1C24), Blue (#034EA1) & White medical icon artwork
 export const DEFAULT_ORGAN_FILTER_OPTIONS: OrganFilterOption[] = [
-  { label: "Heart", value: "heart", image: "/Specialities icons/Cardiology.jpeg" },
-  { label: "Brain & Spine", value: "brain", image: "/Specialities icons/Neurology.jpeg" },
-  { label: "Kidneys", value: "kidney", image: "/Specialities icons/Nephrology.jpeg" },
-  { label: "Liver", value: "liver", image: "/Specialities icons/Liver Transplant.svg" },
-  { label: "Lungs", value: "lungs", image: "/Specialities icons/Pulmonology.jpeg" },
-  { label: "Bones & Joints", value: "bones", image: "/Specialities icons/Orthopedics.jpeg" },
-  { label: "Stomach & GI", value: "stomach", image: "/Specialities icons/Gastroenterology.jpeg" },
-  { label: "Cancer Care", value: "cancer", image: "/Specialities icons/Cancer Care.jpeg" },
-  { label: "Urinary & Bladder", value: "urinary", image: "/Specialities icons/Urology.jpeg" },
-  { label: "Children & Neonatal", value: "paediatric", image: "/Specialities icons/Paediatrics.jpeg" },
-  { label: "Women's Health", value: "gynaecology", image: "/Specialities icons/Gynaecology.svg" },
-  { label: "Thyroid & Endocrine", value: "endocrine", image: "/Specialities icons/Endocrinology.jpeg" },
-  { label: "Joints & Autoimmune", value: "rheumatology", image: "/Specialities icons/Rheumatology.jpeg" },
-  { label: "General Surgery", value: "surgery", image: "/Specialities icons/General Surgery.jpeg" },
+  { label: "Heart", shortLabel: "Heart", value: "heart", image: "/Specialities icons/Cardiology.svg" },
+  { label: "Brain", shortLabel: "Brain", value: "brain", image: "/Specialities icons/Neurology.svg" },
+  { label: "Lungs", shortLabel: "Lungs", value: "lungs", image: "/Specialities icons/Pulmonology.svg" },
+  { label: "Liver", shortLabel: "Liver", value: "liver", image: "/Specialities icons/Liver Transplant.svg" },
+  { label: "Kidneys", shortLabel: "Kidneys", value: "kidney", image: "/Specialities icons/Nephrology.svg" },
+  { label: "Stomach & GI", shortLabel: "Stomach", value: "stomach", image: "/Specialities icons/Gastro.svg" },
+  { label: "Bones & Joints", shortLabel: "Bones", value: "bones", image: "/Specialities icons/Orthopaedics.svg" },
+  { label: "Spine & Nerves", shortLabel: "Spine", value: "spine", image: "/Specialities icons/Spine.svg" },
+  { label: "Urinary & Bladder", shortLabel: "Urinary", value: "urinary", image: "/Specialities icons/Urology.svg" },
+  { label: "Uterus & Ovaries", shortLabel: "Uterus", value: "gynaecology", image: "/Specialities icons/Gynaecology.svg" },
+  { label: "Thyroid & Glands", shortLabel: "Thyroid", value: "endocrine", image: "/Specialities icons/Thyroid.svg" },
+  { label: "Vascular & Aorta", shortLabel: "Vascular", value: "vascular", image: "/Specialities icons/Vascular.svg" },
+  { label: "Oral & Dental", shortLabel: "Dental", value: "dental", image: "/Specialities icons/Dental.svg" },
 ];
 
 interface OrganSystemChipsCarouselProps {
@@ -34,13 +35,17 @@ interface OrganSystemChipsCarouselProps {
   selectedOrgan: string | null;
   onSelectOrgan: (organValue: string | null) => void;
   eyebrow?: string;
+  className?: string;
+  variant?: "circle" | "clean-tabs";
 }
 
 export default function OrganSystemChipsCarousel({
   options = DEFAULT_ORGAN_FILTER_OPTIONS,
   selectedOrgan,
   onSelectOrgan,
-  eyebrow = "Explore by Organ System & Speciality",
+  eyebrow = "Filter by Organ System",
+  className = "",
+  variant = "circle",
 }: OrganSystemChipsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -73,48 +78,88 @@ export default function OrganSystemChipsCarousel({
     el.scrollBy({ left: delta, behavior: "smooth" });
   };
 
+  const isCleanTabs = variant === "clean-tabs";
+
   return (
     <motion.section
-      className={styles.carouselOuterSection}
-      initial={{ opacity: 0, y: 12 }}
+      className={`${styles.carouselOuterSection} ${isCleanTabs ? styles.cleanTabsOuter : ""} ${className}`}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
       aria-label="Filter by Organ System"
     >
-      <div className={styles.topBarRow}>
-        <span className={styles.eyebrowLabel}>{eyebrow}</span>
+      {!isCleanTabs && (
+        <div className={styles.topBarRow}>
+          <span className={styles.eyebrowLabel}>{eyebrow}</span>
 
-        <div className={styles.controlsRightGroup}>
-          <div className={styles.arrowGroup}>
-            <button
-              type="button"
-              className={styles.carouselArrowBtn}
-              onClick={() => handleScrollBy("left")}
-              disabled={!canScrollLeft}
-              aria-label="Scroll organ systems left"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              type="button"
-              className={styles.carouselArrowBtn}
-              onClick={() => handleScrollBy("right")}
-              disabled={!canScrollRight}
-              aria-label="Scroll organ systems right"
-            >
-              <ChevronRight size={18} />
-            </button>
+          <div className={styles.controlsRightGroup}>
+            <div className={styles.arrowGroup}>
+              <button
+                type="button"
+                className={styles.carouselArrowBtn}
+                onClick={() => handleScrollBy("left")}
+                disabled={!canScrollLeft}
+                aria-label="Scroll organ systems left"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                type="button"
+                className={styles.carouselArrowBtn}
+                onClick={() => handleScrollBy("right")}
+                disabled={!canScrollRight}
+                aria-label="Scroll organ systems right"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div className={styles.trackContainer}>
+      <div className={`${styles.trackContainer} ${isCleanTabs ? styles.cleanTabsTrackContainer : ""}`}>
         <div
           ref={trackRef}
-          className={styles.bubblesRow}
+          className={`${styles.bubblesRow} ${isCleanTabs ? styles.cleanTabsRow : ""}`}
         >
+          {isCleanTabs && (
+            <button
+              type="button"
+              className={`${styles.cleanTabBtn} ${selectedOrgan === null ? styles.cleanTabBtnActive : ""}`}
+              onClick={() => onSelectOrgan(null)}
+              aria-pressed={selectedOrgan === null}
+            >
+              <span className={styles.cleanAllBadge} aria-hidden="true">
+                <span className={styles.cleanAllDotGrid}>
+                  <span /><span /><span /><span />
+                </span>
+              </span>
+              <span className={styles.cleanTabLabel}>All Organs</span>
+            </button>
+          )}
           {options.map((opt) => {
             const isActive = selectedOrgan === opt.value;
+            if (isCleanTabs) {
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={`${styles.cleanTabBtn} ${isActive ? styles.cleanTabBtnActive : ""}`}
+                  onClick={() => onSelectOrgan(isActive ? null : opt.value)}
+                  aria-pressed={isActive}
+                  title={opt.label}
+                >
+                  <Image
+                    src={opt.image}
+                    alt={opt.label}
+                    width={28}
+                    height={28}
+                    className={styles.cleanTabIcon}
+                  />
+                  <span className={styles.cleanTabLabel}>{opt.shortLabel || opt.label}</span>
+                </button>
+              );
+            }
             return (
               <button
                 key={opt.value}
@@ -127,8 +172,8 @@ export default function OrganSystemChipsCarousel({
                   <Image
                     src={opt.image}
                     alt={opt.label}
-                    fill
-                    sizes="56px"
+                    width={34}
+                    height={34}
                     className={styles.bubbleImg}
                   />
                 </div>
@@ -137,6 +182,31 @@ export default function OrganSystemChipsCarousel({
             );
           })}
         </div>
+
+        {isCleanTabs && (canScrollLeft || canScrollRight) && (
+          <div className={styles.cleanTabsArrows}>
+            {canScrollLeft && (
+              <button
+                type="button"
+                className={styles.cleanTabScrollBtn}
+                onClick={() => handleScrollBy("left")}
+                aria-label="Scroll organ systems left"
+              >
+                <ChevronLeft size={16} />
+              </button>
+            )}
+            {canScrollRight && (
+              <button
+                type="button"
+                className={styles.cleanTabScrollBtn}
+                onClick={() => handleScrollBy("right")}
+                aria-label="Scroll organ systems right"
+              >
+                <ChevronRight size={16} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </motion.section>
   );
