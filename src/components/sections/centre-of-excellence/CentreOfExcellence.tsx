@@ -307,7 +307,7 @@ export default function CentreOfExcellence() {
           {/* Seamless Dark Grid Extension with View All Specialties CTA */}
           <div className={styles.gridBottomStrip}>
             <motion.a
-              href="/centre-of-excellence"
+              href="/specialities"
               ref={viewAllBtnRef}
               className={styles.viewAllBtn}
               style={{ opacity: dimOpacity, filter: dimBlur }}
