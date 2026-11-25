@@ -15,22 +15,24 @@
   position: relative;
   background: #031224;
   overflow: hidden;
-  /* 16px side inset matches CentreOfExcellence's --gx-pad — reset to 0
-     below 1024px, where the mobile swipe carousel's own full-bleed trick
-     (.mobileCarouselContainer) needs an unpadded ancestor to work. */
-  padding: 44px 16px 64px;
+  padding: 44px 0 64px;
   box-sizing: border-box;
   min-height: 900px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: -2px; /* Close any sub-pixel rendering gaps from the previous section */
+  width: 100%;
 }
 
 .headerContainer {
   position: relative;
   z-index: 10;
   margin-bottom: 48px;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .header {
@@ -82,7 +84,9 @@
 /* Outer Container for Track, Navigation Arrows, and CTA */
 .carouselOuter {
   position: relative;
-  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(-50vw + 50%);
   overflow: visible;
   display: flex;
   flex-direction: column;
@@ -132,8 +136,8 @@
   scroll-snap-type: x mandatory;
   gap: 16px;
   padding: 0 24px;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: 100%;
+  box-sizing: border-box;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   margin-bottom: 24px;

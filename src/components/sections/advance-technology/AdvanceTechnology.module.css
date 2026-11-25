@@ -392,6 +392,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 0 0 32px 0;
+  }
+}
+
 @media (max-width: 640px) {
   .cardShell {
     padding: var(--space-16);
@@ -450,6 +456,10 @@
 }
 
 @media (max-width: 480px) {
+  .wrapper {
+    padding: 0 0 24px 0;
+  }
+
   .rightCol {
     min-height: 440px;
     height: 440px;

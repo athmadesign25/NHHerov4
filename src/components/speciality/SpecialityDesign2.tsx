@@ -4,8 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { ChevronRight, ChevronLeft, ChevronDown, Check, Shield, Star, Clock, MapPin, ArrowUpRight } from "lucide-react";
-import { VirusIcon } from "@/components/ui/icons/VirusIcon";
+import { ChevronRight, ChevronLeft, ChevronDown, Check, Shield, Star, Clock, MapPin, ArrowUpRight, Stethoscope } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
@@ -2195,8 +2194,8 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                           alt={cat.programmeTitle || cat.title} 
                           className={styles.programmeTabImage}
                           loading="lazy"
-                          width={60}
-                          height={60}
+                          width={72}
+                          height={72}
                         />
                       </span>
                       <span className={styles.programmeTabTitle}>
@@ -2350,7 +2349,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     whileTap={{ scale: 0.98 }}
                   >
                     <div className={styles.subConditionIcon}>
-                      <VirusIcon size={14} stroke="#FEF5F5" />
+                      <Stethoscope size={14} color="#ffffff" stroke="#ffffff" aria-hidden="true" />
                     </div>
                     <div className={styles.subConditionContent}>
                       <motion.div className={styles.subConditionTitle} style={{ color: subTitleColor }}>
@@ -2553,7 +2552,6 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.4, delay: i * 0.05 }}
                     style={{
-                      height: "120px",
                       boxSizing: "border-box",
                       backgroundColor: "rgba(255, 255, 255, 0.953)",
                       borderColor: "rgba(60, 62, 71, 0.082)",
@@ -2564,7 +2562,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     }}
                   >
                     <div className={styles.subConditionIcon}>
-                      <VirusIcon size={14} color="#FEF5F5" />
+                      <Stethoscope size={14} color="#ffffff" stroke="#ffffff" aria-hidden="true" />
                     </div>
                     <div className={styles.subConditionContent}>
                       <div className={styles.subConditionTitle} style={{ color: "rgb(63, 63, 73)" }}>
@@ -2594,7 +2592,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               >
-                <AdvanceTestsCarousel tests={isCardiac ? cardiacTestsData : undefined} />
+                <AdvanceTestsCarousel tests={isCardiac ? cardiacTestsData : undefined} theme={isDarkSection ? "dark" : "light"} />
               </motion.div>
             </div>
           ) : section.id === "about-speciality" ? (
@@ -2769,7 +2767,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
       })}
 
       {/* Sleek Medically Reviewed Band above footer */}
-      <MedicallyReviewedBand specialityName={currentSpec?.name || "Cancer Care / Oncology"} />
+      <MedicallyReviewedBand specialityName={currentSpec?.name || "Cancer Care / Oncology"} theme="light" />
 
       {/* Footer sentinel for hiding pinned bar */}
       <div ref={footerSentinelRef} style={{ height: "0px", width: "100%", pointerEvents: "none", opacity: 0 }} />

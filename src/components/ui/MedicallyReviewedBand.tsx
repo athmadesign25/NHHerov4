@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { ShieldCheck, CheckCircle2 } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import styles from "./MedicallyReviewedBand.module.css";
 
 export interface DoctorReviewer {
@@ -16,6 +16,7 @@ export interface MedicallyReviewedBandProps {
   specialityName?: string;
   reviewer?: DoctorReviewer;
   className?: string;
+  theme?: "light" | "dark";
 }
 
 const DEFAULT_REVIEWER: DoctorReviewer = {
@@ -31,9 +32,12 @@ export default function MedicallyReviewedBand({
   specialityName = "Cancer Care",
   reviewer = DEFAULT_REVIEWER,
   className,
+  theme = "light",
 }: MedicallyReviewedBandProps) {
+  const isLight = theme === "light";
+
   return (
-    <div className={`${styles.bandWrapper} ${className || ""}`} aria-label="Medical Review">
+    <div className={`${styles.bandWrapper} ${isLight ? styles.bandWrapperLight : ""} ${className || ""}`} aria-label="Medical Review">
       <div className={styles.bandContainer}>
         <div className={styles.sleekBar}>
           {/* Trust Badge & Context */}
@@ -43,9 +47,7 @@ export default function MedicallyReviewedBand({
             </div>
             <div className={styles.trustTextGroup}>
               <div className={styles.statusRow}>
-                <span className={styles.pulseDot} aria-hidden />
                 <span className={styles.reviewLabel}>Medically Reviewed</span>
-                <span className={styles.contextBadge}>{specialityName}</span>
               </div>
               <span className={styles.reviewDate}>
                 Verified • {reviewer.reviewDate || "October 2024"}
@@ -57,19 +59,15 @@ export default function MedicallyReviewedBand({
 
           {/* Reviewer Doctor Info */}
           <div className={styles.doctorSide}>
-            <div className={styles.avatarFrame}>
+            <span className={styles.portrait}>
               <Image
                 src={reviewer.image}
                 alt={reviewer.name}
-                width={42}
-                height={42}
-                className={styles.avatarImg}
+                fill
+                sizes="48px"
                 loading="lazy"
               />
-              <span className={styles.verifiedCheckBadge} title="Verified Clinical Specialist">
-                <CheckCircle2 size={11} strokeWidth={3} />
-              </span>
-            </div>
+            </span>
 
             <div className={styles.doctorDetails}>
               <div className={styles.nameRow}>

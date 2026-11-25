@@ -888,7 +888,7 @@
 
 .programmeTabsScroll {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   overflow-x: auto;
   padding: 4px 12px 6px;
@@ -900,17 +900,19 @@
 
 .programmeTabsRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   width: max-content;
 }
 
 .programmeTabsWrapperPinned .programmeTabsScroll {
+  align-items: center;
   gap: 12px;
   padding: 2px 12px 3px;
 }
 
 .programmeTabsWrapperPinned .programmeTabsRow {
+  align-items: center;
   gap: 12px;
 }
 
@@ -923,16 +925,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
   background: transparent;
   border: 1px solid transparent;
   padding: 4px 6px;
-  width: 110px;
+  min-width: 114px;
+  max-width: 144px;
+  width: auto;
   flex-shrink: 0;
   text-align: center;
   outline: none;
-  border-radius: 9999px;
+  border-radius: var(--radius-md, 12px);
   transform: translate3d(0, 0, 0);
   opacity: 0.55;
   transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
@@ -981,15 +985,15 @@
 }
 
 .programmeTabImageWrap {
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
   contain: layout;
   position: relative;
   border: 2px solid transparent;
-  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.25);
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.28);
   background: rgba(var(--white-rgb), 0.08);
   transform: translate3d(0, 0, 0);
   transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
@@ -1051,12 +1055,14 @@
   line-height: 1.35;
   color: rgba(var(--white-rgb), 0.75);
   text-align: center;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 108px;
+  display: block;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  width: 100%;
+  max-width: 136px;
   transition: font-size 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               color 0.25s ease,
@@ -1085,16 +1091,22 @@
 
 @media (max-width: 768px) {
   .programmeTab {
-    width: 86px;
-    gap: 6px;
+    min-width: 90px;
+    max-width: 120px;
+    width: auto;
+    padding: 3px 4px;
+    gap: 7px;
   }
   .programmeTabImageWrap {
-    width: 50px;
-    height: 50px;
+    width: 58px;
+    height: 58px;
   }
   .programmeTabTitle {
-    font-size: var(--font-size-2xs);
-    max-width: 86px;
+    font-size: 11px;
+    max-width: 116px;
+    display: block;
+    overflow: visible;
+    text-overflow: clip;
   }
 }
 
@@ -1546,7 +1558,10 @@
 
 @media (max-width: 1024px) {
   .statsGrid { grid-template-columns: repeat(2, 1fr); }
-  .subConditionsGrid { grid-template-columns: repeat(2, 1fr); }
+  .subConditionsGrid { 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 }
 
 .heroBreadcrumbs {
@@ -1578,8 +1593,42 @@
   .accordionItem { height: 80px; }
   .accordionItem.active { height: 400px; }
   .accordionItem:not(.active) .accordionTitle { writing-mode: horizontal-tb; transform: none; }
-  .subConditionsGrid { grid-template-columns: 1fr; }
+  .subConditionsGrid { 
+    grid-template-columns: 1fr;
+    gap: var(--space-14, 14px);
+  }
+  .subConditionCard {
+    height: auto !important;
+    min-height: 88px;
+    padding: 22px 18px !important;
+    gap: 14px;
+  }
+  .subConditionTitle {
+    font-size: var(--font-size-base);
+    line-height: var(--leading-snug);
+  }
+  .subConditionDesc {
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+  }
+  .sectionHeader {
+    margin: 0 auto var(--space-20, 20px);
+  }
   .doctorsSection { padding: 80px 0; }
+}
+
+@media (max-width: 480px) {
+  .sectionHeader {
+    margin: 0 auto var(--space-16, 16px);
+  }
+  .subConditionsGrid {
+    gap: var(--space-12, 12px);
+  }
+  .subConditionCard {
+    padding: 20px 16px !important;
+    gap: 12px;
+    min-height: 82px;
+  }
 }
 
 /* Reference Doctor Cards from Search Experience */
