@@ -1394,7 +1394,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
     };
   }, [isCoE]);
 
-  const isFabVisible = isPastHeroAndSecondSection && !isNearFooter;
+  const isFabVisible = isPastHeroAndSecondSection;
 
   useEffect(() => {
     if (typeof window === "undefined") return;

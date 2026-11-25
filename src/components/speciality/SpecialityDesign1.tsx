@@ -1268,7 +1268,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
     };
   }, [isCoE]);
 
-  const isFabVisible = isPastHeroAndSecondSection && !isNearFooter;
+  const isFabVisible = isPastHeroAndSecondSection;
 
   const [proceduresNode, setProceduresNode] = useState<HTMLDivElement | null>(null);
   const proceduresTrackRef = useRef<HTMLDivElement | null>(null);
