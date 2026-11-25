@@ -1,25 +1,103 @@
-.menu { grid-template-areas: "banner directory"; }
-.badgeStage { display: grid; }
-.badgeContent { grid-area: 1 / 1; position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
-.accreditation { display: flex; align-items: center; gap: var(--space-8); min-width: 0; padding: var(--space-8); border: var(--space-1) solid rgba(var(--white-rgb), 0.25); border-radius: var(--radius-md); background: rgba(var(--navy-900-rgb), 0.4); backdrop-filter: blur(var(--blur-md)); -webkit-backdrop-filter: blur(var(--blur-md)); box-shadow: var(--elevation-2), var(--shadow-inset-highlight); }
-.badgeIcon { display: grid; place-items: center; width: var(--space-32); height: var(--space-32); padding: var(--space-4); flex-shrink: 0; border-radius: var(--radius-sm); background: var(--white); }
-.badgeIcon img { width: var(--space-24); height: var(--space-24); object-fit: contain; }
-.badgeLabel { min-width: 0; text-align: left; color: var(--white); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 600; }
-.badgeLabel > span { display: block; }
-.directory { grid-area: directory; column-count: 4; column-gap: var(--space-16); column-fill: auto; height: 100%; min-height: 0; }
-.cityGroup { break-inside: avoid; min-width: 0; margin-bottom: var(--space-16); padding-inline: var(--space-2); }
-.cityGroup h2 { margin: 0; font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 600; }
-.cityGroup:has(ul) h2 { margin-bottom: var(--space-2); }
-.cityGroup ul { list-style: none; margin: 0; padding: 0; }
-.textButton { text-decoration: none; transition: color var(--duration-base) var(--ease-out); }
-.textButton:hover, .textButton:focus-visible { color: var(--color-primary); text-decoration: none; }
-.cityButton { display: inline-block; padding-block: var(--space-2); color: var(--color-text); }
-.hospitalButton { display: block; padding-block: var(--space-2); font-size: var(--font-size-sm); line-height: var(--leading-normal); color: var(--color-text-secondary); overflow-wrap: break-word; }
-.menu a:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); border-radius: var(--radius-sm); }
-@media (max-width: 1280px) {
-  .directory { column-gap: var(--space-12); }
-  .badgeLabel { font-size: var(--font-size-xs); }
-  .hospitalButton { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Directory fills the panel, the accreditation band closes it off at the base. */
+.menu { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; min-height: 0; background: var(--color-surface); }
+.directory { display: grid; grid-template-columns: 1.35fr repeat(4, minmax(0, 1fr)); gap: var(--space-20); align-content: start; min-height: 0; padding: var(--space-24) var(--space-32) var(--space-12) var(--space-24); overflow-y: auto; overscroll-behavior: contain; }
+.column { min-width: 0; }
+.cityGroup { min-width: 0; margin-bottom: var(--space-20); }
+.cityGroup:last-child { margin-bottom: 0; }
+.cityHeading { margin: 0 0 var(--space-8); color: var(--color-text); font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 600; }
+.typeGroups { display: grid; gap: var(--space-12); }
+.typeGroups > section { min-width: 0; }
+.typeHeading { display: table; width: fit-content; margin: 0 0 var(--space-4); padding: var(--space-1) var(--space-6); border: var(--space-1) solid rgba(var(--slate-900-rgb), 0.08); border-radius: var(--radius-sm); background: var(--grey-100); color: var(--grey-500); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 500; }
+.facilityList { margin: 0; padding: 0; list-style: none; }
+/* Facility names stay on one line; the title attribute covers the rare clip. */
+.facilityLink { display: block; padding-block: var(--space-1); border-radius: var(--radius-sm); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 400; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color var(--duration-fast) var(--ease-out); }
+.facilityLink:hover, .facilityLink:focus-visible { color: var(--color-primary); }
+.facilityLink:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+.suffix { color: var(--color-text-secondary); }
+
+/* Closing band, matching the Services contact band, with a soft vertical
+   gradient so the panel settles instead of ending on a flat grey. */
+.band { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-24); padding: var(--space-16) var(--space-24); background: linear-gradient(to bottom, rgba(var(--slate-900-rgb), 0.05), rgba(var(--slate-900-rgb), 0.03) var(--space-10)), var(--color-surface); }
+.badges { display: flex; align-items: stretch; gap: var(--space-12); margin: 0; padding: 0; list-style: none; }
+.accreditation { display: flex; align-items: center; gap: var(--space-8); min-width: 0; padding: var(--space-6) var(--space-12); border: var(--space-1) solid rgba(var(--white-rgb), 0.8); border-radius: var(--radius-md); background: rgba(var(--white-rgb), 0.6); backdrop-filter: blur(var(--blur-md)); -webkit-backdrop-filter: blur(var(--blur-md)); box-shadow: var(--elevation-1), var(--shadow-inset-highlight); }
+.badgeIcon { display: grid; place-items: center; width: var(--space-32); height: var(--space-32); flex-shrink: 0; }
+.badgeIcon img { width: 100%; height: 100%; object-fit: contain; }
+.badgeLabel { display: grid; min-width: 0; color: var(--color-text); font-size: var(--font-size-2xs); line-height: var(--leading-snug); font-weight: 600; white-space: nowrap; }
+
+.mobileCity h3 { margin: 0; }
+.mobileContent { padding: 0 0 var(--space-16); }
+.mobile .typeHeading { background: var(--grey-100); color: var(--grey-500); }
+.mobile .facilityLink { min-height: var(--space-48); padding-block: var(--space-12); color: var(--slate-200); white-space: normal; overflow: visible; }
+.mobile .facilityLink:hover, .mobile .facilityLink:focus-visible { color: var(--sky-400); }
+.mobile .facilityLink:focus-visible { outline-color: var(--sky-400); }
+.mobile .suffix { color: var(--slate-300); }
+
+@media (min-width: 1100px) and (max-width: 1399px) {
+  .directory { gap: var(--space-16); padding: var(--space-20) var(--space-24) var(--space-12) var(--space-20); }
+  .cityGroup { margin-bottom: var(--space-16); }
+  .band { gap: var(--space-16); padding-inline: var(--space-20); }
+  .badges { gap: var(--space-8); }
+  .accreditation { padding-inline: var(--space-8); }
+}
+@media (max-width: 1099px) { .directory { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .facilityLink { transition: none; } }
+
+/* Local route variations keep the original panel, row type and bottom band. */
+.variantLink { display: flex; align-items: center; gap: var(--space-6); white-space: normal; overflow: visible; }
+.locality { min-width: 0; }
+.clinicTag { flex-shrink: 0; padding: 0 var(--space-4); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-sm); background: var(--grey-100); color: var(--grey-500); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 500; }
+.typeDirectory { display: grid; grid-template-columns: 3fr 2fr; gap: var(--space-32); align-content: start; min-height: 0; padding: var(--space-24) var(--space-32) var(--space-12) var(--space-24); overflow-y: auto; overscroll-behavior: contain; }
+.typeSection { min-width: 0; }
+.typeSection .cityGroup { margin-bottom: var(--space-12); }
+.typeSection .cityGroup:last-child { margin-bottom: 0; }
+.sectionEyebrow { margin: 0 0 var(--space-16); color: color-mix(in srgb, var(--red-600) 75%, var(--color-text-secondary)); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 600; text-transform: uppercase; }
+.hospitalColumns { display: grid; grid-template-columns: 1.35fr repeat(2, minmax(0, 1fr)); gap: var(--space-20); }
+.clinicColumns { display: grid; grid-template-columns: 1.15fr minmax(0, 1fr); gap: var(--space-20); }
+.mobile .typeDirectory { display: block; padding: 0; overflow: visible; }
+.mobile .typeSection + .typeSection { margin-top: var(--space-24); }
+.mobile .sectionEyebrow { color: var(--red-400); }
+.mobile .locality { overflow: visible; }
+@media (min-width: 1100px) and (max-width: 1399px) {
+  .typeDirectory { gap: var(--space-24); padding: var(--space-20) var(--space-24) var(--space-12) var(--space-20); }
+  .hospitalColumns, .clinicColumns { gap: var(--space-16); }
+}
+@media (max-width: 1099px) {
+  .typeDirectory, .hospitalColumns, .clinicColumns { grid-template-columns: minmax(0, 1fr); }
 }
 
-@media (prefers-reduced-motion: reduce) { .textButton { transition: none; } }
+/* V3 restores the hospital portrait and rotating glass accreditation pairs. */
+.withImage { grid-template-columns: max-content minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: var(--space-24); padding: var(--space-24); }
+.withImage .typeDirectory { grid-template-columns: 3fr 1.35fr; gap: var(--space-20); padding: 0; }
+.withImage .hospitalColumns { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-16); }
+.withImage .clinicColumns { grid-template-columns: minmax(0, 1fr); }
+.imageCard { width: clamp(calc(var(--space-128) * 2), 22vw, calc(var(--space-128) * 2 + var(--space-64))); }
+.badgeStage { display: grid; }
+.imageBadges { grid-area: 1 / 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: var(--space-8); }
+.imageCard .accreditation { padding: var(--space-6); gap: var(--space-6); border-color: rgba(var(--white-rgb), 0.25); background: rgba(var(--navy-900-rgb), 0.4); box-shadow: var(--elevation-2), var(--shadow-inset-highlight); }
+.imageCard .badgeIcon { padding: var(--space-4); border-radius: var(--radius-sm); background: var(--white); }
+.imageCard .badgeLabel { color: var(--white); font-size: var(--font-size-xs); line-height: var(--leading-snug); white-space: normal; }
+@media (min-width: 1100px) and (max-width: 1399px) {
+  .withImage { gap: var(--space-20); padding: var(--space-20); }
+  .withImage .typeDirectory, .withImage .hospitalColumns { gap: var(--space-12); }
+}
+@media (max-width: 1099px) {
+  .withImage { grid-template-columns: minmax(0, 1fr); }
+  .withImage .typeDirectory, .withImage .hospitalColumns { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The default city-column design keeps the original glass pill proportions. */
+.inlineDirectoryMenu { gap: var(--space-32); }
+.inlineDirectoryMenu .imageCard { width: clamp(calc(var(--space-128) * 2 + var(--space-96) + var(--space-8)), 24vw, calc(var(--space-128) * 3)); }
+.inlineDirectoryMenu .badgeLabel > span { white-space: nowrap; }
+.inlineDirectoryMenu .directory { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-16); padding: 0; }
+.inlineDirectoryMenu .cityHeading { margin-bottom: var(--space-4); }
+.inlineDirectoryMenu .cityGroup { margin-bottom: var(--space-24); }
+.inlineDirectoryMenu .cityGroup:last-child { margin-bottom: 0; }
+.inlineDirectoryMenu .facilityList { display: grid; gap: var(--space-2); }
+.inlineDirectoryMenu .facilityLink { display: flex; align-items: baseline; gap: var(--space-4); padding-block: var(--space-2); }
+.inlineDirectoryMenu .locality { overflow-wrap: anywhere; }
+.inlineDirectoryMenu .clinicTag { padding-inline: var(--space-2); white-space: nowrap; }
+
+@media (max-width: 1099px) {
+  .inlineDirectoryMenu .directory { grid-template-columns: minmax(0, 1fr); }
+}

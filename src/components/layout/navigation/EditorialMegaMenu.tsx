@@ -28,14 +28,12 @@ function MenuGroup({ group, id, mobile, initiallyOpen, onNavigate }: {
   const links = <ul id={mobile ? undefined : linksId} className={`${styles.links} ${tiles ? styles.ecosystemLinks : ""}`}>
     {group.links.map(({ icon: Icon, ...item }) => (
       <li key={item.href}>
-        <Link href={item.href} onClick={onNavigate} className={`${styles.link} ${mobile ? mobilePatterns.link : ""} ${tiles ? styles.ecosystemTile : ""}`}>
+        <Link href={item.href} onClick={onNavigate} aria-label={item.label} className={`${styles.link} ${mobile ? mobilePatterns.link : ""} ${tiles ? styles.ecosystemTile : ""} ${tiles && item.label === "Athma" ? styles.athmaTile : ""}`}>
           {tiles ? (
-            item.visual?.kind === "logo" ? <span className={`${styles.ecosystemVisual} ${item.label === "Athma" ? styles.ecosystemAthma : styles.ecosystemMedha}`}>
-              <Image src={item.visual.src} alt={item.label} fill sizes="160px" className={styles.ecosystemLogo} />
-            </span> : <span className={styles.ecosystemAcademicMark}>
-              <span>Academics &amp;<br />Research</span>
-            </span>
-          ) : <span className={styles.itemCopy}>{item.label !== "Academics & Research" && <Icon className={styles.itemIcon} aria-hidden="true" />}<span className={styles.label}>{mobile ? mobileMenuLabel(item.label) : item.label}</span></span>}
+            item.visual?.kind === "logo" ? <span className={styles.ecosystemVisual}>
+              <Image src={item.visual.src} alt="" aria-hidden="true" fill sizes="160px" className={styles.ecosystemLogo} />
+            </span> : <span className={styles.ecosystemAcademicMark}><span>Academics &amp;<br />Research</span></span>
+          ) : <span className={styles.itemCopy}>{item.label !== "Academics & Research" && <span className={styles.iconBox} aria-hidden="true"><Icon className={styles.itemIcon} /></span>}<span className={styles.label}>{mobile ? mobileMenuLabel(item.label) : item.label}</span></span>}
         </Link>
       </li>
     ))}

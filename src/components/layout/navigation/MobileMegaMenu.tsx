@@ -12,6 +12,7 @@ import { HOSPITAL_LOCALITIES as HOSPITAL_CITIES } from "./hospital-data";
 import { DOCTOR_CONDITIONS } from "./doctor-conditions";
 import { DOCTOR_SPECIALTIES } from "./doctor-specialties";
 import ServicesMegaMenu from "./ServicesMegaMenu";
+import HospitalMegaMenu from "./HospitalMegaMenu";
 import { doctorNavUrl } from "@/features/search/navigationEntries";
 import { mobileMenuLabel } from "./mobile-menu-label";
 import patterns from "./MobileMenuPatterns.module.css";
@@ -20,12 +21,12 @@ import BookingMemberMenu from "../BookingMemberMenu";
 
 type Page = "main" | "find-a-doctor" | "hospitals" | "specialities" | "health-library" | "about-us" | "specialty" | "city" | "condition" | "sunday" | "today";
 const titles: Record<Page, string> = {
-  main: "How can we help?", "find-a-doctor": "Find a doctor", hospitals: "Find hospital", specialities: "Services",
+  main: "How can we help?", "find-a-doctor": "Find a doctor", hospitals: "Hospitals & clinics", specialities: "Services",
   "health-library": "Health library", "about-us": "About us",
   specialty: "Find a doctor by specialty", city: "Find a doctor by location", condition: "Find a doctor by disease / condition",
   sunday: "Find a doctor available on Sunday", today: "Find a doctor available today",
 };
-const descriptions = ["By specialty, city or condition", "Explore our hospitals by city", "Specialist care, tests and more", "Articles, stories and videos", "Our people and our purpose"];
+const descriptions = ["By specialty, city or condition", "Explore hospitals and clinics by city", "Specialist care, tests and more", "Articles, stories and videos", "Our people and our purpose"];
 const doctorChoices: { page: Page; label: string }[] = [
   { page: "specialty", label: "By specialty" }, { page: "city", label: "By location" },
   { page: "condition", label: "By disease / condition" }, { page: "sunday", label: "Doctors available on Sunday" },
@@ -71,7 +72,7 @@ export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, onLogout 
   useEffect(() => { title.current?.focus({ preventScroll: true }); panel.current?.scrollTo(0, 0); }, [page]);
 
   const availability = page === "sunday" || page === "today";
-  const directory = page === "hospitals" || availability;
+  const directory = availability;
   const searchable = page === "specialty" || page === "city" || page === "condition" || directory;
   const labels = page === "specialty" ? DOCTOR_SPECIALTIES.flat().sort() : page === "condition" ? DOCTOR_CONDITIONS : HOSPITAL_CITIES.map(c => c.city);
   const matches = (text: string) => text.toLowerCase().includes(query.trim().toLowerCase());
@@ -128,6 +129,7 @@ export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, onLogout 
             {!cities.length && <p className={styles.empty}>No matches. Try another city or locality.</p>}
             <Link className={styles.viewAll} href={availability ? availabilityHref() : "https://www.narayanahealth.org/hospitals-clinics"} onClick={onClose}>{availability ? (page === "sunday" ? "View all doctors available on Sunday" : "View all doctors available today") : "View all hospitals & clinics"}</Link>
           </>}
+          {page === "hospitals" && <HospitalMegaMenu onNavigate={onClose} mobile />}
           {page === "specialities" && <ServicesMegaMenu onNavigate={onClose} mobile />}
           {(page === "health-library" || page === "about-us") && <EditorialMegaMenu kind={page} onNavigate={onClose} mobile />}
         </motion.div>
