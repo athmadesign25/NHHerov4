@@ -1588,7 +1588,6 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
 
   return (
     <div className={styles.pageContainer} style={{ backgroundColor: isCoE ? "#031224" : undefined }}>
-      <FloatingTOC items={tocItems} />
 
       {/* Pinned breadcrumb & dropdown bar (when isTabsPinned is true) */}
       <AnimatePresence>
@@ -1830,6 +1829,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 )}
               </div>
             </div>
+            <FloatingTOC items={tocItems} theme={navTheme} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -2710,7 +2710,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
               </motion.div>
             </>
           ) : section.id === "doctor-overview" ? (
-            <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
+            <div style={{ width: "100%", maxWidth: "100%", overflowX: "clip", overflowY: "visible" }}>
               <motion.div
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}

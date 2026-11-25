@@ -4,18 +4,123 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  padding-left: calc(max(4vw, 40px) + 184px);
-  padding-right: calc(max(4vw, 40px) + 184px);
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: visible;
+  overflow-x: clip;
 }
 
-@media (max-width: 1100px) {
-  .carouselContainer {
-    padding-left: clamp(16px, 4vw, 48px);
-    padding-right: clamp(16px, 4vw, 48px);
+/* Desktop Stage: natural fluid height determined by active card, revealing peeking side cards without vertical cropping */
+.desktopStage {
+  --side-peek-space: calc(max(4vw, 40px) + 184px);
+  --card-w: calc(100% - (var(--side-peek-space) * 2));
+  --card-gap: 28px;
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  overflow-x: clip;
+  overflow-y: visible;
+  box-sizing: border-box;
+  padding: 16px 0 52px;
+  margin-bottom: -20px;
+}
+
+@media (max-width: 1100px) and (min-width: 769px) {
+  .desktopStage {
+    --side-peek-space: clamp(40px, 8vw, 80px);
+    --card-gap: 20px;
   }
+}
+
+.desktopCardFrame {
+  position: relative;
+  width: var(--card-w);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.centerMotionCard {
+  width: 100%;
+  position: relative;
+}
+
+.sideCardSlot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.leftCardSlot {
+  right: calc(100% + var(--card-gap));
+}
+
+.rightCardSlot {
+  left: calc(100% + var(--card-gap));
+}
+
+/* Edge fades disabled to avoid shadow clipping and color overlay */
+.edgeFadeLeft,
+.edgeFadeRight {
+  display: none !important;
+}
+
+/* Navigation arrows matching AdvanceTestsCarousel */
+.arrowBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(3, 18, 36, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  flex-shrink: 0;
+}
+
+.arrowBtnLeft {
+  left: 28px;
+}
+
+.arrowBtnRight {
+  right: 28px;
+}
+
+.arrowBtn:hover {
+  background: rgba(3, 18, 36, 0.72);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+/* Light Mode Variant (matching AdvanceTestsCarousel) */
+.arrowBtnLight {
+  background: rgba(var(--white-rgb), 0.92) !important;
+  border-color: rgba(var(--black-rgb), 0.12) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.12) !important;
+}
+
+.arrowBtnLight:hover {
+  background: var(--white) !important;
+  border-color: rgba(var(--black-rgb), 0.28) !important;
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.18) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  transform: translateY(-50%) scale(1.08) !important;
 }
 
 /* Card Shell containing the landscape video and doctor info */
@@ -27,12 +132,77 @@
   box-shadow: var(--elevation-3, 0 16px 40px rgba(0, 0, 0, 0.07));
   overflow: hidden;
   box-sizing: border-box;
-  transition: box-shadow var(--duration-base, 250ms) ease, border-color var(--duration-base, 250ms) ease;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--duration-base, 250ms) var(--ease-spring),
+              opacity var(--duration-base, 250ms) ease,
+              box-shadow var(--duration-base, 250ms) ease,
+              border-color var(--duration-base, 250ms) ease;
 }
 
-.videoCard:hover {
-  box-shadow: var(--elevation-4, 0 24px 48px rgba(0, 0, 0, 0.1));
-  border-color: rgba(var(--blue-brand-rgb, 3, 78, 161), 0.2);
+.videoCardActive {
+  transform: scale(1);
+  opacity: 1;
+  z-index: 10;
+  box-shadow: 0 20px 48px -8px rgba(var(--navy-900-rgb), 0.16), 0 4px 12px rgba(var(--black-rgb), 0.06);
+}
+
+.videoCardActive:hover {
+  box-shadow: 0 24px 54px -8px rgba(var(--navy-900-rgb), 0.2), 0 6px 16px rgba(var(--black-rgb), 0.08);
+}
+
+.videoCardSide {
+  height: 100%;
+  transform: scale(0.94);
+  opacity: 0.62;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.videoCardSide:hover {
+  opacity: 0.9;
+  transform: scale(0.96);
+  box-shadow: 0 18px 40px -6px rgba(var(--navy-900-rgb), 0.14);
+  border-color: rgba(var(--blue-brand-rgb, 3, 78, 161), 0.35);
+}
+
+.sideCardScrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--navy-900-rgb, 3, 18, 36), 0.2);
+  transition: background var(--duration-base) ease;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.videoCardSide:hover .sideCardScrim {
+  background: rgba(var(--navy-900-rgb, 3, 18, 36), 0.06);
+}
+
+.playButtonSide {
+  opacity: 0.75;
+  pointer-events: none;
+  transform: scale(0.9);
+}
+
+.videoCardSide:hover .playButtonSide {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Mobile & Desktop display toggle helpers */
+.desktopOnly {
+  display: block;
+}
+
+.mobileOnly {
+  display: none !important;
+}
+
+.mobileContainer {
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 /* ─── 16:9 Landscape Video Frame ─── */
@@ -45,6 +215,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 /* Thumbnail Background with Hover Zoom */
@@ -342,51 +513,86 @@
   box-shadow: 0 4px 14px rgba(237, 28, 36, 0.4);
 }
 
-/* ─── Navigation Controls (Matching ModernCarousel) ─── */
-.navigationWrapper {
-  display: flex;
-  justify-content: space-between;
+/* ─── Carousel Dots Navigator (Matching AdvanceTestsCarousel) ─── */
+.desktopNavigator {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: var(--space-20, 20px) !important;
+  margin-bottom: var(--space-24, 24px) !important;
+  width: 100% !important;
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .desktopNavigator {
+    display: none !important;
+  }
+}
+
+.mobileNavigator {
+  display: none;
+  justify-content: center;
   align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  margin-bottom: 24px;
   width: 100%;
-  margin-top: var(--space-20, 20px);
-  padding: 0 var(--space-4, 4px);
-  box-sizing: border-box;
 }
 
-.indicatorContainer {
-  display: flex;
-  align-items: center;
-  gap: var(--space-16, 16px);
+@media (max-width: 768px) {
+  .mobileNavigator {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 16px !important;
+    margin-bottom: 24px !important;
+    width: 100% !important;
+  }
 }
 
-.indicatorText {
-  color: var(--color-text, #1A1A2E);
-  font-size: var(--font-size-sm, 14px);
-  font-weight: 500;
-  opacity: 0.7;
-  font-variant-numeric: tabular-nums;
-}
-
-.indicatorBars {
-  display: flex;
-  gap: var(--space-4, 4px);
-  align-items: center;
-}
-
-.indicatorBar {
-  width: 24px;
-  height: 2px;
-  background-color: var(--color-border, #E2E8F0);
+.navDot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: none !important;
+  padding: 0 !important;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
+  flex-shrink: 0 !important;
   cursor: pointer;
-  transition: all var(--duration-emphasis, 350ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
-.indicatorBar:hover {
-  background-color: var(--slate-400, #94A3B8);
+.navDotActive,
+.navDot.navDotActive {
+  width: 18px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
 }
 
-.indicatorBarActive {
-  background-color: var(--color-primary, #034EA1);
+.navDotLight {
+  background: #d2d2d2 !important;
+}
+
+.navDotLight:hover:not(.navDotActiveLight) {
+  background: #b0b0b0 !important;
+}
+
+.navDot:hover:not(.navDotActive):not(.navDotLight) {
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+
+.navDotActiveLight,
+.navDot.navDotActiveLight,
+.navDotLight.navDotActiveLight {
+  width: 18px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+  background: var(--color-primary, #034EA2) !important;
 }
 
 /* ─── Active & Next Video Readability Indication (Pure Text, No Labels) ─── */
@@ -463,9 +669,7 @@
 }
 
 .navButtons {
-  display: flex;
-  gap: var(--space-12, 12px);
-  align-items: center;
+  display: none !important;
 }
 
 .navBtn {
@@ -496,6 +700,15 @@
 
 /* ─── Responsive Adjustments ─── */
 @media (max-width: 768px) {
+  .desktopOnly,
+  .desktopStage {
+    display: none !important;
+  }
+
+  .mobileOnly {
+    display: block !important;
+  }
+
   .videoWrapper {
     aspect-ratio: 16 / 9;
     min-height: unset;
@@ -582,51 +795,8 @@
     font-size: var(--font-size-xs);
   }
 
-  .navigationWrapper {
-    margin-top: var(--space-16, 16px);
-    flex-wrap: wrap;
-    gap: var(--space-12, 12px);
-    align-items: center;
-    justify-content: center;
-  }
-
   .navButtons {
     display: none !important;
-  }
-
-  .indicatorText {
-    display: none !important;
-  }
-
-  .indicatorContainer {
-    width: 100% !important;
-    justify-content: center !important;
-  }
-
-  .indicatorBars {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-
-  .indicatorBar {
-    width: 6px !important;
-    height: 6px !important;
-    border-radius: 6px !important;
-    background-color: rgba(var(--black-rgb), 0.2) !important;
-    cursor: pointer;
-    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease !important;
-    flex-shrink: 0 !important;
-    border: none !important;
-    padding: 0 !important;
-  }
-
-  .indicatorBarActive {
-    width: 18px !important;
-    height: 6px !important;
-    border-radius: 6px !important;
-    background-color: var(--color-primary, #034EA1) !important;
   }
 
   .readingAidContainer {
