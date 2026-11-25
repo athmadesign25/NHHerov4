@@ -2,7 +2,7 @@
   width: 100%;
   position: relative;
   z-index: 10;
-  padding: var(--space-20, 20px) 0;
+  padding: var(--space-24, 24px) 0 var(--space-20, 20px) 0;
   background: var(--navy-900);
   box-sizing: border-box;
   overflow: hidden;
@@ -12,9 +12,9 @@
 
 @media (min-width: 769px) {
   .bandWrapper {
-    padding-top: var(--space-8, 8px);
+    padding-top: var(--space-24, 24px);
     padding-bottom: var(--space-64, 64px);
-    margin-top: calc(-1 * var(--space-32, 32px));
+    margin-top: 0;
   }
 }
 
