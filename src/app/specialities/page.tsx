@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import ListingHeroSection from "@/components/ui/ListingHeroSection";
 import { ALL_SPECIALITIES, SPECIALITY_CATEGORIES, type SpecialityMeta } from "@/data/specialities";
 import { NH_CITIES } from "@/lib/searchService";
 import { SpecialityFilterDialog } from "./filters";
@@ -286,157 +287,118 @@ function SpecialitiesContent() {
       data-design="d20"
       data-nav-theme="light"
     >
-      {/* ── 1. HERO SECTION (TREATMENTS LIBRARY STYLE WITH DOCTOR_PATIENT BG) ── */}
-      <section className={heroStyles.hero} data-nav-theme="dark">
-        <div className={heroStyles.heroBg}>
-          <motion.div
-            className={heroStyles.heroBgMotion}
-            initial={{ opacity: 0, scale: 1.02 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Image
-              src="/doctor_patient.png"
-              alt="Doctor examining patient with stethoscope"
-              fill
-              priority
-              sizes="100vw"
-              className={heroStyles.heroBgImage}
-            />
-            {/* Left Glass Blur & Targeted Text Highlight Scrim */}
-            <div className={heroStyles.heroGlassOverlay} />
-            <div className={heroStyles.heroLeftScrim} />
-            <div className={heroStyles.heroBgOverlay} />
-          </motion.div>
-        </div>
-
-        <div className={heroStyles.heroInner}>
-          {/* Left Column: Breadcrumb, Title, Subtitle, Pulse Search & Full-Width A-Z Filter */}
-          <div className={heroStyles.heroLeftCol} style={{ width: "100%", maxWidth: "100%" }}>
-            <motion.div
-              className={heroStyles.breadcrumbsContainer}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.08 }}
-            >
-              <Breadcrumbs
-                items={[
-                  { label: "Home", href: "/" },
-                  { label: "Medical Specialities" },
-                ]}
-                theme="dark"
-              />
-            </motion.div>
-
-            <motion.h1
-              id="specialities-title"
-              tabIndex={-1}
-              className={heroStyles.heroTitle}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <TextSweepEffect
-                words={["Our Medical Specialities"]}
-                sweepMs={2400}
-                delayMs={80}
-                finalColor="#FFFFFF"
-              />
-            </motion.h1>
-
-            <motion.p
-              className={heroStyles.heroSubtitle}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            >
-              From complex cardiac surgeries to advanced oncology and robotic orthopaedics &mdash; Narayana Health covers every dimension of your health across 25+ hospitals and specialized clinics nationwide.
-            </motion.p>
-
-            {/* Pulse Search Input */}
-            <motion.div
-              className={heroStyles.heroSearchContainer}
-              initial={{ opacity: 0, y: 14, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className={heroStyles.heroSearchRow}>
-                <div className={heroStyles.searchBoxWrap}>
-                  <div className={heroStyles.searchBox}>
-                    <Search size={16} strokeWidth={2.0} className={heroStyles.searchIcon} />
-                    <input
-                      type="text"
-                      placeholder="Search medical specialities, treatments, or conditions..."
-                      className={heroStyles.searchInput}
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      aria-label="Search medical specialities"
-                    />
-                    {search && (
-                      <button
-                        className={heroStyles.clearSearchBtn}
-                        onClick={() => setSearch("")}
-                        aria-label="Clear search input"
-                      >
-                        <X size={14} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* A to Z Alphabet Filter Row (Only in Specialities) - Full Width across left & right margins */}
-            <motion.div
-              className={styles.heroAlphabetWrap}
-              role="group"
-              aria-label="Filter specialities by alphabetical letter"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <button
-                type="button"
-                className={`${styles.heroAlphabetBtn} ${styles.heroAlphabetBtnAll} ${
-                  selectedLetter === "All" ? styles.heroAlphabetBtnActive : ""
-                }`}
-                onClick={() => setSelectedLetter("All")}
-                aria-pressed={selectedLetter === "All"}
-                aria-label="Show all specialities"
-              >
-                All
-              </button>
-              {ALPHABET.map((letter) => {
-                const isAvailable = availableLetters.has(letter);
-                const isSelected = selectedLetter === letter;
-                return (
-                  <button
-                    key={letter}
-                    type="button"
-                    disabled={!isAvailable}
-                    className={`${styles.heroAlphabetBtn} ${
-                      isSelected ? styles.heroAlphabetBtnActive : ""
-                    } ${!isAvailable ? styles.heroAlphabetBtnDisabled : ""}`}
-                    onClick={() => setSelectedLetter(isSelected ? "All" : letter)}
-                    aria-pressed={isSelected}
-                    aria-label={`Filter specialities starting with ${letter}`}
-                    title={
-                      isAvailable
-                        ? `Filter specialities starting with ${letter}`
-                        : `No specialities starting with ${letter}`
-                    }
-                  >
-                    {letter}
-                  </button>
-                );
-              })}
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {/* ── 1. CONFIGURABLE LISTING HERO SECTION ── */}
+      <ListingHeroSection
+        id="specialities"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "Medical Specialities" },
+        ]}
+        title="Our Medical Specialities"
+        subtext="From complex cardiac surgeries to advanced oncology and robotic orthopaedics — Narayana Health covers every dimension of your health across 25+ hospitals and specialized clinics nationwide."
+        stats={[
+          {
+            value: "50+",
+            label: "Medical specialities,\ndelivered with specialized care.",
+          },
+          {
+            value: "25+",
+            label: "Hospitals nationwide,\nwith advanced tertiary infrastructure.",
+          },
+          {
+            value: "4,000+",
+            label: "Expert clinicians,\nwith specialized fellowship training.",
+          },
+          {
+            value: "10M+",
+            label: "Patients healed,\nwith compassionate, evidence-based care.",
+          },
+        ]}
+        backgroundImage="/doctor_patient.png"
+        imageAlt="Doctor examining patient with stethoscope"
+      />
 
       {/* ── 2. SPECIALITIES DIRECTORY GRID (Matching COE left/right margins & card sizing) ── */}
       <section className={heroStyles.coeContainer} aria-label="Medical specialities results">
+        {/* Pulse Search Input */}
+        <motion.div
+          className={heroStyles.heroSearchContainer}
+          initial={{ opacity: 0, y: 14, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className={heroStyles.heroSearchRow}>
+            <div className={heroStyles.searchBoxWrap}>
+              <div className={heroStyles.searchBox}>
+                <Search size={16} strokeWidth={2.0} className={heroStyles.searchIcon} />
+                <input
+                  type="text"
+                  placeholder="Search medical specialities, treatments, or conditions..."
+                  className={heroStyles.searchInput}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  aria-label="Search medical specialities"
+                />
+                {search && (
+                  <button
+                    className={heroStyles.clearSearchBtn}
+                    onClick={() => setSearch("")}
+                    aria-label="Clear search input"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* A to Z Alphabet Filter Row (Only in Specialities) - Full Width across left & right margins */}
+        <motion.div
+          className={styles.heroAlphabetWrap}
+          role="group"
+          aria-label="Filter specialities by alphabetical letter"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <button
+            type="button"
+            className={`${styles.heroAlphabetBtn} ${styles.heroAlphabetBtnAll} ${
+              selectedLetter === "All" ? styles.heroAlphabetBtnActive : ""
+            }`}
+            onClick={() => setSelectedLetter("All")}
+            aria-pressed={selectedLetter === "All"}
+            aria-label="Show all specialities"
+          >
+            All
+          </button>
+          {ALPHABET.map((letter) => {
+            const isAvailable = availableLetters.has(letter);
+            const isSelected = selectedLetter === letter;
+            return (
+              <button
+                key={letter}
+                type="button"
+                disabled={!isAvailable}
+                className={`${styles.heroAlphabetBtn} ${
+                  isSelected ? styles.heroAlphabetBtnActive : ""
+                } ${!isAvailable ? styles.heroAlphabetBtnDisabled : ""}`}
+                onClick={() => setSelectedLetter(isSelected ? "All" : letter)}
+                aria-pressed={isSelected}
+                aria-label={`Filter specialities starting with ${letter}`}
+                title={
+                  isAvailable
+                    ? `Filter specialities starting with ${letter}`
+                    : `No specialities starting with ${letter}`
+                }
+              >
+                {letter}
+              </button>
+            );
+          })}
+        </motion.div>
+
         {/* Speciality Cards Grid (Exact match to Landing Page Specialty Card & COE card sizes) */}
         <AnimatePresence mode="popLayout">
           <motion.div className={heroStyles.coeGrid} layout>

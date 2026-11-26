@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { ChevronRight, ChevronLeft, ChevronDown, Check, Shield, Star, Clock, MapPin, ArrowUpRight, ArrowRight, Stethoscope, Home } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
@@ -1370,16 +1370,15 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
     return () => observer.disconnect();
   }, []);
 
-  const [isPastHeroAndSecondSection, setIsPastHeroAndSecondSection] = useState(false);
-  const treatmentsEndRef = useRef<HTMLDivElement>(null);
-  const nonCoeTriggerRef = useRef<HTMLDivElement>(null);
+  const [isPastHero, setIsPastHero] = useState(false);
 
   useEffect(() => {
     const checkTrigger = () => {
-      const activeTrigger = isCoE ? treatmentsEndRef.current : nonCoeTriggerRef.current;
-      if (!activeTrigger) return;
-      const rect = activeTrigger.getBoundingClientRect();
-      setIsPastHeroAndSecondSection(rect.top <= 100);
+      const sentinel = heroEndSentinelRef.current;
+      if (!sentinel) return;
+      const rect = sentinel.getBoundingClientRect();
+      // Show FAB as soon as user scrolls past the hero section
+      setIsPastHero(rect.top <= 80);
     };
 
     checkTrigger();
@@ -1396,9 +1395,9 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
         lenis.off("scroll", checkTrigger);
       }
     };
-  }, [isCoE]);
+  }, []);
 
-  const isFabVisible = isPastHeroAndSecondSection;
+  const isFabVisible = isPastHero && !isNearFooter;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -1466,13 +1465,13 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
   const handleFeaturedDoctorScroll = () => {
     const track = featuredDoctorTrackRef.current;
     if (!track) return;
-    const trackCenter = track.scrollLeft + track.offsetWidth / 2;
+    const trackRect = track.getBoundingClientRect();
     let closestIndex = 0;
     let minDiff = Infinity;
     featuredDoctorCardRefs.current.forEach((card, idx) => {
       if (!card) return;
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const diff = Math.abs(cardCenter - trackCenter);
+      const cardRect = card.getBoundingClientRect();
+      const diff = Math.abs(cardRect.left - trackRect.left);
       if (diff < minDiff) {
         minDiff = diff;
         closestIndex = idx;
@@ -1488,7 +1487,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
       card.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
-        inline: "center",
+        inline: "start",
       });
     }
   };
@@ -1578,52 +1577,39 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
   const subDescColor = useTransform(bgHandoffProgress, [0, 1], ["rgba(255, 255, 255, 0.7)", "#4A5568"]);
   const subArrowColor = useTransform(bgHandoffProgress, [0, 1], ["#ffffff", "#034EA2"]);
 
-  // Scroll-scale down for specialty detail page hero (!isCoE)
+  // Smooth scroll-driven scale down for specialty detail page hero (!isCoE)
   const heroContainerRef = useRef<HTMLDivElement>(null);
-  const [isMobileHero, setIsMobileHero] = useState(false);
+  const { scrollY } = useScroll();
+
+  // Dynamically adapt target scale: on mweb (<= 768px), scales down so left/right margins are exactly 16px: (W - 32) / W
+  // On desktop, scales down to align with the 1240px centered content container
+  const targetScaleVal = useMotionValue(0.86);
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    const sync = () => setIsMobileHero(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  const { scrollYProgress: heroScrollProgress } = useScroll({
-    target: heroContainerRef,
-    offset: ["start start", "end end"],
-  });
-
-  const smoothHeroProgress = useSpring(heroScrollProgress, {
-    stiffness: 80,
-    damping: 25,
-    mass: 1,
-    restDelta: 0.001,
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined" || window.scrollY < 40) return;
-    const sync = () => smoothHeroProgress.jump(heroScrollProgress.get());
-    sync();
-    const frame = requestAnimationFrame(sync);
-    const settle = setTimeout(sync, 150);
-    return () => {
-      cancelAnimationFrame(frame);
-      clearTimeout(settle);
+    const updateScale = () => {
+      if (typeof window === "undefined") return;
+      if (window.innerWidth <= 768) {
+        targetScaleVal.set((window.innerWidth - 32) / window.innerWidth);
+      } else {
+        const desktopScale = Math.min(0.92, Math.max(0.84, 1240 / window.innerWidth));
+        targetScaleVal.set(desktopScale);
+      }
     };
-  }, [smoothHeroProgress, heroScrollProgress]);
+    updateScale();
+    window.addEventListener("resize", updateScale, { passive: true });
+    return () => window.removeEventListener("resize", updateScale);
+  }, [targetScaleVal]);
 
-  const heroScale = useTransform(smoothHeroProgress, [0, 0.6], [1, 0.88]);
-  const heroRadius = useTransform(smoothHeroProgress, [0, 0.6], ["0px", "20px"]);
-  const heroShadow = useTransform(
-    smoothHeroProgress,
-    [0, 0.6],
-    [
-      "0 0 0 rgba(0, 0, 0, 0)",
-      "0 20px 50px -10px rgba(0, 0, 0, 0.35), 0 10px 20px -5px rgba(0, 0, 0, 0.2)"
-    ]
-  );
+  const heroScale = useTransform([scrollY, targetScaleVal], ([latestY, target]: number[]) => {
+    const progress = Math.min(1, Math.max(0, latestY / 400));
+    return 1 - (1 - target) * progress;
+  });
+
+  const heroRadius = useTransform([scrollY, targetScaleVal], ([latestY, target]: number[]) => {
+    const progress = Math.min(1, Math.max(0, latestY / 400));
+    const maxRadius = target > 0.90 ? 16 : 24;
+    return `${progress * maxRadius}px`;
+  });
 
   return (
     <div className={styles.pageContainer} style={{ backgroundColor: isCoE ? "#031224" : undefined }}>
@@ -1677,7 +1663,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
 
                     {/* Collapsed Ellipsis Button on Mobile when not expanded */}
                     {!isBreadcrumbExpanded && (
-                      <>
+                      <span className={styles.breadcrumbEllipsisWrap}>
                         <button
                           type="button"
                           className={styles.breadcrumbEllipsisBtn}
@@ -1692,8 +1678,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                           ...
                         </button>
                         <ChevronRight size={14} className={`${styles.breadcrumbChevron} ${styles.breadcrumbEllipsisChevron}`} aria-hidden="true" />
-                        <span className={`${styles.breadcrumbSlash} ${styles.breadcrumbEllipsisSlash}`} aria-hidden="true">/</span>
-                      </>
+                      </span>
                     )}
 
                     {/* Middle Items (Desktop always visible, Mobile visible when expanded) */}
@@ -1898,7 +1883,6 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
         data-nav-theme="light"
         style={{
           position: "relative",
-          height: !isCoE && !isMobileHero ? "calc(100vh + 300px)" : "auto",
           background: !isCoE ? "#ffffff" : "#031224",
           width: "100%",
         }}
@@ -1908,17 +1892,14 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
           className={styles.hero}
           data-nav-theme="dark"
           style={{
-            position: !isCoE && !isMobileHero ? "sticky" : "relative",
-            top: 0,
+            position: "relative",
             zIndex: 1,
-            scale: !isCoE && !isMobileHero ? heroScale : 1,
-            borderRadius: !isCoE && !isMobileHero ? heroRadius : "0px",
-            boxShadow: !isCoE && !isMobileHero ? heroShadow : undefined,
+            scale: !isCoE ? heroScale : 1,
+            borderRadius: !isCoE ? heroRadius : "0px",
+            boxShadow: !isCoE ? "0 20px 48px -12px rgba(0, 0, 0, 0.3)" : undefined,
             overflow: "hidden",
-            transformOrigin: "center center",
-            willChange: !isCoE && !isMobileHero ? "transform, border-radius, box-shadow" : undefined,
-            height: !isCoE && !isMobileHero ? "100vh" : undefined,
-            minHeight: !isCoE && !isMobileHero ? "100vh" : undefined,
+            transformOrigin: "center top",
+            willChange: !isCoE ? "transform" : undefined,
           }}
         >
         <div className={styles.heroBg}>
@@ -2427,7 +2408,6 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
             ) : null}
           </AnimatePresence>
         </div>
-        <div ref={treatmentsEndRef} style={{ position: "relative", height: "1px", width: "100%", pointerEvents: "none" }} />
       </section>
       )}
 
@@ -2631,7 +2611,11 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                           }}
                         >
                           {/* Left: Image Container inside Card */}
-                          <div className={styles.doctorImageBlendCol}>
+                          <Link
+                            href={`/doctors/${doc.profileSlug || doc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                            className={styles.doctorImageBlendCol}
+                            aria-label={`View profile of ${doc.name}`}
+                          >
                             <Image
                               src={doc.image}
                               alt={doc.name}
@@ -2639,7 +2623,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                               sizes="(max-width: 640px) 260px, (max-width: 1024px) 340px, 420px"
                               className={styles.doctorBlendImg}
                             />
-                          </div>
+                          </Link>
 
                           {/* Right: Text Col */}
                           <div className={styles.doctorTextCol}>
@@ -2659,6 +2643,17 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                                 <div className={styles.specialityGroup}>
                                   <span className={styles.speciality}>{doc.speciality || doc.designation}</span>
                                 </div>
+                                {doc.experience && (() => {
+                                  const years = doc.experience.match(/\d+(?:\.\d+)?/)?.[0];
+                                  const label = years ? `${years}+ yrs` : doc.experience;
+                                  const aria = years ? `${years}+ years experience` : `${doc.experience} experience`;
+                                  return (
+                                    <span className={styles.experience} aria-label={aria}>
+                                      <span className={styles.metaSeparator} aria-hidden="true">·</span>
+                                      <strong>{label}</strong>
+                                    </span>
+                                  );
+                                })()}
                               </div>
                               <Link
                                 href={`/doctors/${doc.profileSlug || doc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
@@ -2732,7 +2727,6 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                   </motion.div>
                 ))}
               </div>
-              <div ref={nonCoeTriggerRef} style={{ height: "1px", width: "100%", pointerEvents: "none" }} />
             </div>
           ) : section.id === "technology" ? (
             <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>

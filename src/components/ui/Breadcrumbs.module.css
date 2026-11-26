@@ -82,11 +82,11 @@
   }
 
   .chevron {
-    display: none !important;
+    display: inline-flex !important;
   }
 
   .slash {
-    display: inline-flex !important;
+    display: none !important;
   }
 
   .hideOnMobile {

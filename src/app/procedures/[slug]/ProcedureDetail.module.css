@@ -749,6 +749,30 @@
   width: 100%;
 }
 
+@media (min-width: 1025px) and (max-width: 1180px) {
+  .topDoctorsGrid {
+    gap: clamp(16px, 2vw, 22px);
+  }
+
+  .doctorBlendCard {
+    padding: clamp(14px, 1.5vw, 18px);
+    gap: clamp(14px, 1.5vw, 18px);
+    min-height: 420px;
+    border-radius: 20px;
+  }
+
+  .doctorImageBlendCol {
+    width: 38%;
+    min-width: 155px;
+    max-width: 195px;
+  }
+
+  .doctorCardBio {
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+}
+
 .doctorBlendCard {
   display: flex;
   flex-direction: row;
@@ -2350,7 +2374,7 @@
     scroll-snap-align: start !important;
   }
 
-  /* Top Featured Doctors Rail on Mobile */
+  /* Top Featured Doctors Rail on Mobile & Tablet (<= 1024px) */
   .topDoctorsSection {
     margin-top: 24px !important;
     margin-bottom: 44px !important;
@@ -2361,17 +2385,19 @@
     align-items: flex-start !important;
     margin-bottom: 24px !important;
   }
+}
 
+@media (max-width: 1024px) {
   .topDoctorsGrid {
     display: flex !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
-    gap: 14px !important;
+    gap: clamp(14px, 2vw, 24px) !important;
     padding-bottom: 12px !important;
-    margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) !important;
-    padding-left: clamp(16px, 4vw, 24px) !important;
-    padding-right: clamp(16px, 4vw, 24px) !important;
+    margin: 0 calc(-1 * clamp(16px, 4vw, 48px)) !important;
+    padding-left: clamp(16px, 4vw, 48px) !important;
+    padding-right: clamp(16px, 4vw, 48px) !important;
     scrollbar-width: none !important;
   }
 
@@ -2380,24 +2406,131 @@
   }
 
   .doctorBlendCard {
-    flex: 0 0 88vw !important;
-    min-width: 88vw !important;
-    min-height: 360px !important;
+    flex: 0 0 clamp(340px, 56vw, 600px) !important;
+    width: clamp(340px, 56vw, 600px) !important;
+    max-width: 600px !important;
+    min-height: 380px !important;
     scroll-snap-align: start !important;
+    padding: clamp(16px, 2vw, 22px) !important;
+    gap: clamp(14px, 2vw, 24px) !important;
+    border-radius: 20px !important;
   }
 
   .doctorImageBlendCol {
-    width: 40% !important;
-    min-width: 140px !important;
+    width: clamp(140px, 20vw, 220px) !important;
+    min-width: 130px !important;
+    max-width: 220px !important;
+    border-radius: 14px !important;
   }
 
   .doctorCardBio {
-    -webkit-line-clamp: 4 !important;
-    font-size: 13.5px !important;
+    font-size: clamp(13px, 1.1vw, 14.5px) !important;
+    line-height: 1.55 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
   }
 
   .mainLayoutContainer {
     padding-bottom: 96px !important;
     /* Cushion for floating dock */
+  }
+}
+
+@media (max-width: 770px) {
+  .topDoctorsGrid {
+    gap: 12px !important;
+    margin: 0 -16px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .doctorBlendCard {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    grid-template-rows: auto auto !important;
+    grid-template-areas:
+      "photo identity"
+      "bio   bio" !important;
+    align-items: start !important;
+    flex: 0 0 clamp(300px, calc(100vw - 64px), 440px) !important;
+    width: clamp(300px, calc(100vw - 64px), 440px) !important;
+    max-width: 440px !important;
+    min-height: auto !important;
+    padding: 16px 18px !important;
+    gap: 14px 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .doctorImageBlendCol {
+    grid-area: photo !important;
+    position: relative !important;
+    display: block !important;
+    align-self: start !important;
+    width: clamp(100px, 26vw, 124px) !important;
+    height: clamp(106px, 28vw, 132px) !important;
+    min-width: clamp(100px, 26vw, 124px) !important;
+    max-width: 124px !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+    background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%) !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  }
+
+  .doctorBlendImg {
+    object-fit: cover !important;
+    object-position: top center !important;
+  }
+
+  .doctorTextCol {
+    display: contents !important;
+  }
+
+  .doctorTextBottom,
+  .identityText {
+    grid-area: identity !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: start !important;
+    justify-content: flex-start !important;
+    padding-top: 1px !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+  }
+
+  .doctorCardName,
+  .name {
+    font-size: 17.5px !important;
+    line-height: 1.25 !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.015em !important;
+    margin: 0 !important;
+  }
+
+  .doctorCardRole,
+  .speciality {
+    font-size: 13.5px !important;
+    color: #475569 !important;
+    font-weight: 500 !important;
+  }
+
+  .doctorTextTop {
+    grid-area: bio !important;
+    margin-bottom: 0 !important;
+    padding-top: 14px !important;
+    border-top: 1px solid rgba(15, 23, 42, 0.09) !important;
+    width: 100% !important;
+  }
+
+  .doctorCardBio {
+    font-size: 13.5px !important;
+    line-height: 1.6 !important;
+    color: #334155 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+    margin: 0 !important;
   }
 }

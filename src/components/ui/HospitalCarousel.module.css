@@ -517,6 +517,23 @@
     font-size: var(--font-size-xs);
     -webkit-line-clamp: 2;
   }
+  .bookBtn {
+    font-size: var(--font-size-sm, 14px);
+    height: 44px;
+    padding: 0 16px;
+    white-space: nowrap;
+  }
+  .callBtn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bookBtn {
+    font-size: 13.5px;
+    padding: 0 12px;
+  }
 }
 
 /* ─── Light Mode Variant (Design 2) using Design Tokens ─── */
