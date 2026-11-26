@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image, { getImageProps } from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { Activity, ArrowUpRight, Award, Brain, ChevronDown, Clock3, Download, HeartPulse, MapPin, Moon, Play, ShieldCheck, Stethoscope, Sun, Users, X } from "lucide-react";
+import { Activity, ArrowUpRight, Award, Brain, ChevronDown, Clock3, Download, HeartPulse, MapPin, Play, ShieldCheck, Stethoscope, Users, X } from "lucide-react";
 import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
 import EmergencyCareExplorer from "./EmergencyCareExplorer";
 import EmergencyGuideCarousel from "./EmergencyGuideCarousel";
@@ -67,7 +67,6 @@ export default function EmergencyPage() {
   const root = useRef<HTMLDivElement>(null);
   const hero = useRef<HTMLElement>(null);
   const [active, setActive] = useState("overview");
-  const [appearance, setAppearance] = useState<"light" | "dark">("dark");
   const tabs = useRef<HTMLDivElement>(null);
   const chapter = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -82,16 +81,6 @@ export default function EmergencyPage() {
   const appear = { initial: { opacity: calm ? 1 : 0, scale: calm ? 1 : 0.96 }, whileInView: { opacity: 1, scale: 1 }, viewport: { once: true, margin: "-40px" }, transition: { duration: calm ? 0 : duration.slowest, ease: ease.spring } };
   const cardBlur = (index: number) => ({ initial: { opacity: calm ? 1 : 0, y: calm ? 0 : 16, filter: calm ? "blur(0px)" : "blur(12px)" }, whileInView: { opacity: 1, y: 0, filter: "blur(0px)" }, viewport: { once: true, margin: "-40px" }, transition: { duration: calm ? 0 : duration.slower, delay: calm ? 0 : Math.min(index * 0.08, 0.4), ease: ease.out } });
   const reveal = { initial: { opacity: calm ? 1 : 0, y: calm ? 0 : 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.1 }, transition: { duration: calm ? 0 : duration.slowest, ease: ease.out } };
-
-  useEffect(() => {
-    // The reused CTA declares its own nav theme. Keep this page-only variation
-    // aligned without changing that component for the rest of the site.
-    root.current?.querySelector<HTMLElement>(`.${styles.closingCta}`)?.setAttribute("data-nav-theme", appearance);
-    // Navbar samples the section under it on scroll; refresh after a theme
-    // change without moving the reader or changing the shared navigation.
-    const frame = requestAnimationFrame(() => window.dispatchEvent(new Event("scroll")));
-    return () => cancelAnimationFrame(frame);
-  }, [appearance]);
 
   useEffect(() => {
     let frame = 0;
@@ -209,8 +198,8 @@ export default function EmergencyPage() {
     </div>
   </>;
 
-  return <div ref={root} className={`${styles.page} ${appearance === "light" ? styles.pageLight : ""}`} data-emergency-page data-emergency-appearance={appearance}>
-    <section ref={hero} className={styles.hero} data-nav-theme={appearance} aria-labelledby="emergency-title">
+  return <div ref={root} className={styles.page} data-emergency-page data-emergency-appearance="dark">
+    <section ref={hero} className={styles.hero} data-nav-theme="dark" aria-labelledby="emergency-title">
       <picture><source media="(max-width: 768px)" srcSet={mobileHero.srcSet} sizes="100vw" /><Image src="/emergency/nh-ambulance-night-v2.webp" alt="A Narayana Health ambulance on a night road with emergency lights and traffic light trails" fill sizes="100vw" loading="eager" fetchPriority="high" className={styles.heroPhoto} /></picture>
       <div className={styles.heroShade} aria-hidden="true" />
       <div className={`${styles.container} ${styles.heroInner}`}><motion.div className={styles.nearLockup} initial={{ opacity: calm ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: calm ? 0 : duration.slowest, ease: ease.out }}>
@@ -218,17 +207,13 @@ export default function EmergencyPage() {
         <div className={styles.heroPhone}><p>One number for every medical need</p><a className={styles.phoneNumber} href={CALL} aria-label={`Call ${PHONE}`}>{PHONE}</a><motion.a href={CALL} className={`${navStyles.emergencyBtn} ${navStyles.emergencyBtnSolid} ${styles.callButton}`} initial="initial" whileHover="animate" whileFocus="animate"><PhoneCall animateOnHover aria-hidden="true" /><span>Call Now</span><ArrowUpRight aria-hidden="true" /></motion.a></div>
       </motion.div></div>
       <a className={styles.scrollCue} href="#overview" onClick={event => { event.preventDefault(); changeTab("overview"); }}><span>Explore our emergency care</span><AnimatedChevronDown /></a>
-      <div className={styles.appearanceSwitch} role="group" aria-label="Emergency page appearance">
-        <button type="button" aria-pressed={appearance === "light"} onClick={() => setAppearance("light")}><Sun aria-hidden="true" /><span>Light</span></button>
-        <button type="button" aria-pressed={appearance === "dark"} onClick={() => setAppearance("dark")}><Moon aria-hidden="true" /><span>Dark</span></button>
-      </div>
     </section>
 
-    <div ref={chapter} className={styles.tabExperience} data-nav-theme={appearance}>
-    <div ref={tabs} className={styles.mainTabs} data-emergency-tabs data-nav-theme={appearance} inert={tabsPinned}>{renderTabs(false)}</div>
-    <div className={`${styles.compactTabs} ${styles.compactTabsDark}`} data-emergency-tabs data-nav-theme={appearance} hidden={!tabsPinned}>{renderTabs(true)}</div>
+    <div ref={chapter} className={styles.tabExperience} data-nav-theme="dark">
+    <div ref={tabs} className={styles.mainTabs} data-emergency-tabs data-nav-theme="dark" inert={tabsPinned}>{renderTabs(false)}</div>
+    <div className={`${styles.compactTabs} ${styles.compactTabsDark}`} data-emergency-tabs data-nav-theme="dark" hidden={!tabsPinned}>{renderTabs(true)}</div>
     <div ref={panel} id="emergency-tab-panel" role={compact ? "region" : "tabpanel"} aria-label={compact ? sections.find(item => item.id === active)?.label : undefined} aria-labelledby={compact ? undefined : `${tabsPinned ? "compact-emergency-tab" : "emergency-tab"}-${active}`} tabIndex={-1}>
-    {active === "overview" && <section id="overview" className={styles.overviewHero} data-nav-theme={appearance} aria-labelledby="overview-title">
+    {active === "overview" && <section id="overview" className={styles.overviewHero} data-nav-theme="dark" aria-labelledby="overview-title">
       <div className={styles.overviewMedia}>
         <Image src="/assets/doctor_team.png" alt="Narayana Health's multidisciplinary emergency care team" fill sizes="100vw" preload className={styles.overviewPhoto} />
         <div className={styles.overviewShade} aria-hidden="true" />
@@ -302,7 +287,7 @@ export default function EmergencyPage() {
       </section>
 
 <section className={styles.section} data-nav-theme="light" aria-labelledby="why-emergency-title"><div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="why-emergency-title" className={styles.sectionTitle}>{content.benefits.title}</h2><p className={styles.subtitle}>{content.benefits.subtitle}</p></motion.div>
-      <motion.div {...appear} className={styles.careGrid}>{content.benefits.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={styles.careCard} data-card={index} data-nav-theme={appearance}><Image src={["/navigation/services-ambulance.webp", "/emergency/care-1.webp", "/assets/doctor_team.png"][index]} alt={item.title} fill sizes="(max-width: 768px) 90vw, 40vw" className={styles.coverPhoto} /><div className={styles.cardWash} /><div className={styles.careCopy}><h3>{item.title}</h3><p>{item.description}</p></div></motion.article>)}</motion.div>
+      <motion.div {...appear} className={styles.careGrid}>{content.benefits.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={styles.careCard} data-card={index} data-nav-theme="dark"><Image src={["/navigation/services-ambulance.webp", "/emergency/care-1.webp", "/assets/doctor_team.png"][index]} alt={item.title} fill sizes="(max-width: 768px) 90vw, 40vw" className={styles.coverPhoto} /><div className={styles.cardWash} /><div className={styles.careCopy}><h3>{item.title}</h3><p>{item.description}</p></div></motion.article>)}</motion.div>
     </div></section>
 
 <section className={styles.section} data-nav-theme="light" aria-labelledby="inside-er-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="inside-er-title" className={styles.sectionTitle}>{content.video.title}</h2><p className={styles.subtitle}>{content.video.subtitle}</p></motion.div>
