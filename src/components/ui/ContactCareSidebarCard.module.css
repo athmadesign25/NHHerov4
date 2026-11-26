@@ -1,0 +1,110 @@
+/* ─── SIMPLE UNBOXED 24×7 HELPLINE (DYNAMIC & WHITE THEME SUPPORT) ───────── */
+.helplineSection {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 14px;
+  box-sizing: border-box;
+  transition: border-color var(--duration-fast, 0.15s) ease;
+}
+
+.helplineEyebrow {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+  transition: color var(--duration-fast, 0.15s) ease;
+}
+
+.helplinePhoneLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color var(--duration-fast, 0.15s) ease;
+}
+
+.helplinePhoneLink:hover {
+  color: var(--blue-brand) !important;
+}
+
+.phoneIcon {
+  flex-shrink: 0;
+  transition: color var(--duration-fast, 0.15s) ease;
+}
+
+.helplineSubtext {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11px;
+  line-height: 1.35;
+  transition: color var(--duration-fast, 0.15s) ease;
+}
+
+/* ─── 1. WHITE THEME (STATIONARY WHITE CANVASES & V1/V3) ─────────────────── */
+.helplineWhite {
+  border-top: 1.5px solid rgba(var(--blue-brand-rgb), 0.10);
+}
+
+.helplineWhite .helplineEyebrow {
+  color: var(--slate-400, #94a3b8);
+}
+
+.helplineWhite .helplinePhoneLink {
+  color: var(--slate-800, #1e293b);
+}
+
+.helplineWhite .phoneIcon {
+  color: var(--blue-brand);
+}
+
+.helplineWhite .helplineSubtext {
+  color: var(--slate-500, #64748b);
+}
+
+/* ─── 2. DYNAMIC THEME (V2 & V4 SCROLL-DRIVEN DARK -> WHITE BLEND) ────────── */
+.helplineDynamic {
+  border-top: 1.5px solid var(--v2-border, var(--v4-border, rgba(var(--blue-brand-rgb), 0.10)));
+}
+
+.helplineDynamic .helplineEyebrow {
+  color: var(--v2-muted, var(--v4-muted, var(--slate-500)));
+}
+
+.helplineDynamic .helplinePhoneLink {
+  color: var(--v2-heading, var(--v4-heading, var(--slate-800)));
+}
+
+.helplineDynamic .phoneIcon {
+  color: var(--v2-toc-active, var(--v4-eyebrow, var(--blue-brand)));
+}
+
+.helplineDynamic .helplineSubtext {
+  color: var(--v2-muted, var(--v4-muted, var(--slate-500)));
+}
+
+/* ─── 3. DARK THEME (PURE DARK HERO SURFACES) ────────────────────────────── */
+.helplineDark {
+  border-top: 1.5px solid rgba(var(--white-rgb), 0.12);
+}
+
+.helplineDark .helplineEyebrow {
+  color: rgba(var(--white-rgb), 0.50);
+}
+
+.helplineDark .helplinePhoneLink {
+  color: rgba(var(--white-rgb), 0.90);
+}
+
+.helplineDark .phoneIcon {
+  color: var(--sky-400);
+}
+
+.helplineDark .helplineSubtext {
+  color: rgba(var(--white-rgb), 0.50);
+}

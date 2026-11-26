@@ -1,0 +1,237 @@
+.heroSection {
+  position: relative;
+  width: 100%;
+  min-height: 70vh;
+  padding-top: calc(var(--nav-height, 72px) + clamp(48px, 7vh, 88px));
+  padding-bottom: clamp(76px, 9.5vh, 108px);
+  background-color: transparent;
+  color: var(--white);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* V2 Unified Dynamic Canvas: feather bottom edge of heroBg directly to 0% alpha (NO gradient mist overlay band) */
+.heroSection::after {
+  display: none;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+}
+
+.heroBgImage {
+  object-fit: cover;
+  object-position: center 22%;
+  filter: brightness(0.88) saturate(1.10) contrast(1.03);
+}
+
+/* Sweet-Spot Directional Gradient Scrim (per AGENTS.md Section 1.B) */
+.scrimOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(6, 14, 27, 0.96) 0%,
+      rgba(6, 14, 27, 0.92) 34%,
+      rgba(6, 14, 27, 0.65) 50%,
+      rgba(6, 14, 27, 0.20) 66%,
+      rgba(6, 14, 27, 0.04) 82%,
+      transparent 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(6, 14, 27, 0.65) 0%,
+      rgba(6, 14, 27, 0.15) 12%,
+      transparent 24%
+    );
+}
+
+@media (max-width: 900px) {
+  .scrimOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(6, 14, 27, 0.92) 0%,
+      rgba(6, 14, 27, 0.78) 45%,
+      rgba(6, 14, 27, 0.92) 100%
+    );
+  }
+}
+
+.heroInner {
+  position: relative;
+  z-index: 3;
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1320px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .heroInner {
+    width: calc(100% - 32px);
+    gap: 28px;
+  }
+}
+
+.heroLeftCol {
+  display: flex;
+  flex-direction: column;
+  max-width: 820px;
+}
+
+.breadcrumbsWrapper {
+  margin-bottom: 20px;
+}
+
+.heroTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(30px, 3.6vw, 46px);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  color: var(--dyn-heading, var(--white));
+  margin: 0 0 16px 0;
+  text-shadow: none;
+}
+
+.heroSubtitle {
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.62;
+  color: var(--dyn-subtitle, rgba(var(--white-rgb), 0.86));
+  margin: 0 0 28px 0;
+  max-width: 640px;
+  text-shadow: none;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.exploreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary, var(--blue-brand));
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: none;
+  transition: transform var(--duration-base) var(--ease-spring), background var(--duration-base) ease;
+}
+
+.exploreBtn:hover {
+  background: #023877;
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+/* ─── BOTTOM METRICS ROW (BELOW HERO TITLE, SUBTEXT & CTA - MATCHING CSR HERO) ─── */
+.metricsBottomWrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 12px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.statBlock:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -14px;
+  top: 12%;
+  height: 76%;
+  width: 1px;
+  background: var(--stat-divider-color, rgba(var(--white-rgb), 0.14));
+}
+
+@media (max-width: 1024px) {
+  .statBlock:not(:last-child)::after {
+    display: none;
+  }
+}
+
+.statNumber {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 500;
+  color: var(--stat-num-color, rgba(var(--white-rgb), 0.76));
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.statLabel {
+  font-size: var(--font-size-xs, 12px);
+  color: var(--stat-label-color, rgba(var(--white-rgb), 0.46));
+  font-weight: 500;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.featuredCarouselWrapper {
+  position: relative;
+  z-index: 3;
+  background: transparent;
+  margin-top: -1px;
+}

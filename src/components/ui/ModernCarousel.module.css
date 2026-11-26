@@ -575,16 +575,20 @@
     width: 6px;
     height: 6px;
     border-radius: 6px;
-    background-color: rgba(var(--black-rgb), 0.2);
+    background-color: #d2d2d2;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+  }
+
+  .indicatorBar:hover:not(.indicatorBarActive) {
+    background-color: #b0b0b0;
   }
 
   .indicatorBarActive {
     width: 18px;
     height: 6px;
     border-radius: 6px;
-    background-color: var(--color-primary);
+    background-color: var(--color-primary, #034EA2);
   }
 
   .readingAidContainer {

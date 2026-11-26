@@ -55,6 +55,24 @@
   box-sizing: border-box;
 }
 
+.desktopNavigator {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: var(--space-20, 20px) !important;
+  margin-bottom: var(--space-24, 24px) !important;
+  width: 100% !important;
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .desktopNavigator {
+    display: none !important;
+  }
+}
+
 .mobileNavigator {
   display: none;
   justify-content: center;
@@ -62,6 +80,7 @@
   gap: 6px;
   margin-top: 16px;
   margin-bottom: 24px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -80,20 +99,41 @@
   width: 6px !important;
   height: 6px !important;
   border-radius: 6px !important;
-  background: rgba(var(--black-rgb), 0.2) !important;
-  cursor: pointer;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
+  background: rgba(255, 255, 255, 0.25) !important;
   border: none !important;
   padding: 0 !important;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
   flex-shrink: 0 !important;
+  cursor: pointer;
 }
 
 .navDotActive,
 .navDot.navDotActive {
-  background: var(--color-primary, #034EA2) !important;
   width: 18px !important;
   height: 6px !important;
   border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+.navDotLight {
+  background: #d2d2d2 !important;
+}
+
+.navDotLight:hover:not(.navDotActiveLight) {
+  background: #b0b0b0 !important;
+}
+
+.navDot:hover:not(.navDotActive):not(.navDotLight) {
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+
+.navDotActiveLight,
+.navDot.navDotActiveLight,
+.navDotLight.navDotActiveLight {
+  width: 18px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+  background: var(--color-primary, #034EA2) !important;
 }
 
 .desktopOnly {

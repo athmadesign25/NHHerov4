@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import styles from "./AdvanceTechnology.module.css";
 
 export interface TechnologyItem {
@@ -154,11 +154,7 @@ export default function AdvanceTechnology({
                       }}
                       aria-label={`${item.name} - ${item.ctaText || "Know more"}`}
                     >
-                      {isActive ? (
-                        <ArrowRight size={16} />
-                      ) : (
-                        <ArrowUpRight size={15} />
-                      )}
+                      <ArrowRight size={15} />
                     </Link>
                   </div>
 

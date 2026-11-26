@@ -433,7 +433,7 @@ export const ARTICLES_DIRECTORY_DATA: ArticleItem[] = [
     categorySlug: "pediatric",
     author: "Narayana Health",
     authorRole: "Clinical Paediatrics Advisory Panel",
-    authorAvatar: "/icons/benefits/nh.svg",
+    authorAvatar: "/assets/nh_doctor_avatar.png",
     readTime: "4 min read",
     publishedDate: "November 04, 2026",
     image: "/Specialities icons/Paediatrics.jpeg",
@@ -465,7 +465,7 @@ export const ARTICLES_DIRECTORY_DATA: ArticleItem[] = [
     categorySlug: "diabetes",
     author: "Narayana Health",
     authorRole: "Epidemiology & Preventive Health Desk",
-    authorAvatar: "/icons/benefits/nh.svg",
+    authorAvatar: "/assets/nh_doctor_avatar.png",
     readTime: "5 min read",
     publishedDate: "November 03, 2026",
     image: "/images/articles/sugar_free_sweets_diwali.jpg",
@@ -517,9 +517,9 @@ export function getArticleDetailData(slug: string): ArticleDetailData {
   const matchedDocs = doctorsData.filter((d: DoctorData) =>
     d.speciality.toLowerCase().includes(match.categorySlug) ||
     d.keywords.some((k) => k.toLowerCase().includes(match.categorySlug))
-  ).slice(0, 3);
+  ).slice(0, 6);
 
-  const fallbackDocs = matchedDocs.length > 0 ? matchedDocs : doctorsData.slice(0, 3);
+  const fallbackDocs = matchedDocs.length >= 6 ? matchedDocs : [...matchedDocs, ...doctorsData].slice(0, 6);
 
   const doctors = fallbackDocs.map((d: DoctorData) => ({
     name: d.name,

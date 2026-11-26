@@ -6,11 +6,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #060c18;
+  background-color: transparent;
   overflow: hidden;
-  /* Comfortably pushed down, balanced lower vertically as per NH syntax */
+  /* Comfortably pushed down, balanced lower vertically with generous breathing space */
   padding-top: calc(var(--nav-height, 72px) + clamp(32px, 9vh, 140px));
-  padding-bottom: clamp(24px, 4.5vh, 44px);
+  padding-bottom: clamp(64px, 9vh, 108px);
   box-sizing: border-box;
 }
 
@@ -18,7 +18,7 @@
   .heroSection {
     min-height: calc(100vh - 16px);
     padding-top: calc(var(--nav-height, 72px) + clamp(18px, 4vh, 44px));
-    padding-bottom: 24px;
+    padding-bottom: 48px;
   }
   .container {
     gap: 24px;
@@ -36,11 +36,11 @@
   .heroSection {
     min-height: auto;
     padding-top: calc(var(--nav-height, 72px) + 48px);
-    padding-bottom: 36px;
+    padding-bottom: 52px;
   }
 }
 
-/* ── Video Canvas ── */
+/* ── Video Canvas (V2 Vertical Alpha Feather — Zero Horizontal Seam) ── */
 .videoWrapper {
   position: absolute;
   inset: 0;
@@ -48,6 +48,24 @@
   height: 100%;
   overflow: hidden;
   z-index: 1;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.72) 68%,
+    rgba(0, 0, 0, 0.32) 82%,
+    rgba(0, 0, 0, 0.07) 93%,
+    transparent 100%
+  );
 }
 
 .heroVideo {
@@ -60,19 +78,31 @@
   opacity: 0.65;
 }
 
-/* Clean directional dark scrim overlay (Image 2 style: NO text shadows needed) */
+/* Clean directional dark scrim overlay */
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(6, 12, 24, 0.68) 0%,
-    rgba(6, 12, 24, 0.35) 35%,
-    rgba(6, 12, 24, 0.80) 75%,
-    rgba(6, 12, 24, 0.98) 100%
-  );
+  background:
+    linear-gradient(
+      90deg,
+      rgba(6, 12, 24, 0.88) 0%,
+      rgba(6, 12, 24, 0.64) 32%,
+      rgba(6, 12, 24, 0.25) 58%,
+      transparent 84%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(6, 12, 24, 0.65) 0%,
+      rgba(6, 12, 24, 0.20) 24%,
+      transparent 55%
+    );
   z-index: 2;
   pointer-events: none;
+}
+
+.bottomBlend,
+.ambientGlow {
+  display: none;
 }
 
 /* ── Container Content ── */
@@ -80,7 +110,7 @@
   position: relative;
   z-index: 3;
   width: calc(100% - max(4vw, 40px) * 2);
-  max-width: 1240px;
+  max-width: 1320px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -108,8 +138,8 @@
 .breadcrumbsWrapper {
   display: flex;
   align-items: center;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--font-size-sm);
+  color: rgba(var(--white-rgb), 0.7);
 }
 
 /* Clean Title (Exact Speciality Hero Typography - NO shadows, refined size) */
@@ -117,7 +147,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(30px, 3.4vw, 44px);
   font-weight: 800;
-  color: #ffffff;
+  color: var(--white);
   line-height: 1.18;
   letter-spacing: -0.025em;
   margin: 0;
@@ -128,12 +158,12 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(14px, 1.25vw, 16px);
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(var(--white-rgb), 0.88);
   margin: 0;
   max-width: 720px;
 }
 
-/* Outlined CTA Button (Matching "Find a specialist" in Image 2) */
+/* Primary Solid Brand Blue CTA Button (Rule C standard) */
 .heroCtaRow {
   display: flex;
   align-items: center;
@@ -145,26 +175,25 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
+  padding: 12px 24px;
   border-radius: 8px;
-  background: transparent;
+  background: var(--color-primary, var(--blue-brand, #034EA2));
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.40);
-  font-size: 13.5px;
+  border: none;
+  font-size: var(--font-size-sm, 14px);
   font-weight: 600;
   text-decoration: none;
-  backdrop-filter: blur(8px);
-  transition: all var(--transition-fast, 150ms ease);
+  box-shadow: none;
+  transition: background var(--duration-base, 0.2s) ease, transform var(--duration-base, 0.2s) var(--ease-spring);
 }
 
 .heroCtaBtn:hover {
-  background: #ffffff;
-  color: var(--color-primary, #034EA2);
-  border-color: #ffffff;
+  background: #023877;
+  color: #ffffff;
   transform: translateY(-2px);
 }
 
-/* ── Bottom Metrics & Milestone Wrap (Matching Image 2 Speciality) ── */
+/* ── Bottom Metrics & Milestone Wrap (Matching Library Page Syntax) ── */
 .metricsBottomWrap {
   display: flex;
   flex-direction: column;
@@ -174,7 +203,7 @@
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+  gap: 28px;
   width: 100%;
 }
 
@@ -192,52 +221,54 @@
   }
 }
 
-.statItem {
+.statBlock {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   position: relative;
 }
 
-.statItem:not(:last-child)::after {
+.statBlock:not(:last-child)::after {
   content: "";
   position: absolute;
-  right: -16px;
-  top: 10%;
-  height: 80%;
+  right: -14px;
+  top: 12%;
+  height: 76%;
   width: 1px;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--stat-divider-color, rgba(var(--white-rgb), 0.14));
 }
 
 @media (max-width: 1024px) {
-  .statItem:not(:last-child)::after {
+  .statBlock:not(:last-child)::after {
     display: none;
   }
 }
 
-/* Clean Pure White Stat Number - Refined Size, NO shadows, NO blue */
-.statValue {
+/* Numeric credential metrics styling: medium 500 weight, dynamic V2 color */
+.statNumber {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(26px, 2.4vw, 30px);
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin-bottom: 2px;
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 500;
+  color: var(--stat-num-color, rgba(var(--white-rgb), 0.76));
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
-/* Clean Stat Description (Exact 2-line layout like Image 2) */
-.statDesc {
-  font-size: 13px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.85);
+/* Uppercase muted 12px label */
+.statLabel {
+  font-size: var(--font-size-xs, 12px);
+  color: var(--stat-label-color, rgba(var(--white-rgb), 0.46));
+  font-weight: 500;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
 /* Hairline Divider matching Image 2 */
 .statsDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--stat-divider-color, rgba(var(--white-rgb), 0.15));
   margin: 18px 0;
 }
 
@@ -251,7 +282,7 @@
 }
 
 .milestoneIcon {
-  color: #ffffff;
+  color: var(--dyn-heading, var(--white));
   flex-shrink: 0;
   width: 24px;
   height: 24px;
@@ -260,16 +291,16 @@
 
 .milestoneTitle {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 15.5px;
+  font-size: var(--font-size-base);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--dyn-heading, var(--white));
   margin: 0 0 2px 0;
   line-height: 1.3;
 }
 
 .milestoneDesc {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--font-size-sm);
+  color: var(--dyn-subtitle, rgba(var(--white-rgb), 0.85));
   line-height: 1.4;
   margin: 0;
 }
@@ -279,9 +310,9 @@
     gap: 10px;
   }
   .milestoneTitle {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
   .milestoneDesc {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 }

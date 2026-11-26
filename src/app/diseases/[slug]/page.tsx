@@ -3,9 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
-import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   CheckCircle2,
   Link as LinkIcon,
@@ -22,12 +20,24 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getDiseaseDetailData, DiseaseDetailData } from "@/data/diseasesData";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalReviewedBySection, {
+  ClinicalSummaryBanner,
+  ClinicalEditorialFigures,
+} from "@/components/ui/ClinicalReviewedBySection";
+import {
+  NearbySpecialistsCarousel,
+  NearbyCareCentresCarousel,
+} from "@/components/ui/NearbyClinicalCarousels";
+import ShareWidget from "@/components/ui/ShareWidget";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
+import ClinicalAtAGlanceCard from "@/components/ui/ClinicalAtAGlanceCard";
 import styles from "./DiseaseDetail.module.css";
 
 interface PageProps {
@@ -41,6 +51,101 @@ export default function DiseaseDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // V2: Scroll-driven section colour transition (#060c18 -> #020408 -> #f4f7fb -> #ffffff)
+  const v4Progress = useMotionValue(0);
+
+  useEffect(() => {
+    const updateV4Transition = () => {
+      const sy = window.scrollY || 0;
+      const startScroll = 36;
+      const endScroll = 360;
+      const raw = (sy - startScroll) / (endScroll - startScroll);
+      const clamped = Math.max(0, Math.min(1, raw));
+      v4Progress.set(clamped);
+      setIsScrolled(sy > 300);
+    };
+
+    updateV4Transition();
+    window.addEventListener("scroll", updateV4Transition, { passive: true });
+    window.addEventListener("resize", updateV4Transition, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateV4Transition);
+      window.removeEventListener("resize", updateV4Transition);
+    };
+  }, [v4Progress]);
+
+  // Smoothly crossfade stationary hero photo into the unified dynamic canvas so there is ZERO horizontal gradient seam
+  const heroCanvasOpacity = useTransform(v4Progress, [0, 0.38, 0.68], [1, 0.75, 0]);
+
+  // Hero bottom metrics dynamic color inversion as the unified canvas transitions from dark/black to white
+  const heroStatNumColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
+  );
+  const heroStatLabelColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
+  );
+  const heroStatDividerColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
+  );
+
+  // V2: Smooth Dark -> Deep Black -> Pure White transition (exact V2 detail standard)
+  const v2BgColor = useTransform(
+    v4Progress,
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
+  );
+  const v2HeadingColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
+  );
+  const v2SubtitleColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.76)", "rgba(255, 255, 255, 0.82)", "#475569", "#64748b"]
+  );
+  const v2BodyColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.84)", "rgba(255, 255, 255, 0.86)", "#334155", "#374151"]
+  );
+  const v2MutedColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.62)", "rgba(255, 255, 255, 0.68)", "#64748b", "#64748b"]
+  );
+  const v2TocLinkColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.78)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
+  );
+  const v2TocActiveColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["#38bdf8", "#38bdf8", "#034EA2", "#034EA2"]
+  );
+  const v2TocActiveBg = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+  );
+  const v2BorderColor = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.16)", "rgba(15, 23, 42, 0.09)", "rgba(15, 23, 42, 0.08)"]
+  );
+  const v2CardBg = useTransform(
+    v4Progress,
+    [0, 0.44, 0.64, 1],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.10)", "#f8fafc", "#f8fafc"]
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -95,9 +200,34 @@ export default function DiseaseDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div className={styles.detailPageContainer}>
+    <motion.div
+      className={styles.detailPageContainer}
+      style={
+        {
+          backgroundColor: v2BgColor,
+          "--v2-bg": v2BgColor,
+          "--v2-heading": v2HeadingColor,
+          "--v2-subtitle": v2SubtitleColor,
+          "--v2-body": v2BodyColor,
+          "--v2-muted": v2MutedColor,
+          "--v2-toc-link": v2TocLinkColor,
+          "--v2-toc-active": v2TocActiveColor,
+          "--v2-toc-active-bg": v2TocActiveBg,
+          "--v2-border": v2BorderColor,
+          "--v2-card-bg": v2CardBg,
+          "--hero-bottom-bg": v2BgColor,
+          "--stat-num-color": heroStatNumColor,
+          "--stat-label-color": heroStatLabelColor,
+          "--stat-divider-color": heroStatDividerColor,
+        } as unknown as React.CSSProperties
+      }
+    >
       {/* ─── STATIONARY ATMOSPHERIC CANVAS ─────────────────────────────────── */}
-      <div className={styles.stationaryCanvas} aria-hidden="true">
+      <motion.div
+        className={styles.stationaryCanvas}
+        aria-hidden="true"
+        style={{ opacity: heroCanvasOpacity }}
+      >
         <motion.div
           className={styles.stationaryMotionWrapper}
           initial={{ scale: 1.12, opacity: 0.5 }}
@@ -114,14 +244,14 @@ export default function DiseaseDetailPage({ params }: PageProps) {
           />
         </motion.div>
         <div className={styles.stationaryCanvasOverlay} />
-      </div>
+      </motion.div>
 
       {/* ─── DETAIL HERO ──────────────────────────────────────────────────── */}
-      <section className={styles.detailHero} data-nav-theme="dark">
-        <div className={styles.heroBgOverlay} />
+      <section className={`${styles.detailHero} ${styles.detailHeroV2}`} data-nav-theme="dark">
+        <motion.div className={styles.heroBgOverlay} style={{ opacity: heroCanvasOpacity }} />
 
         <div className={styles.heroInner}>
-          <motion.div 
+          <motion.div
             className={styles.heroLeftCol}
             initial={{ opacity: 0, scale: 0.97, y: 14 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -146,56 +276,66 @@ export default function DiseaseDetailPage({ params }: PageProps) {
               {detail.heroTitle}
             </h1>
 
-            <p className={styles.heroSubTitle}>
-              {detail.heroSubtitle}
-            </p>
+            {(detail.leadParagraph || detail.heroSubtitle) && (
+              <p className={styles.heroSubTitle}>
+                {detail.leadParagraph || detail.heroSubtitle}
+              </p>
+            )}
 
             <div className={styles.heroActionsRow}>
               <Link
-                href={defaultDoctorListingUrl(new URL(specialityBookingEntry(detail.specialitySlug), "https://nh.local").searchParams)}
+                href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
                 <span>Consult Specialist</span>
                 <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
-
-              <a href="tel:18003090309" className={styles.heroPhoneText}>
-                <PhoneCall size={14} className={styles.phoneIcon} />
-                <span>24×7 Care Helpline: <strong>1800 309 0309</strong></span>
-              </a>
             </div>
           </motion.div>
 
-          {/* Right Hero Analytics */}
-          <motion.div 
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+          {/* Bottom Hero Metrics (Matching CSR Hero) */}
+          <motion.div
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.stage}</span>
-              <span className={styles.statLabel}>Clinical Staging</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.clinicalSafety}</span>
-              <span className={styles.statLabel}>Clinical Safety</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.treatmentApproach}</span>
-              <span className={styles.statLabel}>Care Model</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>Top Tier</span>
-              <span className={styles.statLabel}>Institutional Center</span>
+            <div className={styles.statsGrid}>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.stage} />
+                </span>
+                <span className={styles.statLabel}>Clinical Staging</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.clinicalSafety} />
+                </span>
+                <span className={styles.statLabel}>Clinical Safety</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.treatmentApproach} />
+                </span>
+                <span className={styles.statLabel}>Care Model</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="Top Tier" />
+                </span>
+                <span className={styles.statLabel}>Institutional Center</span>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* ─── MAIN CONTENT BODY ────────────────────────────────────────────── */}
-      <div className={styles.readingExperienceWrapper}>
+      <motion.div
+        className={`${styles.readingExperienceWrapper} ${styles.readingExperienceWrapperV2}`}
+        style={{ backgroundColor: v2BgColor }}
+      >
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
             {/* Sticky Table of Contents Sidebar */}
@@ -247,30 +387,34 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                 <span>Share</span>
               </button>
 
-              {/* Share widget */}
-              <div className={styles.shareWidgetBorderless}>
-                <span className={styles.shareTitle}>Share this guide</span>
-                <div className={styles.shareRow}>
-                  <button
-                    type="button"
-                    onClick={handleCopyLink}
-                    className={styles.shareBtn}
-                    aria-label="Copy page link"
-                    title="Copy Link"
-                  >
-                    {copyToast ? <Check size={14} className={styles.copySuccessIcon} /> : <LinkIcon size={14} />}
-                  </button>
-                </div>
-                {copyToast && <span className={styles.copyToastText}>Link copied to clipboard</span>}
-              </div>
+              {/* Standardized Share widget */}
+              <ShareWidget shareTitle={detail.title} title="Share this guide" />
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard
+                subtitle="Direct assistance for condition management, treatment protocols & second opinions."
+                theme="dynamic"
+              />
             </aside>
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
-              {/* SECTION: Overview */}
+              {/* Minimal Non-Intrusive Clinical Action Pathway Strip */}
+              <ClinicalAtAGlanceCard
+                bookingHref="/book-an-appointment"
+                secondOpinionHref="/book-an-appointment?flow=second-opinion"
+                theme="dynamic"
+              />
+
+              {/* SECTION: Overview & 4-5 Line Clinical Summary */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Disease Overview</h2>
-                <p className={styles.leadParagraph}>{detail.leadParagraph}</p>
+                <ClinicalSummaryBanner
+                  eyebrow={`${detail.speciality} · Condition Executive Summary`}
+                  summary={`${detail.leadParagraph} Early clinical recognition, precision staging (${detail.stageOrType}), and evidence-based ${detail.metrics.treatmentApproach.toLowerCase()} protocols at Narayana Health ensure optimal long-term organ preservation and patient outcomes.`}
+                  reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                  theme="dynamic"
+                />
                 <div className={styles.quickFactsGrid}>
                   <div className={styles.factCard}>
                     <span className={styles.factCardLabel}>Speciality</span>
@@ -337,6 +481,21 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                     </div>
                   ))}
                 </div>
+
+                <ClinicalEditorialFigures
+                  items={[
+                    {
+                      src: detail.heroImage || "/images/procedures/procedure_mri.png",
+                      alt: `${detail.shortTitle} clinical overview`,
+                      caption: `Pathophysiology & Clinical Assessment · ${detail.shortTitle}`,
+                    },
+                    {
+                      src: "/images/procedures/procedure_mri.png",
+                      alt: `${detail.shortTitle} diagnostic imaging`,
+                      caption: `High-Resolution Diagnostic Staging & Multidisciplinary Review (${detail.speciality})`,
+                    },
+                  ]}
+                />
               </section>
 
               {/* SECTION: Treatment Protocols */}
@@ -355,51 +514,15 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                 </div>
               </section>
 
-              {/* SECTION: Recommended Specialists */}
-              <section id="specialists" className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Consult Senior Specialists</h2>
-                <p className={styles.sectionLeadText}>
-                  Consult with accredited consultants specializing in {detail.speciality}:
-                </p>
-                <div className={styles.doctorsGrid}>
-                  {detail.doctors.map((doc, idx) => (
-                    <div key={idx} className={styles.refDoctorCard}>
-                      <Image
-                        src={doc.image}
-                        alt={doc.name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 300px"
-                        className={styles.refDocFullImage}
-                      />
-                      <div className={styles.refDocFullGradient} />
-                      <div className={styles.refDocOverlayContent}>
-                        <div className={styles.refDocBottomFlex}>
-                          <div className={styles.refDocTextCol}>
-                            <h3 className={styles.refDocName} title={doc.name}>
-                              {doc.name}
-                            </h3>
-                            <div className={styles.refDocSpecialty}>
-                              {doc.speciality || detail.speciality}
-                            </div>
-                            <div className={styles.refDocExpRow}>
-                              <span>{doc.experience}</span>
-                            </div>
-                            <div className={styles.refDocHospital} title={doc.hospital}>
-                              {doc.hospital}
-                            </div>
-                          </div>
-                          <Link
-                            href={defaultDoctorListingUrl(new URL(specialityBookingEntry(detail.specialitySlug), "https://nh.local").searchParams)}
-                            className={styles.refBookBtnWhite}
-                          >
-                            Book
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* SECTION: Recommended Specialists Carousel (Modular & Softened Gradient) */}
+              <NearbySpecialistsCarousel
+                id="specialists"
+                title="Consult Senior Specialists"
+                subtitle={`Consult with accredited consultants specializing in ${detail.speciality} across our hospital network:`}
+                doctors={detail.doctors}
+                specialityFilter={detail.specialitySlug}
+                actionLabel="Book"
+              />
 
               {/* SECTION: FAQs */}
               <section id="faqs" className={styles.contentSection}>
@@ -407,24 +530,27 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                 <SpecialityFAQ faqs={detail.faqs} theme="light" fluid />
               </section>
 
-              {/* Hospital Centers */}
-              <section className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Specialised Care Centers</h2>
-                <p className={styles.sectionLeadText}>
-                  Receive multidisciplinary surgical and clinical care at our accredited centers of excellence:
-                </p>
-                <div className={styles.hospitalsGrid}>
-                  {detail.hospitals.map((hosp, idx) => (
-                    <div key={idx} className={styles.hospitalCardWrap}>
-                      <HospitalCard hosp={hosp} className={carouselStyles.cardCompact} />
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* Hospital Centers Carousel (Multi-unit Bangalore & NH Network) */}
+              <NearbyCareCentresCarousel
+                id="hospitals"
+                title="Specialised Care Centers"
+                subtitle="Receive multidisciplinary surgical and clinical care across our multiple Bangalore units and accredited centers of excellence:"
+                hospitals={detail.hospitals}
+              />
+
+              {/* Dedicated Google E-E-A-T "Reviewed by Dr. ___" Section */}
+              <ClinicalReviewedBySection
+                doctorName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                doctorRole="Senior Consultant & Clinical Lead"
+                speciality={detail.doctors[0]?.speciality || detail.speciality}
+                hospital={detail.doctors[0]?.hospital || "Narayana Health City, Bengaluru"}
+                experience={detail.doctors[0]?.experience || "20+ Years Experience"}
+                doctorImage={detail.doctors[0]?.image || "/doctors/doc_vivek.jpg"}
+              />
             </div>
           </div>
         </main>
-      </div>
+      </motion.div>
 
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner
@@ -445,12 +571,12 @@ export default function DiseaseDetailPage({ params }: PageProps) {
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
-        consultHref={defaultDoctorListingUrl(new URL(specialityBookingEntry(detail.specialitySlug), "https://nh.local").searchParams)}
+        consultHref={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
         consultLabel={"Book\nConsultation"}
         conditionTitle={detail.shortTitle}
         pulseQuery={`I want to know about ${detail.heroTitle}: clinical guidance, diagnosis, and treatment options.`}
         isScrolled={isScrolled}
       />
-    </div>
+    </motion.div>
   );
 }

@@ -25,9 +25,11 @@ import {
   Users
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getCsrProgramBySlug, CSR_PROGRAMS_DATA, CsrProgramItem } from "@/data/csrData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ShareWidget from "@/components/ui/ShareWidget";
 import styles from "./CsrDetail.module.css";
 
 interface PageProps {
@@ -183,30 +185,37 @@ export default function CsrDetailPage({ params }: PageProps) {
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
                 <PhoneCall size={14} />
-                <span>Narayana Foundation Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneDesktopSpan}>Narayana Foundation Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneMobileSpan}>Call Helpline</span>
               </a>
             </div>
           </motion.div>
 
-          {/* Right Column: Sweet Spot Floating Credential Metrics */}
+          {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
-            {program.statBadge && (
-              <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{program.statBadge.number}</span>
-                <span className={styles.statLabel}>{program.statBadge.label}</span>
-              </div>
-            )}
-            {program.modalContent.metrics.slice(0, 3).map((m, idx) => (
-              <div key={idx} className={styles.statBlock}>
-                <span className={styles.statNumber}>{m.value}</span>
-                <span className={styles.statLabel}>{m.label}</span>
-              </div>
-            ))}
+            <div className={styles.statsGrid}>
+              {program.statBadge && (
+                <div className={styles.statBlock}>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={program.statBadge.number} />
+                  </span>
+                  <span className={styles.statLabel}>{program.statBadge.label}</span>
+                </div>
+              )}
+              {program.modalContent.metrics.slice(0, 3).map((m, idx) => (
+                <div key={idx} className={styles.statBlock}>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={m.value} />
+                  </span>
+                  <span className={styles.statLabel}>{m.label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -265,15 +274,8 @@ export default function CsrDetailPage({ params }: PageProps) {
               </div>
 
               {/* Share / Copy Link Button */}
-              <button
-                type="button"
-                onClick={handleShare}
-                className={styles.sidebarShareBtn}
-                aria-label="Share initiative"
-              >
-                <Share2 size={14} />
-                <span>Share Initiative</span>
-              </button>
+              {/* Standardized Share Widget */}
+              <ShareWidget shareTitle={program.title} title="Share this initiative" />
             </aside>
 
             {/* ─── RIGHT CONTENT COLUMN ───────────────────────────────────── */}

@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useTransition } from "react";
+import React, { useState, useMemo, useEffect, useTransition, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
-import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  X,
-  ArrowUpRight,
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { 
+  Search, 
+  X, 
+  ArrowUpRight, 
   PhoneCall,
   Calendar,
   AlertTriangle,
@@ -19,24 +17,18 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import OrganSystemChipsCarousel, {
+  DEFAULT_ORGAN_FILTER_OPTIONS,
+} from "@/components/ui/OrganSystemChipsCarousel";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { SYMPTOMS_DATA, SymptomItem } from "@/data/symptomsData";
 import styles from "./SymptomsLibrary.module.css";
 
-// 10 Key Organ Filters
-const ORGAN_FILTER_OPTIONS = [
-  { label: "Heart", value: "heart", image: "/Specialities icons/Cardiology.jpeg" },
-  { label: "Brain & Spine", value: "brain", image: "/Specialities icons/Neurology.jpeg" },
-  { label: "Kidneys", value: "kidney", image: "/Specialities icons/Nephrology.jpeg" },
-  { label: "Liver", value: "liver", image: "/Specialities icons/Liver Transplant.svg" },
-  { label: "Lungs", value: "lungs", image: "/Specialities icons/Pulmonology.jpeg" },
-  { label: "Bones & Joints", value: "bones", image: "/Specialities icons/Orthopedics.jpeg" },
-  { label: "Stomach", value: "stomach", image: "/Specialities icons/General Surgery.jpeg" },
-  { label: "Cancer Care", value: "cancer", image: "/Specialities icons/Cancer Care.jpeg" },
-  { label: "Urinary & Bladder", value: "urinary", image: "/Specialities icons/Urology.jpeg" },
-  { label: "Children & Neonatal", value: "paediatric", image: "/Specialities icons/Paediatrics.jpeg" },
-];
+// 14 Key Organ & Clinical Filters
+const ORGAN_FILTER_OPTIONS = DEFAULT_ORGAN_FILTER_OPTIONS;
 
 // Secondary credentials on right hero column
 const HERO_ANALYTICS_PARAMETERS = [
@@ -131,13 +123,137 @@ export default function SymptomsLibraryPage() {
   const handleResetFilters = () => {
     setSelectedOrgan(null);
     setSearchQuery("");
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("organ");
+      url.searchParams.delete("search");
+      url.searchParams.delete("q");
+      url.searchParams.delete("query");
+      window.history.replaceState(null, "", url.toString());
+    }
   };
 
+  // 1. Unified Dark -> White -> Dark V2 dynamism across the entire page
+  const topProgress = useMotionValue(0);
+  const unifiedWhiteProgress = useMotionValue(0);
+  const ctaSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sy = window.scrollY || 0;
+      const topWhite = Math.max(0, Math.min(1, (sy - 36) / (360 - 36)));
+      topProgress.set(topWhite);
+
+      let bottomDark = 0;
+      const el = ctaSentinelRef.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 900;
+        const startY = vh * 0.72;
+        const endY = vh * 0.28;
+        const raw = (startY - rect.top) / (startY - endY);
+        bottomDark = Math.max(0, Math.min(1, raw));
+      }
+
+      unifiedWhiteProgress.set(Math.max(0, Math.min(topWhite, 1 - bottomDark)));
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [topProgress, unifiedWhiteProgress]);
+
+  // V2 dynamism palette: Dark Navy -> Deep Black -> Alabaster -> Pure White
+  const pageBgColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
+  );
+
+  const heroCanvasOpacity = useTransform(
+    topProgress,
+    [0, 0.38, 0.68],
+    [1, 0.75, 0]
+  );
+
+  // Dynamic text, chip, filter & rail color inversions matching Procedure Detail V2
+  const dynHeading = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynSubtitle = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.78)", "rgba(255, 255, 255, 0.84)", "#475569", "#64748b"]);
+  const dynMuted = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.60)", "rgba(255, 255, 255, 0.66)", "#64748b", "#64748b"]);
+  const dynEyebrow = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.56)", "rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]);
+  const dynBubbleLabel = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.74)", "rgba(255, 255, 255, 0.82)", "#334155", "#334155"]);
+  const dynBubbleHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynBubbleActive = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#034EA2", "#034EA2"]);
+  const dynBubbleBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.22)", "rgba(255, 255, 255, 0.26)", "rgba(15, 23, 42, 0.14)", "rgba(15, 23, 42, 0.12)"]);
+  const dynBubbleBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.08)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynArrow = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.80)", "#475569", "#475569"]);
+  const dynArrowHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynFilterBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.14)", "rgba(15, 23, 42, 0.12)"]);
+  const dynFilterBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.08)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynFilterText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.74)", "rgba(255, 255, 255, 0.82)", "#334155", "#334155"]);
+  const dynFilterBgHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.10)", "rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.08)"]);
+  const dynFilterTextHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynRailAll = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.58)", "rgba(255, 255, 255, 0.68)", "#475569", "#475569"]);
+  const dynRailLetter = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.48)", "rgba(255, 255, 255, 0.58)", "#64748b", "#64748b"]);
+  const dynRailHoverBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.08)", "rgba(255, 255, 255, 0.12)", "rgba(15, 23, 42, 0.06)", "rgba(15, 23, 42, 0.06)"]);
+  const dynRailHoverText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.08)"]);
+  const dynSearchBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.07)", "rgba(255, 255, 255, 0.09)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynSearchBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.22)", "rgba(255, 255, 255, 0.26)", "rgba(15, 23, 42, 0.16)", "rgba(15, 23, 42, 0.14)"]);
+  const dynSearchText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynSearchPlaceholder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.78)", "#64748b", "#64748b"]);
+  const dynRedSelBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(237, 28, 36, 0.15)", "rgba(237, 28, 36, 0.18)", "rgba(237, 28, 36, 0.06)", "rgba(237, 28, 36, 0.06)"]);
+  const dynRedSelBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(248, 113, 113, 0.75)", "rgba(248, 113, 113, 0.80)", "rgba(220, 38, 38, 0.65)", "rgba(220, 38, 38, 0.65)"]);
+  const dynRedSelText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ff7b82", "#ff7b82", "#cf171f", "#cf171f"]);
+  const heroStatNumColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]);
+  const heroStatLabelColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]);
+  const heroStatDividerColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]);
+
   return (
-    <div className={styles.pageContainer}>
+    <motion.div
+      className={styles.pageContainer}
+      style={{
+        backgroundColor: pageBgColor,
+        ["--dyn-heading" as string]: dynHeading,
+        ["--dyn-subtitle" as string]: dynSubtitle,
+        ["--dyn-muted" as string]: dynMuted,
+        ["--dyn-eyebrow" as string]: dynEyebrow,
+        ["--dyn-bubble-label" as string]: dynBubbleLabel,
+        ["--dyn-bubble-hover" as string]: dynBubbleHover,
+        ["--dyn-bubble-active" as string]: dynBubbleActive,
+        ["--dyn-bubble-border" as string]: dynBubbleBorder,
+        ["--dyn-bubble-bg" as string]: dynBubbleBg,
+        ["--dyn-arrow" as string]: dynArrow,
+        ["--dyn-arrow-hover" as string]: dynArrowHover,
+        ["--dyn-filter-border" as string]: dynFilterBorder,
+        ["--dyn-filter-bg" as string]: dynFilterBg,
+        ["--dyn-filter-text" as string]: dynFilterText,
+        ["--dyn-filter-bg-hover" as string]: dynFilterBgHover,
+        ["--dyn-filter-text-hover" as string]: dynFilterTextHover,
+        ["--dyn-rail-all" as string]: dynRailAll,
+        ["--dyn-rail-letter" as string]: dynRailLetter,
+        ["--dyn-rail-hover-bg" as string]: dynRailHoverBg,
+        ["--dyn-rail-hover-text" as string]: dynRailHoverText,
+        ["--dyn-border" as string]: dynBorder,
+        ["--dyn-search-bg" as string]: dynSearchBg,
+        ["--dyn-search-border" as string]: dynSearchBorder,
+        ["--dyn-search-text" as string]: dynSearchText,
+        ["--dyn-search-placeholder" as string]: dynSearchPlaceholder,
+        ["--dyn-red-sel-bg" as string]: dynRedSelBg,
+        ["--dyn-red-sel-border" as string]: dynRedSelBorder,
+        ["--dyn-red-sel-text" as string]: dynRedSelText,
+        ["--stat-num-color" as string]: heroStatNumColor,
+        ["--stat-label-color" as string]: heroStatLabelColor,
+        ["--stat-divider-color" as string]: heroStatDividerColor,
+      }}
+    >
       {/* ─── TWO-COLUMN HERO SECTION ───────────────────────────────────────── */}
       <section className={styles.hero} data-nav-theme="dark">
-        <div className={styles.heroBg}>
+        <motion.div className={styles.heroBg} style={{ opacity: heroCanvasOpacity }}>
           <motion.div
             className={styles.heroBgMotion}
             initial={{ opacity: 0, scale: 1.02 }}
@@ -145,7 +261,7 @@ export default function SymptomsLibraryPage() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Image
-              src="/doctor_patient.png"
+              src="/images/heroes/symptoms_hero_v3.jpg"
               alt="Doctor assessing patient symptoms"
               fill
               priority
@@ -154,7 +270,7 @@ export default function SymptomsLibraryPage() {
             />
             <div className={styles.heroBgOverlay} />
           </motion.div>
-        </div>
+        </motion.div>
 
         <div className={styles.heroInner}>
           {/* Left Column: Breadcrumb, Title, Subtitle & Pulse Search */}
@@ -180,11 +296,11 @@ export default function SymptomsLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
-              <TextSweepEffect
-                words={["Symptoms & Clinical Triage"]}
-                sweepMs={2400}
-                delayMs={80}
-                finalColor="#FFFFFF"
+              <TextSweepEffect 
+                words={["Symptoms & Clinical Triage"]} 
+                sweepMs={2400} 
+                delayMs={80} 
+                finalColor="var(--dyn-heading, #FFFFFF)" 
               />
             </motion.h1>
 
@@ -206,8 +322,19 @@ export default function SymptomsLibraryPage() {
             >
               <div className={styles.heroSearchRow}>
                 <div className={styles.searchBoxWrap}>
+                  <div className={styles.animatedBorderOutline} aria-hidden="true" />
                   <div className={styles.searchBox}>
-                    <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
+                    <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }} aria-hidden="true">
+                      <defs>
+                        <linearGradient id="nhSearchPillGradSymptoms" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#00C4FF" />
+                          <stop offset="35%" stopColor="#8B5CF6" />
+                          <stop offset="70%" stopColor="#FF2E93" />
+                          <stop offset="100%" stopColor="#ED1C24" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <Search size={18} strokeWidth={2.0} className={styles.searchIcon} />
                     <input
                       type="text"
                       placeholder="Search symptom, sensation or warning sign..."
@@ -271,62 +398,45 @@ export default function SymptomsLibraryPage() {
             </motion.div>
           </div>
 
-          {/* Right Column: Secondary Credential Numbers */}
+          {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
-            {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
-              <div key={index} className={styles.statBlock}>
-                <span className={styles.statNumber}>
-                  {item.staticValue ? (
-                    item.staticValue
-                  ) : (
-                    <MetricValueReveal value={item.value!} suffix={item.suffix} />
-                  )}
-                </span>
-                <span className={styles.statLabel}>{item.label}</span>
-              </div>
-            ))}
+            <div className={styles.statsGrid}>
+              {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
+                <div key={index} className={styles.statBlock}>
+                  <span className={styles.statNumber}>
+                    {item.staticValue ? (
+                      item.staticValue
+                    ) : (
+                      <MetricValueReveal value={item.value!} suffix={item.suffix} />
+                    )}
+                  </span>
+                  <span className={styles.statLabel}>{item.label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── 10 ORGAN BUBBLE FILTERS ──────────────────────────────────────── */}
-      <motion.section
-        className={styles.categorySection}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className={styles.bubblesRow}>
-          {ORGAN_FILTER_OPTIONS.map((opt) => {
-            const isActive = selectedOrgan === opt.value;
-            return (
-              <button
-                key={opt.value}
-                className={`${styles.bubbleBtn} ${isActive ? styles.bubbleBtnActive : ""}`}
-                onClick={() => handleToggleOrgan(opt.value)}
-                type="button"
-                aria-pressed={isActive}
-              >
-                <div className={styles.bubbleImgWrap}>
-                  <Image
-                    src={opt.image}
-                    alt={opt.label}
-                    fill
-                    sizes="52px"
-                    className={styles.bubbleImg}
-                  />
-                </div>
-                <span className={styles.bubbleLabel}>{opt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </motion.section>
+      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" (DESKTOP) ─────────── */}
+      <OrganSystemChipsCarousel
+        options={ORGAN_FILTER_OPTIONS}
+        selectedOrgan={selectedOrgan}
+        onSelectOrgan={(val) => {
+          if (val === null) {
+            setSelectedOrgan(null);
+            setSearchQuery("");
+          } else {
+            handleToggleOrgan(val);
+          }
+        }}
+        eyebrow="Explore Symptoms by Organ System & Speciality"
+      />
 
       {/* ─── DYNAMIC FEEDBACK TEXT ROW ─────────────────────────────────────── */}
       <motion.div
@@ -353,9 +463,9 @@ export default function SymptomsLibraryPage() {
           </p>
 
           {(selectedOrgan || searchQuery.trim()) && (
-            <button
-              type="button"
-              className={styles.clearFilterChip}
+            <button 
+              type="button" 
+              className={styles.clearFilterChip} 
               onClick={handleResetFilters}
               aria-label="Clear active filter"
             >
@@ -433,7 +543,7 @@ export default function SymptomsLibraryPage() {
               <AnimatePresence mode="popLayout">
                 {items.map((item, idx) => {
                   const detailUrl = `/symptoms/${item.slug}`;
-                  const doctorsUrl = defaultDoctorListingUrl(new URL(specialityBookingEntry(item.specialitySlug), "https://nh.local").searchParams);
+                  const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
 
                   return (
                     <motion.article
@@ -463,23 +573,33 @@ export default function SymptomsLibraryPage() {
 
                           <Link href={detailUrl} className={styles.cardTitleLink}>
                             <h2 className={styles.cardTitle}>
-                              {item.title}
+                              <CardTitleText title={item.title} />
                             </h2>
                           </Link>
 
-                          <p className={styles.cardSub}>
-                            {item.summary}
-                          </p>
+                          <div className={styles.cardSubReveal}>
+                            <div className={styles.cardSubInner}>
+                              <p className={styles.cardSub}>
+                                {buildCardHoverReading([
+                                  item.overview,
+                                  item.summary,
+                                  item.commonCauses?.length ? `Common causes: ${item.commonCauses.slice(0, 3).join(", ")}` : null,
+                                  item.diagnosticTests?.length ? `Diagnostic evaluation: ${item.diagnosticTests.slice(0, 3).join(", ")}` : null,
+                                ])}
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
                         <div className={styles.cardBottomSlot}>
                           <div className={styles.cardRestingMeta}>
                             <span className={styles.metaBadge}>
-                              <AlertTriangle size={11} className={styles.metaIcon} />
+                              <AlertTriangle size={13} className={styles.metaIcon} />
                               <span>{item.severity}</span>
                             </span>
+                            <span className={styles.metaDivider} aria-hidden="true" />
                             <span className={styles.metaBadge}>
-                              <Activity size={11} className={styles.metaIcon} />
+                              <Activity size={13} className={styles.metaIcon} />
                               <span>{item.urgencyLevel}</span>
                             </span>
                           </div>
@@ -505,15 +625,22 @@ export default function SymptomsLibraryPage() {
         )}
       </AnimatePresence>
 
+      {/* Sentinel for smooth pre-footer CTA background return to dark */}
+      <div
+        ref={ctaSentinelRef}
+        style={{ height: "1px", width: "100%", pointerEvents: "none" }}
+        aria-hidden="true"
+      />
+
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner
-        bg="dark"
+        bg="transparent"
         eyebrow="24×7 EMERGENCY & TRIAGE NETWORK"
         title="Experiencing Severe or Sudden Symptoms?"
         subtitle="Don't ignore critical warning signs. Our emergency care units and rapid triage helpline are available 24×7 with state-of-the-art ambulances, cath labs, and trauma specialists."
         primaryBtn={{
-          href: "/doctors",
-          text: "Consult a Specialist Now",
+          href: "/book-an-appointment",
+          text: "Find a Specialist",
         }}
         secondaryBtn={{
           href: "/treatments",
@@ -522,6 +649,7 @@ export default function SymptomsLibraryPage() {
         phoneText="Emergency Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
+      <ClinicalFloatingSideActions />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>
@@ -602,6 +730,6 @@ export default function SymptomsLibraryPage() {
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

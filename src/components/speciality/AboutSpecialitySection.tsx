@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import styles from "./AboutSpecialitySection.module.css";
 
 export interface AboutTabContent {
@@ -352,11 +352,7 @@ export default function AboutSpecialitySection({
                         className={`${styles.techActionBtn} ${isActive ? styles.techActionBtnActive : ""}`}
                         aria-label={`${tab.tabLabel} - View details`}
                       >
-                        {isActive ? (
-                          <ArrowRight size={15} />
-                        ) : (
-                          <ArrowUpRight size={15} />
-                        )}
+                        <ArrowRight size={15} />
                       </div>
                     </div>
                   </div>

@@ -295,9 +295,9 @@ export function getDiseaseDetailData(slug: string): DiseaseDetailData {
   const matched = doctorsData.filter((d: DoctorData) =>
     d.speciality.toLowerCase().includes(match.specialitySlug) ||
     d.keywords.some((k) => k.toLowerCase().includes(match.organ) || k.toLowerCase().includes(match.specialitySlug))
-  ).slice(0, 3);
+  ).slice(0, 6);
 
-  const fallback = matched.length > 0 ? matched : doctorsData.slice(0, 3);
+  const fallback = matched.length >= 6 ? matched : [...matched, ...doctorsData].slice(0, 6);
 
   const doctors: DoctorDetailItem[] = fallback.map((d: DoctorData) => ({
     name: d.name,
@@ -351,7 +351,7 @@ export function getDiseaseDetailData(slug: string): DiseaseDetailData {
       type: idx === 0 ? "First-Line Intervention" : "Advanced Modality",
     })),
     doctors: doctors,
-    hospitals: HOSPITALS_DATA.slice(0, 3),
+    hospitals: HOSPITALS_DATA.slice(0, 8),
     faqs: [
       {
         q: `What are the earliest signs of ${match.shortTitle.toLowerCase()}?`,

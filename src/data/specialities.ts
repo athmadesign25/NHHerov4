@@ -2023,7 +2023,7 @@ export function normalizeSpecialitySlug(rawSlug: string): string {
     "kidney": "nephrology",
     "ortho": "orthopaedics",
     "bone-marrow-transplant": "haematology-bmt",
-    "solid-organ-bone-marrow-transplant": "organ-transplants",
+    "solid-organ-bone-marrow-transplant": "haematology-bmt",
   };
   return map[rawSlug] || rawSlug;
 }

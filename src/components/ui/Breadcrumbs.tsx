@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import styles from "./Breadcrumbs.module.css";
@@ -21,10 +23,14 @@ export default function Breadcrumbs({
   className = "",
   hideOnMobile = false,
 }: BreadcrumbsProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const isDark = theme === "dark";
   const inactiveColor = isDark ? "rgba(255, 255, 255, 0.7)" : "var(--color-text-muted)";
   const activeColor = isDark ? "#ffffff" : "var(--color-text)";
   const arrowColor = isDark ? "rgba(255, 255, 255, 0.4)" : "var(--color-border)";
+
+  // On mobile, if there are more than 3 items and not expanded, collapse middle items into '...'
+  const shouldCollapse = items.length > 3 && !isExpanded;
 
   return (
     <nav
@@ -33,8 +39,37 @@ export default function Breadcrumbs({
     >
       <ol className={styles.list}>
         {items.map((item, index) => {
+          const isFirst = index === 0;
+          const isSecond = index === 1;
           const isLast = index === items.length - 1;
-          
+          const isMiddle = !isFirst && !isSecond && !isLast;
+
+          // If collapsed, hide intermediate items on mobile
+          if (shouldCollapse && isMiddle) {
+            // Render the ellipsis button right after the 2nd item (index === 2)
+            if (index === 2) {
+              return (
+                <li key="ellipsis" className={styles.item}>
+                  <button
+                    type="button"
+                    className={styles.ellipsisBtn}
+                    style={{ color: inactiveColor }}
+                    onClick={() => setIsExpanded(true)}
+                    aria-label="Expand breadcrumbs"
+                    title="Show full path"
+                  >
+                    ...
+                  </button>
+                  <span className={styles.separatorWrapper}>
+                    <ChevronRight size={14} className={styles.chevron} style={{ color: arrowColor }} />
+                    <span className={styles.slash} style={{ color: arrowColor }}>/</span>
+                  </span>
+                </li>
+              );
+            }
+            return null;
+          }
+
           return (
             <li key={index} className={styles.item}>
               {item.href && !isLast ? (
@@ -53,7 +88,10 @@ export default function Breadcrumbs({
               )}
               
               {!isLast && (
-                <ChevronRight size={14} style={{ marginLeft: 8, color: arrowColor }} />
+                <span className={styles.separatorWrapper}>
+                  <ChevronRight size={14} className={styles.chevron} style={{ color: arrowColor }} />
+                  <span className={styles.slash} style={{ color: arrowColor }}>/</span>
+                </span>
               )}
             </li>
           );
