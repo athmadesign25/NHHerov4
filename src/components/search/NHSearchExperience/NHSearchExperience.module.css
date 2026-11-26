@@ -6437,6 +6437,61 @@
   transform: translateY(-1px) scale(1.04) !important;
 }
 
+/* Inline Voice Recording Row inside Active Search White Modal */
+.themeWhite .stateActive .voiceListeningBadge,
+[data-search-theme="white"] .stateActive .voiceListeningBadge {
+  background: rgba(237, 28, 36, 0.09) !important;
+  border-color: rgba(237, 28, 36, 0.25) !important;
+  color: #D91B24 !important;
+}
+
+.themeWhite .stateActive .voiceLiveTranscript,
+[data-search-theme="white"] .stateActive .voiceLiveTranscript {
+  color: #0F172A !important;
+}
+
+.themeWhite .stateActive .voiceLivePlaceholder,
+[data-search-theme="white"] .stateActive .voiceLivePlaceholder {
+  color: #64748B !important;
+}
+
+.themeWhite .stateActive .voiceLastSecondsBlink,
+[data-search-theme="white"] .stateActive .voiceLastSecondsBlink {
+  background: rgba(237, 28, 36, 0.1) !important;
+  border-color: rgba(237, 28, 36, 0.28) !important;
+  color: #D91B24 !important;
+}
+
+.themeWhite .stateActive .voiceCancelBtn,
+[data-search-theme="white"] .stateActive .voiceCancelBtn {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #475569 !important;
+}
+
+.themeWhite .stateActive .voiceCancelBtn:hover,
+[data-search-theme="white"] .stateActive .voiceCancelBtn:hover {
+  background: rgba(237, 28, 36, 0.12) !important;
+  border-color: rgba(237, 28, 36, 0.35) !important;
+  color: #D91B24 !important;
+  box-shadow: none !important;
+}
+
+.themeWhite .stateActive .voiceConfirmBtn,
+[data-search-theme="white"] .stateActive .voiceConfirmBtn {
+  background: #034EA2 !important;
+  border-color: #034EA2 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .stateActive .voiceConfirmBtn:hover,
+[data-search-theme="white"] .stateActive .voiceConfirmBtn:hover {
+  background: #023070 !important;
+  border-color: #023070 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25) !important;
+}
+
 /* Quick Actions on Default Landing Composer (ALWAYS high-contrast crisp white on hero glass) */
 .stateLanding .inlineActionBtn,
 .landingContainer .inlineActionBtn,
