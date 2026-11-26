@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { 
   BookOpen,
@@ -315,7 +316,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
             <div className={styles.heroActionsRow}>
               <Link 
-                href={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`} 
+                href={specialityBookingEntry(detail.categorySlug)}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
@@ -568,7 +569,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
-        consultHref={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`}
+        consultHref={specialityBookingEntry(detail.categorySlug)}
         consultLabel={"Book\nOPD"}
         conditionTitle={detail.title}
         pulseQuery={`I want to learn more about "${detail.title}": clinical advice, diagnosis, and treatment options.`}

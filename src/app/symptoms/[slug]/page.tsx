@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   AlertTriangle,
@@ -284,7 +285,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
 
             <div className={styles.heroActionsRow}>
               <Link
-                href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
+                href={specialityBookingEntry(detail.specialitySlug)}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
@@ -582,7 +583,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
         title="Experiencing Severe or Sudden Symptoms?"
         subtitle="Don't ignore critical warning signs. Our emergency care units and rapid triage helpline are available 24×7 with state-of-the-art ambulances, cath labs, and trauma specialists."
         primaryBtn={{
-          href: `/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`,
+          href: specialityBookingEntry(detail.specialitySlug),
           text: "Consult a Specialist Now",
         }}
         secondaryBtn={{
@@ -595,7 +596,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
-        consultHref={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
+        consultHref={specialityBookingEntry(detail.specialitySlug)}
         consultLabel={"Book\nConsultation"}
         conditionTitle={detail.shortTitle}
         pulseQuery={`I want to know about symptoms of ${detail.heroTitle}: possible causes, emergency signs, and consultation options.`}

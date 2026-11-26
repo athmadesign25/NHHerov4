@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { procedureDoctorBookingHref } from "@/app/procedures/bookingLinks";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue } from "framer-motion";
 import { 
   Check, 
@@ -309,7 +311,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             {/* Actions Row: Primary CTA Only */}
             <div className={styles.heroActionsRow}>
               <Link 
-                href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`} 
+                href={specialityBookingEntry(detail.specialitySlug)}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
@@ -447,14 +449,14 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                         </div>
                         <div className={styles.doctorCtaContainer}>
                           <Link
-                            href={`/doctors?doctor=${encodeURIComponent(doc.name)}`}
+                            href={procedureDoctorBookingHref(doc.name)}
                             className={styles.doctorProfileLink}
                           >
                             <span>View Profile</span>
                           </Link>
                           <span className={styles.doctorCtaDivider} aria-hidden="true">|</span>
                           <Link
-                            href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}&doctor=${encodeURIComponent(doc.name)}`}
+                            href={procedureDoctorBookingHref(doc.name)}
                             className={styles.doctorConsultLink}
                           >
                             <span>Consult Now</span>
@@ -877,11 +879,11 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         title="Looking for a Surgical Second Opinion or Cost Estimate?"
         subtitle="Our senior surgical boards review complex diagnoses, imaging reports, and recommend minimally invasive surgical alternatives with transparent, all-inclusive pricing."
         primaryBtn={{
-          href: `/doctors?speciality=${encodeURIComponent(detail.speciality)}`,
+          href: specialityBookingEntry(detail.specialitySlug),
           text: "Book Procedure Consultation",
         }}
         secondaryBtn={{
-          href: "/health-packages",
+          href: "/health-checkups",
           text: "Explore Health Packages",
         }}
         phoneText="Surgical Helpline: 1800 309 0309"
@@ -890,7 +892,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
-        consultHref={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`}
+        consultHref={specialityBookingEntry(detail.specialitySlug)}
         consultLabel={"Book\nConsultation"}
         conditionTitle={detail.shortTitle}
         pulseQuery={`I want to know about ${detail.title}: procedure details, eligibility, and expected recovery.`}

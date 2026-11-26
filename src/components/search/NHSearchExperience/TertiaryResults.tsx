@@ -146,7 +146,11 @@ export default function TertiaryResults({
   const articlesViewAllHref = `/search?tab=articles${query ? `&q=${encodeURIComponent(query)}` : ""}`;
 
   return (
-    <div className={styles.resultsRightCol} aria-label="Supporting discovery and editorial care">
+    <div
+      className={styles.resultsRightCol}
+      data-lenis-prevent="true"
+      aria-label="Supporting discovery and editorial care"
+    >
       {/* 1. Treatments & Procedures Section (or Emergency Directory if empty) */}
       {hasTreatments ? (
         <div className={styles.editorialSection}>

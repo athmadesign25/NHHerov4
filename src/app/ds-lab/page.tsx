@@ -37,7 +37,11 @@ function readRootTokens(): Token[] {
     }
     for (const rule of Array.from(rules)) {
       if (!(rule instanceof CSSStyleRule)) continue;
-      if (!rule.selectorText?.split(",").some((s) => s.trim() === ":root")) continue;
+      const isRootOrAll = rule.selectorText?.split(",").some((s) => {
+        const t = s.trim();
+        return t === ":root" || t === "*";
+      });
+      if (!isRootOrAll) continue;
       const decl = rule.style;
       for (let i = 0; i < decl.length; i++) {
         const prop = decl[i];
@@ -78,12 +82,34 @@ export default function DsLab() {
     return /^(#|rgb|hsl)/.test(v);
   };
 
+  const parsePx = (t: Token) => {
+    const v = resolve(t.name) || t.value;
+    const m = v.match(/([\d.]+)px/);
+    return m ? parseFloat(m[1]) : 0;
+  };
+  const parseNum = (t: Token) => {
+    const v = resolve(t.name) || t.value;
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+  };
+
   const colours = tokens.filter((t) => isColour(t) && !match(t, /-rgb$/));
   const channels = tokens.filter((t) => match(t, /-rgb$/));
-  const sizes = tokens.filter((t) => match(t, /^--font-size-/));
-  const leading = tokens.filter((t) => match(t, /^--leading-/));
-  const spacing = tokens.filter((t) => match(t, /^--sp-/));
-  const radii = tokens.filter((t) => match(t, /^--radius-/));
+  const sizes = tokens
+    .filter((t) => match(t, /^--font-size-/))
+    .sort((a, b) => parsePx(a) - parsePx(b));
+  const leading = tokens
+    .filter((t) => match(t, /^--leading-/))
+    .sort((a, b) => parseNum(a) - parseNum(b));
+  const spacing = tokens
+    .filter((t) => match(t, /^--space-/))
+    .sort((a, b) => parsePx(a) - parsePx(b));
+  const radii = tokens
+    .filter((t) => match(t, /^--radius-/) && t.name !== "--radius-full")
+    .sort((a, b) => parsePx(a) - parsePx(b))
+    .concat(tokens.filter((t) => t.name === "--radius-full"));
+  const blurs = tokens.filter((t) => match(t, /^--blur-/));
+  const sectionRhythms = tokens.filter((t) => match(t, /^--section-y/));
   // --shadow-rgb is a channel triplet rather than a shadow, so it would
   // render as an empty card here.
   const elevation = tokens.filter((t) => match(t, /^--elevation-/, /^--shadow-/) && !/-rgb$/.test(t.name));
@@ -95,7 +121,7 @@ export default function DsLab() {
   const colourGroups = group(colours, [
     "--white", "--black", "--slate-", "--grey-", "--blue-", "--cyan-", "--sky-",
     "--red-", "--navy-", "--green-", "--emerald-", "--teal-", "--amber-",
-    "--violet-", "--pink-", "--color-",
+    "--violet-", "--pink-", "--color-", "--journey-", "--d7-", "--d17-",
   ]);
 
   return (
@@ -186,6 +212,33 @@ export default function DsLab() {
             ))}
           </div>
         </div>
+        <div className={styles.block}>
+          <h3 className={styles.h3}>Font weights</h3>
+          <p className={styles.note}>
+            Typeface: <strong>Inter</strong> (self-hosted via <code>--font-inter</code> / <code>--font-sans</code>).
+            These five weights form our core typographic contrast scale:
+          </p>
+          <div className={styles.weightGrid}>
+            {[
+              { label: "Regular", weight: 400, role: "Body text, descriptions, table contents" },
+              { label: "Medium", weight: 500, role: "Metadata, timestamps, chips, secondary labels" },
+              { label: "SemiBold", weight: 600, role: "Buttons, navigation items, card subtitles" },
+              { label: "Bold", weight: 700, role: "Section headings, doctor names, card titles" },
+              { label: "ExtraBold", weight: 800, role: "Page hero titles, display metrics, statistics" },
+            ].map(({ label, weight, role }) => (
+              <div key={weight} className={styles.weightCell}>
+                <div className={styles.weightHeader}>
+                  <span className={styles.weightName}>{label}</span>
+                  <code className={styles.tokVal}>font-weight: {weight}</code>
+                </div>
+                <p className={styles.weightSpecimen} style={{ fontWeight: weight }}>
+                  Narayana Health — Compassion &amp; Clinical Excellence
+                </p>
+                <span className={styles.weightDesc}>{role}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ── ELEVATION ── */}
@@ -200,6 +253,32 @@ export default function DsLab() {
           {elevation.map((t) => (
             <div key={t.name} className={styles.elevCell} style={{ boxShadow: `var(${t.name})` }}>
               <code className={styles.tokName}>{t.name}</code>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── BLUR ── */}
+      <section className={styles.section}>
+        <h2 className={styles.h2}>Backdrop Blur <span className={styles.count}>{blurs.length} steps</span></h2>
+        <p className={styles.note}>
+          Three distinct blur tiers for glassmorphism panels, modals, and navigation scrims.
+          Never invent random blur values — choose from sm (8px), md (16px), or lg (24px).
+        </p>
+        <div className={styles.blurGrid}>
+          {blurs.map((t) => (
+            <div key={t.name} className={styles.blurCard}>
+              <div className={styles.blurMesh}>
+                <div className={styles.blurOrb1} />
+                <div className={styles.blurOrb2} />
+              </div>
+              <div className={styles.blurGlass} style={{ backdropFilter: `blur(var(${t.name}))`, WebkitBackdropFilter: `blur(var(${t.name}))` }}>
+                <code className={styles.tokName}>{t.name}</code>
+                <code className={styles.tokVal}>{resolve(t.name)}</code>
+                <span className={styles.blurDesc}>
+                  {t.name === "--blur-sm" ? "Subtle surface glass" : t.name === "--blur-md" ? "Card & sheet backplates" : "Heavy modal & nav scrims"}
+                </span>
+              </div>
             </div>
           ))}
         </div>
@@ -223,6 +302,20 @@ export default function DsLab() {
               <code className={styles.tokName}>{t.name}</code>
               <code className={styles.tokVal}>{resolve(t.name)}</code>
               <div className={styles.spaceBar} style={{ width: `var(${t.name})` }} />
+            </div>
+          ))}
+        </div>
+        <div className={styles.block}>
+          <h3 className={styles.h3}>Section vertical rhythm</h3>
+          <p className={styles.note}>
+            Major page sections use one of these three vertical padding tokens to maintain rhythm as the user scrolls.
+            They step down responsively at 1024px and 768px breakpoints.
+          </p>
+          {sectionRhythms.map((t) => (
+            <div key={t.name} className={styles.sectionRow}>
+              <code className={styles.tokName}>{t.name}</code>
+              <code className={styles.tokVal}>{resolve(t.name)}</code>
+              <div className={styles.sectionBar} style={{ width: `var(${t.name})` }} />
             </div>
           ))}
         </div>

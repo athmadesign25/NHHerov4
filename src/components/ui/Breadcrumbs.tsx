@@ -25,9 +25,9 @@ export default function Breadcrumbs({
 }: BreadcrumbsProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const isDark = theme === "dark";
-  const inactiveColor = isDark ? "rgba(255, 255, 255, 0.7)" : "var(--color-text-muted)";
-  const activeColor = isDark ? "#ffffff" : "var(--color-text)";
-  const arrowColor = isDark ? "rgba(255, 255, 255, 0.4)" : "var(--color-border)";
+  const inactiveColor = isDark ? "var(--dyn-muted, var(--v2-muted, rgba(var(--white-rgb), 0.7)))" : "var(--color-text-muted)";
+  const activeColor = isDark ? "var(--dyn-heading, var(--v2-heading, var(--white)))" : "var(--color-text)";
+  const arrowColor = isDark ? "var(--dyn-muted, var(--v2-muted, rgba(var(--white-rgb), 0.4)))" : "var(--color-border)";
 
   // On mobile, if there are more than 3 items and not expanded, collapse middle items into '...'
   const shouldCollapse = items.length > 3 && !isExpanded;

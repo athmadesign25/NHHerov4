@@ -87,7 +87,7 @@ export default function BlogCtaBanner({
         subtitle:
           "High-precision imaging, pathology, and preventive health screenings with rapid turnaround times and specialist clinical review.",
         primary: { href: "/book-an-appointment", text: "Find a Specialist" },
-        secondary: { href: "/health-packages", text: "Explore Health Packages" },
+        secondary: { href: "/health-checkups", text: "Explore Health Packages" },
         phoneDesktop: "Call 24×7: 1800 309 0309",
         phoneMobile: "Call Diagnostics Desk",
       };
@@ -135,7 +135,7 @@ export default function BlogCtaBanner({
         subtitle:
           "Whether you are seeking a primary clinical opinion, advanced surgery evaluation, or preventive screening — our specialists are here to guide you.",
         primary: { href: "/book-an-appointment", text: "Find a Specialist" },
-        secondary: { href: "/health-packages", text: "Explore Health Packages" },
+        secondary: { href: "/health-checkups", text: "Explore Health Packages" },
         phoneDesktop: "Call 24×7: 1800 309 0309",
         phoneMobile: "Call 24×7 Helpline",
       };
@@ -146,7 +146,7 @@ export default function BlogCtaBanner({
       subtitle:
         "Whether you are seeking a primary clinical opinion, advanced surgery evaluation, or specialized preventive health screening — our 4,500+ world-class consultants are here for you.",
       primary: { href: "/book-an-appointment", text: "Find a Specialist" },
-      secondary: { href: "/health-packages", text: "Explore Health Packages" },
+      secondary: { href: "/health-checkups", text: "Explore Health Packages" },
       phoneDesktop: "Call 24×7: 1800 309 0309",
       phoneMobile: "Call 24×7 Helpline",
     };

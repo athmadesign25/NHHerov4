@@ -2,13 +2,13 @@
   display: flex;
   align-items: center;
   gap: var(--sp-4);
-  background: linear-gradient(135deg, #021a36 0%, #034EA2 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #021a36 0%, var(--blue-brand) 100%);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
   border-radius: var(--radius-xl);
   padding: var(--sp-5);
   position: relative;
-  box-shadow: 0 10px 30px rgba(3, 78, 162, 0.15);
-  color: #FFFFFF;
+  box-shadow: 0 10px 30px rgba(var(--blue-brand-rgb), 0.15);
+  color: var(--white);
   overflow: hidden;
 }
 
@@ -20,15 +20,15 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.4), rgba(255,255,255,0));
+  background: linear-gradient(90deg, rgba(var(--white-rgb), 0), rgba(var(--white-rgb), 0.4), rgba(var(--white-rgb), 0));
 }
 
 .compact {
-  background: linear-gradient(135deg, #021a36 0%, #034EA2 100%);
+  background: linear-gradient(135deg, #021a36 0%, var(--blue-brand) 100%);
   padding: var(--sp-3);
   gap: var(--sp-3);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.1);
 }
 
 /* ─── PHOTO ──────────────────────────────────────────────────────────────── */
@@ -39,9 +39,9 @@
   border-radius: var(--radius-md);
   overflow: hidden;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.1);
+  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.2);
+  border: 2px solid rgba(var(--white-rgb), 0.15);
 }
 
 .compact .photoWrapper {
@@ -64,11 +64,11 @@
 }
 
 .name {
-  font-size: 24px;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--white);
   margin: 0;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -76,12 +76,12 @@
 }
 
 .compact .name {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
 }
 
 .speciality {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--font-size-sm);
+  color: rgba(var(--white-rgb), 0.85);
   font-weight: 500;
   margin: 0;
 }
@@ -99,14 +99,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--font-size-xs);
+  color: rgba(var(--white-rgb), 0.9);
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--white-rgb), 0.1);
   padding: 4px 10px;
   border-radius: 20px;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(var(--blur-sm));
+  border: 1px solid rgba(var(--white-rgb), 0.05);
 }
 
 .metaDot {
@@ -121,25 +121,25 @@
   gap: 4px;
   flex-shrink: 0;
   align-self: flex-start;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--white-rgb), 0.1);
   padding: 10px 16px;
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--blur-sm));
+  border: 1px solid rgba(var(--white-rgb), 0.1);
 }
 
 .feeLabel {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--white-rgb), 0.7);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .feeAmount {
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 /* ─── MOBILE ─────────────────────────────────────────────────────────────── */
@@ -156,7 +156,7 @@
   }
 
   .name {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
   }
 
   .feeBadge {

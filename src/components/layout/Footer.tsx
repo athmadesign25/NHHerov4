@@ -29,7 +29,7 @@ export default function Footer() {
                 </div>
                 <p className={styles.brandDesc}>
                   Delivering affordable, world-class healthcare to every corner of India and beyond. 
-                  Trusted by 2.5M+ patients across 30+ specialties.
+                  Trusted by 2.5M+ patients across 30+ specialities.
                 </p>
                 <div className={styles.contact}>
                   <a href="tel:18003090309" className={styles.contactItem} id="footer-phone">
@@ -102,9 +102,15 @@ export default function Footer() {
               © {new Date().getFullYear()} Narayana Health. All rights reserved.
             </p>
             <div className={styles.bottomLinks}>
-              {["Privacy Policy", "Terms of Use", "Cookie Policy", "Sitemap"].map((item) => (
-                <Link key={item} href="/" className={styles.bottomLink} id={`footer-${item.toLowerCase().replace(/\s+/g, "-")}`}>
-                  {item}
+              {[
+                { label: "Disclaimer", href: "/disclaimer" },
+                { label: "Privacy Policy", href: "/" },
+                { label: "Terms of Use", href: "/disclaimer#liability" },
+                { label: "Cookie Policy", href: "/" },
+                { label: "Sitemap", href: "/" },
+              ].map((item) => (
+                <Link key={item.label} href={item.href} className={styles.bottomLink} id={`footer-${item.label.toLowerCase().replace(/\s+/g, "-")}`}>
+                  {item.label}
                 </Link>
               ))}
             </div>

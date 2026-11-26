@@ -757,7 +757,7 @@ export default function TreatmentsV1SpecialityStyle({
           text: "Find a Specialist",
         }}
         secondaryBtn={{
-          href: "/health-packages",
+          href: "/health-checkups",
           text: "Explore Health Packages",
         }}
         phoneText="Surgical Helpline: 1800 309 0309"

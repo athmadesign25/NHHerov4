@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect, useTransition, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   Search,
@@ -1131,7 +1132,7 @@ export default function TreatmentsV2Library() {
               <AnimatePresence mode="popLayout">
                 {displayedItems.map((item, idx) => {
                   const detailUrl = `/procedures/${item.slug}`;
-                  const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
+                  const doctorsUrl = specialityBookingEntry(item.specialitySlug);
 
                   return (
                     <motion.article
@@ -1236,7 +1237,7 @@ export default function TreatmentsV2Library() {
           text: "Find a Specialist",
         }}
         secondaryBtn={{
-          href: "/health-packages",
+          href: "/health-checkups",
           text: "Explore Health Packages",
         }}
         phoneText="Surgical Helpline: 1800 309 0309"

@@ -1006,6 +1006,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
   const isCoE = propIsCoE !== undefined ? propIsCoE : false;
   const tocItems = isCoE ? COE_TOC_ITEMS : NON_COE_TOC_ITEMS;
   const title = isCardiac ? "Cardiology & Cardiac Surgery" : (currentSpec?.name || 'Cancer Care');
+  const featuredDoctors = getSpecialityFeaturedDoctors(slug, isCardiac);
   const videoSrc = isCardiac ? "/Specialities icons/Cardiology.mp4" : (currentSpec?.detailVideo || currentSpec?.video || "/videos/Hero-Video-New.mp4");
   
   const adultCategories: SpecialityCategoryItem[] = isCardiac ? cardiacAdultCategories : adultCancerCategories;
@@ -1014,7 +1015,6 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
   // Featured Doctors Carousel for responsive mweb (< 768px)
   const [activeFeaturedDoctorIndex, setActiveFeaturedDoctorIndex] = useState(0);
   const featuredDoctorTrackRef = useRef<HTMLDivElement>(null);
-  const featuredDoctorCardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleFeaturedDoctorScroll = () => {
     const track = featuredDoctorTrackRef.current;
@@ -1022,7 +1022,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
     const trackCenter = track.scrollLeft + track.offsetWidth / 2;
     let closestIndex = 0;
     let minDiff = Infinity;
-    featuredDoctorCardRefs.current.forEach((card, idx) => {
+    track.querySelectorAll<HTMLElement>("[data-featured-doctor]").forEach((card, idx) => {
       if (!card) return;
       const cardCenter = card.offsetLeft + card.offsetWidth / 2;
       const diff = Math.abs(cardCenter - trackCenter);
@@ -1036,7 +1036,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
 
   const scrollToFeaturedDoctor = (index: number) => {
     setActiveFeaturedDoctorIndex(index);
-    const card = featuredDoctorCardRefs.current[index];
+    const card = featuredDoctorTrackRef.current?.querySelectorAll<HTMLElement>("[data-featured-doctor]")[index];
     if (card) {
       card.scrollIntoView({
         behavior: "smooth",
@@ -2239,9 +2239,6 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             </div>
           </div>
           {section.id === "featured-doctors" ? (
-            (() => {
-              const featuredDoctors = getSpecialityFeaturedDoctors(slug, isCardiac);
-              return (
                 <>
                   <div
                     className={styles.featuredDoctorsContainer}
@@ -2252,9 +2249,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                       {featuredDoctors.map((doc, idx) => (
                         <motion.div
                           key={idx}
-                          ref={(el) => {
-                            featuredDoctorCardRefs.current[idx] = el;
-                          }}
+                          data-featured-doctor
                           className={styles.doctorBlendCard}
                           initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
                           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -2326,8 +2321,6 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                     </div>
                   </div>
                 </>
-              );
-            })()
           ) : section.id === "related-treatments" ? (
             <div className={styles.subConditionsContainer} data-nav-theme="light">
               <div className={styles.subConditionsGrid}>

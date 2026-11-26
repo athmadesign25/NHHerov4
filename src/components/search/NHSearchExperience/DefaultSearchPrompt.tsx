@@ -115,9 +115,8 @@ export default function DefaultSearchPrompt({
   const router = useRouter();
   const isWhite = searchTheme === "white";
 
-  // Voice Interaction Machine
-  const [voiceMode, setVoiceMode] = useState<"idle" | "listening" | "transcribed">("idle");
-  const [transcribedText, setTranscribedText] = useState("");
+  // Voice Interaction Machine (records inline on landing composer, then transitions to Active Search with transcript)
+  const [voiceMode, setVoiceMode] = useState<"idle" | "listening">("idle");
   const [liveTranscript, setLiveTranscript] = useState("");
   const [recordingSeconds, setRecordingSeconds] = useState(0);
 
@@ -148,7 +147,7 @@ export default function DefaultSearchPrompt({
     };
   }, []);
 
-  // Stop recording and finalize transcript (capped at 500 words max)
+  // Stop recording, reset landing voice UI, and take transcript to Active Search stage for editing
   const finishRecording = useCallback((finalText?: string) => {
     isListeningRef.current = false;
     if (simulationTimerRef.current) clearTimeout(simulationTimerRef.current);
@@ -166,17 +165,24 @@ export default function DefaultSearchPrompt({
     }
 
     const resolvedText = (finalText || liveTranscript || DEMO_VOICE_QUERY).trim();
-    // Enforce 500-word limit
     const limitedText = enforceWordLimit(resolvedText, MAX_SEARCH_WORDS);
-    setTranscribedText(limitedText);
-    setVoiceMode("transcribed");
-  }, [liveTranscript]);
+
+    setRecordingSeconds(0);
+    recordingSecondsRef.current = 0;
+    setLiveTranscript("");
+    setVoiceMode("idle");
+
+    if (onVoiceSubmit) {
+      onVoiceSubmit(limitedText);
+    } else {
+      onActivate();
+    }
+  }, [liveTranscript, onActivate, onVoiceSubmit]);
 
   // Start Voice Recording (Strict 3-minute limit = 180 seconds max)
   const startRecording = useCallback(() => {
     setVoiceMode("listening");
     setLiveTranscript("");
-    setTranscribedText("");
     setRecordingSeconds(0);
     recordingSecondsRef.current = 0;
     isListeningRef.current = true;
@@ -344,16 +350,15 @@ export default function DefaultSearchPrompt({
     recordingSecondsRef.current = 0;
     setVoiceMode("idle");
     setLiveTranscript("");
-    setTranscribedText("");
   };
 
   // Handle Paperclip attach click (PDF only)
   const handlePaperclipClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (voiceMode === "listening") finishRecording();
-    setVoiceMode("idle");
-    setTranscribedText("");
+    if (voiceMode === "listening") {
+      handleClearVoice();
+    }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -389,17 +394,6 @@ export default function DefaultSearchPrompt({
     const prompt = "Understand my health report";
     if (onDocumentSubmit) {
       onDocumentSubmit(attachedPdf, prompt);
-    } else {
-      onActivate();
-    }
-  };
-
-  // Submit voice search query -> Opens Pulse AI direct
-  const handleSendVoice = (e?: React.MouseEvent | React.FormEvent) => {
-    if (e) e.stopPropagation();
-    const queryToSend = (transcribedText || liveTranscript || DEMO_VOICE_QUERY).trim();
-    if (onVoiceSubmit) {
-      onVoiceSubmit(queryToSend);
     } else {
       onActivate();
     }
@@ -581,60 +575,6 @@ export default function DefaultSearchPrompt({
               </div>
             </motion.div>
           )}
-
-          {voiceMode === "transcribed" && (
-            <motion.div
-              key="voice-transcribed"
-              className={styles.transcribedWrap}
-              initial={{ opacity: 0, y: 3 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -3 }}
-              transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <input
-                type="text"
-                className={styles.transcribedInput}
-                value={transcribedText}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  const words = countWords(val);
-                  if (words > MAX_SEARCH_WORDS) {
-                    setTranscribedText(enforceWordLimit(val, MAX_SEARCH_WORDS));
-                  } else {
-                    setTranscribedText(val);
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleSendVoice();
-                  } else if (e.key === "Escape") {
-                    handleClearVoice();
-                  }
-                }}
-                onBlur={() => {
-                  if (!transcribedText.trim()) {
-                    setVoiceMode("idle");
-                  }
-                }}
-                placeholder="Describe your symptoms..."
-                autoFocus
-                aria-label="Transcribed voice health query"
-              />
-
-              {countWords(transcribedText) >= MAX_SEARCH_WORDS && (
-                <div className={styles.transcribedActions}>
-                  <span
-                    className={styles.transcribedWordLimitError}
-                    role="alert"
-                  >
-                    500 words limit reached
-                  </span>
-                </div>
-              )}
-            </motion.div>
-          )}
         </AnimatePresence>
       </motion.div>
 
@@ -754,29 +694,27 @@ export default function DefaultSearchPrompt({
             {/* Right side controls: splits into Send + Mic */}
             <div className={styles.bottomControlsRight}>
               <div className={styles.splitControlsGroup}>
-                {/* Mic button (standalone, allows re-recording in transcribed state) */}
+                {/* Mic button */}
                 <button
                   type="button"
                   className={styles.standaloneIconBtn}
-                  aria-label={voiceMode === "transcribed" ? "Re-record voice" : "Voice search"}
-                  title={voiceMode === "transcribed" ? "Click to re-record voice" : "Voice search"}
+                  aria-label="Voice search"
+                  title="Voice search"
                   onClick={handleMicClick}
                 >
                   <Mic size={17} />
                 </button>
 
-                {/* Send button (illuminated with active pulse when transcribed or PDF attached) */}
+                {/* Send button */}
                 <button
                   type="button"
-                  className={`${styles.submitArrowBtn} ${voiceMode === "transcribed" || attachedPdf ? styles.submitArrowActiveBtn : ""}`}
+                  className={`${styles.submitArrowBtn} ${attachedPdf ? styles.submitArrowActiveBtn : ""}`}
                   aria-label="Submit search"
-                  title={attachedPdf ? "Understand health report with Pulse AI" : voiceMode === "transcribed" ? "Send to Pulse AI" : "Submit search"}
+                  title={attachedPdf ? "Understand health report with Pulse AI" : "Submit search"}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (attachedPdf) {
                       handleSendDocument(e);
-                    } else if (voiceMode === "transcribed") {
-                      handleSendVoice(e);
                     } else {
                       onActivate();
                     }

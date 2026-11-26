@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: var(--consultation-track, #f1f5f9);
+  background: var(--consultation-track, var(--slate-100));
   border: none;
   border-radius: var(--radius-full);
   padding: 4px;
@@ -25,7 +25,7 @@
 }
 
 .option:hover:not(.optionActive) {
-  background: rgba(15, 23, 42, 0.03);
+  background: rgba(var(--slate-900-rgb), 0.03);
 }
 
 .option:focus-visible {
@@ -37,10 +37,10 @@
 .activePill {
   position: absolute;
   inset: 0;
-  background: var(--consultation-pill, #ffffff);
+  background: var(--consultation-pill, var(--white));
   border: none;
   border-radius: var(--radius-full);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px rgba(var(--slate-900-rgb), 0.08), 0 1px 2px rgba(var(--slate-900-rgb), 0.04);
   z-index: 0;
 }
 
@@ -54,25 +54,25 @@
 }
 
 .optionLabel {
-  font-size: var(--font-size-sm, 14px);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--consultation-muted, #475569);
+  color: var(--consultation-muted, var(--slate-600));
   white-space: nowrap;
   transition: color var(--transition-fast), font-weight var(--transition-fast);
 }
 
 .option:hover:not(.optionActive) .optionLabel {
-  color: var(--consultation-text, #0f172a);
+  color: var(--consultation-text, var(--slate-900));
 }
 
 .optionHospitalActive .optionLabel {
   font-weight: 700;
-  color: var(--consultation-hospital, #dc2626);
+  color: var(--consultation-hospital, var(--red-600));
 }
 
 .optionVideoActive .optionLabel {
   font-weight: 700;
-  color: var(--consultation-video, #034ea2);
+  color: var(--consultation-video, var(--blue-brand));
 }
 
 .optionIcon {
@@ -93,6 +93,6 @@
   }
 
   .optionLabel {
-    font-size: var(--font-size-xs, 12px);
+    font-size: var(--font-size-xs);
   }
 }

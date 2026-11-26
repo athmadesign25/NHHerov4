@@ -2542,10 +2542,10 @@
   transform: scale(1.03);
 }
 
-/* ── Results Main Split Layout (Weighted 67% Left vs 33% Right) ── */
+/* ── Results Main Split Layout (Weighted 64% Left vs 36% Right for clean breathing room) ── */
 .resultsSplitLayout {
   display: grid;
-  grid-template-columns: minmax(0, 67fr) minmax(280px, 33fr);
+  grid-template-columns: minmax(0, 64fr) minmax(300px, 36fr);
   grid-template-rows: minmax(0, 1fr);
   gap: clamp(24px, 3vw, 36px);
   margin-top: 14px;
@@ -2556,6 +2556,13 @@
   height: 100%;
   overflow: hidden;
   position: relative;
+}
+
+.resultsSplitLayoutPulseActive {
+  flex: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  align-items: start !important;
 }
 
 /* ── Primary Dominant Left Column (Independent Vertical Scroll under Sticky Pulse AI) ── */
@@ -4124,7 +4131,7 @@
   color: #FFFFFF;
 }
 
-/* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis (Editorial Sidebar) ── */
+/* ── Tertiary Right Rail: Supporting Discovery, Unboxed & Airy (Scrolls only when height overflows) ── */
 .resultsRightCol {
   display: flex;
   flex-direction: column;
@@ -4136,13 +4143,28 @@
   max-height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 4px;
-  padding-bottom: 88px;
-  scrollbar-width: none;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 8px 32px 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
 }
 
 .resultsRightCol::-webkit-scrollbar {
-  display: none;
+  width: 5px;
+}
+
+.resultsRightCol::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.resultsRightCol::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 6px;
+}
+
+.resultsRightCol::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.55);
 }
 
 .editorialSection {
@@ -4287,15 +4309,13 @@
   transform: translateX(2px);
 }
 
-/* Related Specialties Pills (Up to 3 clean rows) */
+/* Related Specialties Pills */
 .editorialPillsGroup {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex-wrap: wrap;
   margin-top: 6px;
-  max-height: 98px;
-  overflow: hidden;
 }
 
 .editorialPill {
@@ -5110,6 +5130,15 @@
     min-height: 0 !important;
     overflow-y: auto !important;
     padding-bottom: 72px !important;
+  }
+
+  .unifiedResultsScrollAreaActive .resultsSplitLayout,
+  .unifiedResultsScrollAreaActive .resultsLeftColWrap,
+  .unifiedResultsScrollAreaActive .resultsLeftCol {
+    height: auto !important;
+    flex: none !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
   }
 
   .pressEnterHint {
@@ -6408,6 +6437,61 @@
   transform: translateY(-1px) scale(1.04) !important;
 }
 
+/* Inline Voice Recording Row inside Active Search White Modal */
+.themeWhite .stateActive .voiceListeningBadge,
+[data-search-theme="white"] .stateActive .voiceListeningBadge {
+  background: rgba(237, 28, 36, 0.09) !important;
+  border-color: rgba(237, 28, 36, 0.25) !important;
+  color: #D91B24 !important;
+}
+
+.themeWhite .stateActive .voiceLiveTranscript,
+[data-search-theme="white"] .stateActive .voiceLiveTranscript {
+  color: #0F172A !important;
+}
+
+.themeWhite .stateActive .voiceLivePlaceholder,
+[data-search-theme="white"] .stateActive .voiceLivePlaceholder {
+  color: #64748B !important;
+}
+
+.themeWhite .stateActive .voiceLastSecondsBlink,
+[data-search-theme="white"] .stateActive .voiceLastSecondsBlink {
+  background: rgba(237, 28, 36, 0.1) !important;
+  border-color: rgba(237, 28, 36, 0.28) !important;
+  color: #D91B24 !important;
+}
+
+.themeWhite .stateActive .voiceCancelBtn,
+[data-search-theme="white"] .stateActive .voiceCancelBtn {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #475569 !important;
+}
+
+.themeWhite .stateActive .voiceCancelBtn:hover,
+[data-search-theme="white"] .stateActive .voiceCancelBtn:hover {
+  background: rgba(237, 28, 36, 0.12) !important;
+  border-color: rgba(237, 28, 36, 0.35) !important;
+  color: #D91B24 !important;
+  box-shadow: none !important;
+}
+
+.themeWhite .stateActive .voiceConfirmBtn,
+[data-search-theme="white"] .stateActive .voiceConfirmBtn {
+  background: #034EA2 !important;
+  border-color: #034EA2 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .stateActive .voiceConfirmBtn:hover,
+[data-search-theme="white"] .stateActive .voiceConfirmBtn:hover {
+  background: #023070 !important;
+  border-color: #023070 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25) !important;
+}
+
 /* Quick Actions on Default Landing Composer (ALWAYS high-contrast crisp white on hero glass) */
 .stateLanding .inlineActionBtn,
 .landingContainer .inlineActionBtn,
@@ -6945,15 +7029,32 @@
   color: #0F172A !important;
 }
 
-/* Right column Editorial / Tertiary items (White Mode - Clean unboxed without row/section lines) */
+/* Right column Secondary / Supporting Discovery — clean unboxed whitespace with generous breathing room */
+.themeWhite .resultsRightCol,
+[data-search-theme="white"] .resultsRightCol {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 2px 10px 32px 14px !important;
+  gap: 30px !important;
+}
+
+.themeWhite .resultsRightCol .sectionEyebrowTitle,
+[data-search-theme="white"] .resultsRightCol .sectionEyebrowTitle {
+  color: #344b69 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em !important;
+}
+
 .themeWhite .editorialItem,
 [data-search-theme="white"] .editorialItem {
   border-bottom: none !important;
+  padding: 8px 6px !important;
 }
 
 .themeWhite .editorialItem:hover,
 [data-search-theme="white"] .editorialItem:hover {
-  background: #F8FAFC !important;
+  background: #f4f7fb !important;
 }
 
 .themeWhite .editorialIconMono,
@@ -6968,12 +7069,12 @@
 
 .themeWhite .editorialItemTitle,
 [data-search-theme="white"] .editorialItemTitle {
-  color: #0F172A !important;
+  color: #24334b !important;
 }
 
 .themeWhite .editorialItemSub,
 [data-search-theme="white"] .editorialItemSub {
-  color: #64748B !important;
+  color: #7689a5 !important;
 }
 
 .themeWhite .editorialChevron,
@@ -6990,7 +7091,7 @@
 [data-search-theme="white"] .editorialViewMoreLink,
 .themeWhite .editorialHeaderViewAll,
 [data-search-theme="white"] .editorialHeaderViewAll {
-  color: #64748B !important;
+  color: #657d9d !important;
 }
 
 .themeWhite .editorialViewMoreLink:hover,
@@ -7002,15 +7103,18 @@
 
 .themeWhite .editorialPill,
 [data-search-theme="white"] .editorialPill {
-  background: #F1F5F9 !important;
-  border: 1px solid #E2E8F0 !important;
-  color: #334155 !important;
+  background: #edf3f8 !important;
+  border: 1px solid transparent !important;
+  border-radius: 18px !important;
+  padding: 6px 13px !important;
+  color: #536c87 !important;
+  font-size: 11px !important;
 }
 
 .themeWhite .editorialPill:hover,
 [data-search-theme="white"] .editorialPill:hover {
-  background: #EEF3FA !important;
-  border-color: rgba(3, 78, 162, 0.3) !important;
+  background: #e1ecf6 !important;
+  border-color: rgba(3, 78, 162, 0.22) !important;
   color: #034EA2 !important;
 }
 
@@ -9143,43 +9247,66 @@
   overflow: hidden;
 }
 
-/* ── Unified Full-Width Progressive Feathered Backdrop (Zero Milky Wash-Out) ── */
+.resultsLeftColWrapPulseActive {
+  height: auto !important;
+  flex: none !important;
+  overflow: visible !important;
+}
+
+/* ── Smooth Progressive Frosted Gradient Blur Backdrop (Figma 523:389) ── */
 .pulseDockBackdrop,
 .pulseBottomGradientFade {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 58px;
+  height: 128px;
   pointer-events: none;
   z-index: 18;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-
-  /* Crisp white backing strictly behind the 50px pill (0–86% = 50px),
-     with an 8px soft edge feather (86–100%) — zero encroachment into doctor cards above */
   background: linear-gradient(
     to top,
-    #FFFFFF 0%,
-    #FFFFFF 86%,
-    rgba(255, 255, 255, 0.75) 93%,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.94) 42%,
+    rgba(255, 255, 255, 0.84) 60%,
+    rgba(255, 255, 255, 0.50) 78%,
+    rgba(255, 255, 255, 0.16) 90%,
     rgba(255, 255, 255, 0) 100%
   );
-
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  mask-image: none;
-  -webkit-mask-image: none;
+  backdrop-filter: blur(6px) saturate(115%);
+  -webkit-backdrop-filter: blur(6px) saturate(115%);
+  mask-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.96) 44%,
+    rgba(0, 0, 0, 0.72) 66%,
+    rgba(0, 0, 0, 0.25) 84%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.96) 44%,
+    rgba(0, 0, 0, 0.72) 66%,
+    rgba(0, 0, 0, 0.25) 84%,
+    rgba(0, 0, 0, 0) 100%
+  );
   will-change: opacity, transform;
-  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    left 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pulseDockBackdropCompact {
-  height: 58px;
+  height: 128px;
 }
 
 .pulseDockBackdropActive {
-  height: 58px;
+  height: 92px;
 }
 
 .themeWhite .pulseDockBackdrop,
@@ -9188,22 +9315,38 @@
 [data-search-theme="white"] .pulseBottomGradientFade {
   background: linear-gradient(
     to top,
-    #FFFFFF 0%,
-    #FFFFFF 86%,
-    rgba(255, 255, 255, 0.75) 93%,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.94) 42%,
+    rgba(255, 255, 255, 0.84) 60%,
+    rgba(255, 255, 255, 0.50) 78%,
+    rgba(255, 255, 255, 0.16) 90%,
     rgba(255, 255, 255, 0) 100%
   ) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  mask-image: none !important;
-  -webkit-mask-image: none !important;
+  backdrop-filter: blur(6px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(115%) !important;
+  mask-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.96) 44%,
+    rgba(0, 0, 0, 0.72) 66%,
+    rgba(0, 0, 0, 0.25) 84%,
+    rgba(0, 0, 0, 0) 100%
+  ) !important;
+  -webkit-mask-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.96) 44%,
+    rgba(0, 0, 0, 0.72) 66%,
+    rgba(0, 0, 0, 0.25) 84%,
+    rgba(0, 0, 0, 0) 100%
+  ) !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
 
 .themeWhite .floatingPulsePill,
 [data-search-theme="white"] .floatingPulsePill {
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  box-shadow: 0 6px 22px rgba(20, 84, 184, 0.08), 0 1px 4px rgba(0, 0, 0, 0.03) !important;
 }
 
 .themeDark .pulseDockBackdrop,
@@ -9212,24 +9355,28 @@
 [data-search-theme="dark"] .pulseBottomGradientFade {
   background: linear-gradient(
     to top,
-    #0B111E 0%,
-    #0B111E 86%,
-    rgba(11, 17, 30, 0.75) 93%,
+    rgba(11, 17, 30, 0.98) 0%,
+    rgba(11, 17, 30, 0.92) 44%,
+    rgba(11, 17, 30, 0.72) 68%,
     rgba(11, 17, 30, 0) 100%
   ) !important;
 }
 
-/* Floating Dock for Ask Pulse ai Bar (Small/compact in non-active, expands on active) */
+/* Floating Dock for Ask Pulse Bar (Scoped over Left Doctors Column in Semantic View) */
 .floatingPulseDock {
   position: absolute;
-  bottom: 2px;
+  bottom: 10px;
   left: 18px;
   right: 18px;
   z-index: 25;
   pointer-events: none;
   display: flex;
   will-change: opacity, transform;
-  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    left 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pulseDockVisible {
@@ -9261,23 +9408,86 @@
   align-items: stretch !important;
 }
 
+/* Follow-up Quick Suggestion Chips above Ask Pulse Bar (Figma 523:391) */
+.pulseQuickChipsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  padding: 0 12px 0 46px;
+  margin-bottom: 9px;
+  box-sizing: border-box;
+}
+
+.pulseQuickChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #d8e1f7;
+  color: #244782;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(36, 71, 130, 0.06);
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pulseQuickChip:hover {
+  background: #034EA2;
+  border-color: #034EA2;
+  color: #FFFFFF;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px rgba(3, 78, 162, 0.28);
+}
+
+.themeDark .pulseQuickChip,
+[data-search-theme="dark"] .pulseQuickChip {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(139, 92, 246, 0.35);
+  color: #cbd5e1;
+}
+
+.themeDark .pulseQuickChip:hover,
+[data-search-theme="dark"] .pulseQuickChip:hover {
+  background: #034EA2;
+  border-color: #38BDF8;
+  color: #FFFFFF;
+}
+
+.floatingPulseComposerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
 .floatingPulsePill {
   pointer-events: auto;
-  height: 52px;
+  height: 48px;
   border-radius: 9999px;
   background: #FFFFFF;
   display: flex;
   align-items: center;
-  padding: 0 16px 0 10px;
-  gap: 12px;
-  box-shadow: 0 8px 30px rgba(0, 78, 162, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
-  border: 2px solid transparent;
-  background-image: linear-gradient(#FFFFFF, #FFFFFF), linear-gradient(90deg, #E11D48 0%, #8B5CF6 45%, #034EA2 100%);
+  padding: 0 14px 0 18px;
+  gap: 10px;
+  box-shadow: 0 8px 30px rgba(0, 78, 162, 0.10), 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1.5px solid transparent;
+  background-image: linear-gradient(#FFFFFF, #FFFFFF), linear-gradient(90deg, #A73FBC 0%, #6D6AFE 48%, #00B4D8 100%);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
 }
 
 .floatingPulsePillCompact {
@@ -9286,6 +9496,25 @@
 }
 
 @media (max-width: 900px) {
+  .pulseQuickChipsRow {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 4px;
+    gap: 8px;
+  }
+
+  .pulseQuickChipsRow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .floatingPulseDock {
+    left: 12px;
+    right: 12px;
+    bottom: 8px;
+  }
+
   .floatingPulsePillCompact {
     width: 100%;
     max-width: 100%;
@@ -9298,7 +9527,7 @@
 }
 
 .floatingPulsePill:focus-within {
-  box-shadow: 0 10px 36px rgba(3, 78, 162, 0.20), 0 0 0 2px rgba(3, 78, 162, 0.2);
+  box-shadow: 0 10px 34px rgba(3, 78, 162, 0.18), 0 0 0 2px rgba(109, 106, 254, 0.14);
 }
 
 .themeDark .floatingPulsePill,
@@ -9309,10 +9538,10 @@
 }
 
 .floatingPulsePlusBtn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: #034EA2;
+  background: linear-gradient(265deg, rgb(0, 56, 118) 4%, rgb(0, 104, 220) 96%);
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -9320,12 +9549,32 @@
   border: none;
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 0.2s ease, background 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0, 56, 118, 0.24);
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .floatingPulsePlusBtn:hover {
-  background: #023070;
+  filter: brightness(1.08);
   transform: scale(1.05);
+}
+
+.floatingPulseTrailingActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.floatingPulseDivider {
+  width: 1px;
+  height: 22px;
+  background: #d3dce6;
+  flex-shrink: 0;
+}
+
+.themeDark .floatingPulseDivider,
+[data-search-theme="dark"] .floatingPulseDivider {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .floatingPulseInput {
@@ -9335,7 +9584,7 @@
   border: none;
   outline: none;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 500;
   color: #0F172A;
 }
@@ -9346,7 +9595,7 @@
 }
 
 .floatingPulseInput::placeholder {
-  color: #64748B;
+  color: #919191;
   font-weight: 400;
 }
 
@@ -9358,12 +9607,12 @@
 .floatingPulseMicBtn {
   background: transparent;
   border: none;
-  color: #034EA2;
+  color: #1454b8;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 6px;
+  padding: 5px;
   border-radius: 50%;
   transition: background 0.2s ease, transform 0.2s ease;
 }
@@ -9507,7 +9756,7 @@
   border-top: none;
   width: 100%;
   min-height: calc(100vh - 120px);
-  padding-bottom: 140px;
+  padding-bottom: max(180px, calc(100vh - 280px));
 }
 
 .themeDark .aiChatStreamSection,
@@ -9638,9 +9887,11 @@
 }
 
 .aiBotChipBtn:hover {
-  background: #F1F5F9;
+  background: #034EA2;
   border-color: #034EA2;
-  transform: translateY(-1px);
+  color: #FFFFFF;
+  box-shadow: 0 5px 14px rgba(3, 78, 162, 0.24);
+  transform: translateY(-1.5px);
 }
 
 .themeDark .aiBotChipBtn,
@@ -10280,14 +10531,21 @@
   }
 
   .floatingPulsePill {
-    height: 46px !important;
+    height: 44px !important;
+  }
+
+  .pulseQuickChipsRow {
+    margin-bottom: 6px !important;
   }
 
   .pulseDockBackdrop,
   .pulseBottomGradientFade,
-  .pulseDockBackdropCompact,
+  .pulseDockBackdropCompact {
+    height: 112px !important;
+  }
+
   .pulseDockBackdropActive {
-    height: 52px !important;
+    height: 82px !important;
   }
 }
 

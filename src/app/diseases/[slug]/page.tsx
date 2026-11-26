@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   CheckCircle2,
@@ -284,7 +285,7 @@ export default function DiseaseDetailPage({ params }: PageProps) {
 
             <div className={styles.heroActionsRow}>
               <Link
-                href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
+                href={specialityBookingEntry(detail.specialitySlug)}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
@@ -558,7 +559,7 @@ export default function DiseaseDetailPage({ params }: PageProps) {
         title="Need an Expert Second Opinion on a Complex Diagnosis?"
         subtitle="Our institutional clinical boards review imaging, histology, and molecular staging to formulate personalized treatment protocols with transparent care pathways."
         primaryBtn={{
-          href: `/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`,
+          href: specialityBookingEntry(detail.specialitySlug),
           text: "Book Clinical Consultation",
         }}
         secondaryBtn={{
@@ -571,7 +572,7 @@ export default function DiseaseDetailPage({ params }: PageProps) {
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
-        consultHref={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
+        consultHref={specialityBookingEntry(detail.specialitySlug)}
         consultLabel={"Book\nConsultation"}
         conditionTitle={detail.shortTitle}
         pulseQuery={`I want to know about ${detail.heroTitle}: clinical guidance, diagnosis, and treatment options.`}

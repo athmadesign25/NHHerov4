@@ -15,6 +15,7 @@ export const footerLinks = {
     { label: "Awards & Recognition", href: "/" },
     { label: "Press & Media", href: "/" },
     { label: "CSR Initiatives", href: "/csr" },
+    { label: "Community Radio (90.4 FM)", href: "/community-radioprogram" },
     { label: "Careers", href: "/" },
   ],
   "Resources": [

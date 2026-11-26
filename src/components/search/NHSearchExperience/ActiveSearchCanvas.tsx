@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { 
-  Paperclip, Mic, ArrowRight, X, 
+  Paperclip, Mic, ArrowRight, X, Check,
   User, Heart, Sparkles, CornerDownLeft, Command,
   Activity, Bone, Brain, AlertCircle, Stethoscope, SearchX,
   Clock
@@ -16,8 +16,56 @@ import {
   fetchLiveApiPredictions,
   countWords,
   enforceWordLimit,
-  MAX_SEARCH_WORDS
+  MAX_SEARCH_WORDS,
+  MAX_AUDIO_DURATION_SECONDS
 } from "./searchData";
+
+interface SpeechRecognitionResultItem {
+  transcript: string;
+}
+
+interface SpeechRecognitionResultList {
+  [index: number]: SpeechRecognitionResultItem;
+  isFinal?: boolean;
+  length: number;
+}
+
+interface SpeechRecognitionResultWrapper {
+  [index: number]: SpeechRecognitionResultList;
+  isFinal?: boolean;
+  length: number;
+}
+
+interface SpeechRecognitionEventLike {
+  results: SpeechRecognitionResultWrapper;
+}
+
+interface SpeechRecognitionInstance {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: unknown) => void) | null;
+  onend: (() => void) | null;
+  onspeechend?: (() => void) | null;
+}
+
+type SpeechRecognitionCtor = new () => SpeechRecognitionInstance;
+
+const DEMO_VOICE_QUERY = "I have chest pain and shortness of breath since morning";
+
+const ACOUSTIC_BAR_COUNT = 44;
+const ACOUSTIC_WAVE_BARS = Array.from({ length: ACOUSTIC_BAR_COUNT }, (_, i) => {
+  const distFromCenter = Math.abs(i - ACOUSTIC_BAR_COUNT / 2) / (ACOUSTIC_BAR_COUNT / 2);
+  const bell = Math.sin((1 - distFromCenter) * (Math.PI / 2));
+  const baseHeight = Math.round(7 + bell * 17 + ((i % 3) * 2));
+  const delay = Number(((i * 0.045) % 0.85).toFixed(2));
+  const duration = Number((0.65 + ((i % 4) * 0.1)).toFixed(2));
+  return { baseHeight, delay, duration };
+});
 
 const MOBILE_POPULAR_SEARCHES = [
   { label: "Cardiologist", query: "Cardiologist near me", icon: Heart },
@@ -52,6 +100,18 @@ export default function ActiveSearchCanvas({
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedSugIndex, setSelectedSugIndex] = useState<number>(-1);
   const [livePrediction, setLivePrediction] = useState<PredictiveState | null>(null);
+  const [isVoiceListening, setIsVoiceListening] = useState(false);
+  const [liveVoiceTranscript, setLiveVoiceTranscript] = useState("");
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+
+  const isListeningRef = useRef(false);
+  const voiceRecognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+  const voiceSimulationTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const voiceStreamIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const voiceSilenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const voiceDurationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const liveVoiceTranscriptRef = useRef("");
+  const recordingSecondsRef = useRef(0);
 
   // Recent Searches (History for logged in user, cache for guest user)
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
@@ -161,10 +221,236 @@ export default function ActiveSearchCanvas({
     ? (localPrediction || livePrediction)
     : (livePrediction || localPrediction);
 
-  // Auto-focus input when opening
-  useEffect(() => {
-    inputRef.current?.focus();
+  const clearActiveVoiceTimers = useCallback(() => {
+    if (voiceSimulationTimerRef.current) {
+      clearTimeout(voiceSimulationTimerRef.current);
+      voiceSimulationTimerRef.current = null;
+    }
+    if (voiceStreamIntervalRef.current) {
+      clearInterval(voiceStreamIntervalRef.current);
+      voiceStreamIntervalRef.current = null;
+    }
+    if (voiceSilenceTimerRef.current) {
+      clearTimeout(voiceSilenceTimerRef.current);
+      voiceSilenceTimerRef.current = null;
+    }
+    if (voiceDurationIntervalRef.current) {
+      clearInterval(voiceDurationIntervalRef.current);
+      voiceDurationIntervalRef.current = null;
+    }
   }, []);
+
+  // Auto-focus input when opening & place cursor cleanly at end of any pre-filled transcript
+  useEffect(() => {
+    const el = inputRef.current;
+    if (el) {
+      el.focus();
+      const len = el.value.length;
+      if (len > 0) {
+        el.setSelectionRange(len, len);
+      }
+    }
+    return () => {
+      isListeningRef.current = false;
+      clearActiveVoiceTimers();
+      if (voiceRecognitionRef.current) {
+        try {
+          voiceRecognitionRef.current.abort();
+        } catch {}
+        voiceRecognitionRef.current = null;
+      }
+    };
+  }, [clearActiveVoiceTimers]);
+
+  const finishActiveVoice = useCallback((finalText?: string) => {
+    if (!isListeningRef.current) return;
+    isListeningRef.current = false;
+    clearActiveVoiceTimers();
+
+    if (voiceRecognitionRef.current) {
+      try {
+        voiceRecognitionRef.current.stop();
+      } catch {}
+      voiceRecognitionRef.current = null;
+    }
+
+    const resolvedText = (finalText || liveVoiceTranscriptRef.current || DEMO_VOICE_QUERY).trim();
+    const limitedText = enforceWordLimit(resolvedText, MAX_SEARCH_WORDS);
+
+    liveVoiceTranscriptRef.current = "";
+    recordingSecondsRef.current = 0;
+    setLiveVoiceTranscript("");
+    setRecordingSeconds(0);
+    setIsVoiceListening(false);
+    onQueryChange(limitedText);
+
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => {
+        const el = inputRef.current;
+        if (el) {
+          el.focus();
+          el.setSelectionRange(limitedText.length, limitedText.length);
+        }
+      });
+    }
+  }, [clearActiveVoiceTimers, onQueryChange]);
+
+  const handleCancelActiveVoice = useCallback(() => {
+    isListeningRef.current = false;
+    clearActiveVoiceTimers();
+
+    if (voiceRecognitionRef.current) {
+      try {
+        voiceRecognitionRef.current.abort();
+      } catch {}
+      voiceRecognitionRef.current = null;
+    }
+
+    liveVoiceTranscriptRef.current = "";
+    recordingSecondsRef.current = 0;
+    setLiveVoiceTranscript("");
+    setRecordingSeconds(0);
+    setIsVoiceListening(false);
+
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }
+  }, [clearActiveVoiceTimers]);
+
+  const handleStartActiveVoice = useCallback(() => {
+    clearActiveVoiceTimers();
+    isListeningRef.current = true;
+    liveVoiceTranscriptRef.current = "";
+    recordingSecondsRef.current = 0;
+    setLiveVoiceTranscript("");
+    setRecordingSeconds(0);
+    setIsVoiceListening(true);
+
+    voiceDurationIntervalRef.current = setInterval(() => {
+      if (!isListeningRef.current) {
+        clearActiveVoiceTimers();
+        return;
+      }
+      recordingSecondsRef.current += 1;
+      setRecordingSeconds(recordingSecondsRef.current);
+
+      if (recordingSecondsRef.current >= MAX_AUDIO_DURATION_SECONDS) {
+        finishActiveVoice();
+      }
+    }, 1000);
+
+    let speechApiFound = false;
+    if (typeof window !== "undefined") {
+      const win = window as unknown as {
+        SpeechRecognition?: SpeechRecognitionCtor;
+        webkitSpeechRecognition?: SpeechRecognitionCtor;
+      };
+      const SpeechCtor = win.SpeechRecognition || win.webkitSpeechRecognition;
+
+      if (SpeechCtor) {
+        try {
+          const rec = new SpeechCtor();
+          rec.continuous = false;
+          rec.interimResults = true;
+          rec.lang = "en-IN";
+
+          rec.onresult = (ev) => {
+            if (!isListeningRef.current) return;
+            let interim = "";
+            let final = "";
+
+            for (let i = 0; i < ev.results.length; i++) {
+              const res = ev.results[i];
+              if (res.isFinal) {
+                final += res[0]?.transcript || "";
+              } else {
+                interim += res[0]?.transcript || "";
+              }
+            }
+
+            const current = enforceWordLimit((final || interim).trim(), MAX_SEARCH_WORDS);
+            if (current) {
+              liveVoiceTranscriptRef.current = current;
+              setLiveVoiceTranscript(current);
+              if (voiceSimulationTimerRef.current) {
+                clearTimeout(voiceSimulationTimerRef.current);
+                voiceSimulationTimerRef.current = null;
+              }
+              if (voiceStreamIntervalRef.current) {
+                clearInterval(voiceStreamIntervalRef.current);
+                voiceStreamIntervalRef.current = null;
+              }
+            }
+
+            if (final) {
+              finishActiveVoice(final);
+            } else {
+              if (voiceSilenceTimerRef.current) clearTimeout(voiceSilenceTimerRef.current);
+              voiceSilenceTimerRef.current = setTimeout(() => {
+                if (isListeningRef.current && current) {
+                  finishActiveVoice(current);
+                }
+              }, 1600);
+            }
+          };
+
+          rec.onerror = () => {
+            // Allow interactive demo fallback to proceed smoothly if mic access is unavailable
+          };
+
+          rec.onspeechend = () => {
+            if (voiceSilenceTimerRef.current) clearTimeout(voiceSilenceTimerRef.current);
+            voiceSilenceTimerRef.current = setTimeout(() => {
+              if (isListeningRef.current) {
+                finishActiveVoice();
+              }
+            }, 800);
+          };
+
+          rec.onend = () => {
+            if (isListeningRef.current) {
+              finishActiveVoice();
+            }
+          };
+
+          rec.start();
+          voiceRecognitionRef.current = rec;
+          speechApiFound = true;
+        } catch {
+          speechApiFound = false;
+        }
+      }
+    }
+
+    voiceSimulationTimerRef.current = setTimeout(() => {
+      if (!isListeningRef.current) return;
+      const words = DEMO_VOICE_QUERY.split(" ");
+      let idx = 0;
+      let accum = "";
+
+      voiceStreamIntervalRef.current = setInterval(() => {
+        if (!isListeningRef.current) return;
+        if (idx < words.length) {
+          accum += (accum ? " " : "") + words[idx];
+          liveVoiceTranscriptRef.current = accum;
+          setLiveVoiceTranscript(accum);
+          idx++;
+        } else {
+          if (voiceStreamIntervalRef.current) {
+            clearInterval(voiceStreamIntervalRef.current);
+            voiceStreamIntervalRef.current = null;
+          }
+          voiceSilenceTimerRef.current = setTimeout(() => {
+            if (isListeningRef.current) {
+              finishActiveVoice(accum);
+            }
+          }, 900);
+        }
+      }, 260);
+    }, speechApiFound ? 3200 : 1600);
+  }, [clearActiveVoiceTimers, finishActiveVoice]);
 
   // Keyboard handler for Tab completion, arrow navigation, enter submit
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -251,110 +537,186 @@ export default function ActiveSearchCanvas({
         </button>
       </div>
 
-      {/* Input Row with Live Predictive Sentence Ghost Overlay */}
+      {/* Input Row with Live Predictive Sentence Ghost Overlay or Inline Voice Recording */}
       <div className={styles.activeInputRow}>
-        <button 
-          type="button" 
-          className={styles.standaloneIconBtn} 
-          aria-label="Attach medical records or file"
-        >
-          <Paperclip size={18} />
-        </button>
+        {isVoiceListening ? (
+          <motion.div
+            key="active-voice-listening"
+            className={styles.compactAcousticRow}
+            initial={{ opacity: 0, y: 2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.voiceListeningBadge}>
+              <span className={styles.voiceListeningDot} />
+              <span>LISTENING</span>
+            </div>
 
-        <div className={styles.inputGhostWrapper}>
-          {/* Real interactive input */}
-          <input
-            ref={inputRef}
-            type="text"
-            className={styles.activeTextInput}
-            value={query}
-            onChange={(e) => {
-              const val = e.target.value;
-              const words = countWords(val);
-              if (words > MAX_SEARCH_WORDS) {
-                onQueryChange(enforceWordLimit(val, MAX_SEARCH_WORDS));
-              } else {
-                onQueryChange(val);
-              }
-              setSelectedSugIndex(-1);
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder="Start typing symptom, specialty or doctor..."
-            aria-label="Search symptoms, conditions or doctors"
-            autoComplete="off"
-            spellCheck="false"
-          />
+            {liveVoiceTranscript ? (
+              <span className={styles.voiceLiveTranscript}>
+                &ldquo;{liveVoiceTranscript}&rdquo;
+              </span>
+            ) : (
+              <span className={styles.voiceLivePlaceholder}>
+                Speak symptoms...
+              </span>
+            )}
 
-          {/* Out-of-Word-Limit Error Indicator & Clear / Undo Button */}
-          {(countWords(query) >= MAX_SEARCH_WORDS || query.length > 0) && (
-            <div className={styles.inputEndAdornment}>
-              {countWords(query) >= MAX_SEARCH_WORDS && (
-                <span className={styles.inputWordLimitError} role="alert">
-                  500 words limit reached
-                </span>
-              )}
-              {query.length > 0 && (
-                <button
-                  type="button"
-                  className={styles.inputClearBtn}
-                  aria-label="Clear search input"
-                  title="Clear search"
-                  onClick={() => {
-                    onQueryChange("");
-                    inputRef.current?.focus();
+            {recordingSeconds >= MAX_AUDIO_DURATION_SECONDS - 10 && recordingSeconds < MAX_AUDIO_DURATION_SECONDS && (
+              <div
+                className={styles.voiceLastSecondsBlink}
+                role="status"
+                aria-live="polite"
+              >
+                <span>{MAX_AUDIO_DURATION_SECONDS - recordingSeconds}s remaining</span>
+              </div>
+            )}
+
+            <div className={styles.compactAcousticWave} aria-hidden="true">
+              {ACOUSTIC_WAVE_BARS.map((bar, i) => (
+                <span
+                  key={i}
+                  className={styles.compactWaveBar}
+                  style={{
+                    height: `${Math.min(18, Math.max(5, bar.baseHeight))}px`,
+                    animationDelay: `${bar.delay}s`,
+                    animationDuration: `${bar.duration}s`,
                   }}
+                />
+              ))}
+            </div>
+
+            <div className={styles.voiceListeningActions}>
+              <button
+                type="button"
+                className={styles.voiceCancelBtn}
+                onClick={handleCancelActiveVoice}
+                title="Cancel recording"
+                aria-label="Cancel voice recording"
+              >
+                <X size={15} strokeWidth={2.0} />
+              </button>
+              <button
+                type="button"
+                className={styles.voiceConfirmBtn}
+                onClick={() => finishActiveVoice()}
+                title="Done recording"
+                aria-label="Confirm and insert transcribed text"
+              >
+                <Check size={15} strokeWidth={2.0} />
+              </button>
+            </div>
+          </motion.div>
+        ) : (
+          <>
+            <button 
+              type="button" 
+              className={styles.standaloneIconBtn} 
+              aria-label="Attach medical records or file"
+            >
+              <Paperclip size={18} />
+            </button>
+
+            <div className={styles.inputGhostWrapper}>
+              {/* Real interactive input */}
+              <input
+                ref={inputRef}
+                type="text"
+                className={styles.activeTextInput}
+                value={query}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const words = countWords(val);
+                  if (words > MAX_SEARCH_WORDS) {
+                    onQueryChange(enforceWordLimit(val, MAX_SEARCH_WORDS));
+                  } else {
+                    onQueryChange(val);
+                  }
+                  setSelectedSugIndex(-1);
+                }}
+                onKeyDown={handleKeyDown}
+                placeholder="Start typing symptom, specialty or doctor..."
+                aria-label="Search symptoms, conditions or doctors"
+                autoComplete="off"
+                spellCheck="false"
+              />
+
+              {/* Out-of-Word-Limit Error Indicator & Clear / Undo Button */}
+              {(countWords(query) >= MAX_SEARCH_WORDS || query.length > 0) && (
+                <div className={styles.inputEndAdornment}>
+                  {countWords(query) >= MAX_SEARCH_WORDS && (
+                    <span className={styles.inputWordLimitError} role="alert">
+                      500 words limit reached
+                    </span>
+                  )}
+                  {query.length > 0 && (
+                    <button
+                      type="button"
+                      className={styles.inputClearBtn}
+                      aria-label="Clear search input"
+                      title="Clear search"
+                      onClick={() => {
+                        onQueryChange("");
+                        inputRef.current?.focus();
+                      }}
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Inline ghost predictive sentence overlay */}
+              {prediction && prediction.suffix && query.length > 0 && (
+                <div
+                  className={styles.ghostTextOverlay}
+                  onClick={() => handleAcceptPrediction(prediction.fullText)}
+                  title="Click or press Tab to complete"
                 >
-                  <X size={14} />
-                </button>
+                  <span className={styles.ghostInvisibleTyped}>{query}</span>
+                  <span className={styles.ghostSuffix}>{prediction.suffix}</span>
+                  <span className={styles.tabBadge}>Tab ⇥</span>
+                </div>
               )}
             </div>
-          )}
 
-          {/* Inline ghost predictive sentence overlay */}
-          {prediction && query.length > 0 && (
-            <div
-              className={styles.ghostTextOverlay}
-              onClick={() => handleAcceptPrediction(prediction.fullText)}
-              title="Click or press Tab to complete"
+            {query.trim().length === 0 && (
+              <button 
+                type="button" 
+                className={styles.standaloneIconBtn} 
+                onClick={handleStartActiveVoice}
+                aria-label="Voice search"
+                title="Speak to type"
+              >
+                <Mic size={18} />
+              </button>
+            )}
+
+            <button
+              type="button"
+              className={styles.submitArrowBtn}
+              aria-label="Submit search"
+              onClick={() => {
+                if (prediction && selectedSugIndex >= 0 && prediction.suggestions[selectedSugIndex]) {
+                  const target = prediction.suggestions[selectedSugIndex];
+                  saveSearchToHistory(target);
+                  onSubmit(target);
+                } else if (query.trim()) {
+                  saveSearchToHistory(query.trim());
+                  onSubmit(query.trim());
+                } else if (prediction && prediction.fullText) {
+                  saveSearchToHistory(prediction.fullText);
+                  onSubmit(prediction.fullText);
+                } else {
+                  saveSearchToHistory("Cardiologist near me");
+                  onSubmit("Cardiologist near me");
+                }
+              }}
             >
-              <span className={styles.ghostInvisibleTyped}>{query}</span>
-              <span className={styles.ghostSuffix}>{prediction.suffix}</span>
-              <span className={styles.tabBadge}>Tab ⇥</span>
-            </div>
-          )}
-        </div>
-
-        <button 
-          type="button" 
-          className={styles.standaloneIconBtn} 
-          aria-label="Voice search"
-        >
-          <Mic size={18} />
-        </button>
-
-        <button
-          type="button"
-          className={styles.submitArrowBtn}
-          aria-label="Submit search"
-          onClick={() => {
-            if (prediction && selectedSugIndex >= 0 && prediction.suggestions[selectedSugIndex]) {
-              const target = prediction.suggestions[selectedSugIndex];
-              saveSearchToHistory(target);
-              onSubmit(target);
-            } else if (query.trim()) {
-              saveSearchToHistory(query.trim());
-              onSubmit(query.trim());
-            } else if (prediction && prediction.fullText) {
-              saveSearchToHistory(prediction.fullText);
-              onSubmit(prediction.fullText);
-            } else {
-              saveSearchToHistory("Cardiologist near me");
-              onSubmit("Cardiologist near me");
-            }
-          }}
-        >
-          <ArrowRight size={16} strokeWidth={2.0} />
-        </button>
+              <ArrowRight size={16} strokeWidth={2.0} />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Red Horizon Divider Line */}

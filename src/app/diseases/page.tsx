@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect, useTransition, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { 
   Search, 
@@ -535,7 +536,7 @@ export default function DiseasesLibraryPage() {
               <AnimatePresence mode="popLayout">
                 {items.map((item, idx) => {
                   const detailUrl = `/diseases/${item.slug}`;
-                  const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
+                  const doctorsUrl = specialityBookingEntry(item.specialitySlug);
 
                   return (
                     <motion.article

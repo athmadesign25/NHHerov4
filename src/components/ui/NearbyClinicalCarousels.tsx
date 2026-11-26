@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { procedureDoctorBookingHref } from "@/app/procedures/bookingLinks";
 import { ChevronLeft, ChevronRight, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
@@ -134,9 +135,7 @@ export function NearbySpecialistsCarousel({
 
                   <Link
                     href={
-                      specialityFilter
-                        ? `/doctors?speciality=${encodeURIComponent(specialityFilter)}`
-                        : `/doctors?search=${encodeURIComponent(doc.name)}`
+                      procedureDoctorBookingHref(doc.name)
                     }
                     className={styles.bookBtn}
                   >

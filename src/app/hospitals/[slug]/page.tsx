@@ -5,17 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
 import { design20Directory } from "@/features/search/design20Directory";
-import { procedureDoctorBookingHref } from "@/app/procedures/bookingLinks";
 import { motion, AnimatePresence } from "framer-motion";
-import {
+import { 
   Building,
-  CheckCircle2,
-  Link as LinkIcon,
-  PhoneCall,
-  ArrowUpRight,
-  Calendar,
-  Activity,
-  Plus,
+  CheckCircle2, 
+  Link as LinkIcon, 
+  PhoneCall, 
+  ArrowUpRight, 
+  Calendar, 
+  Activity, 
+  Plus, 
   Minus,
   Check,
   MapPin,
@@ -24,27 +23,24 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getHospitalDetailData, HospitalDetailData } from "@/data/hospitalsDirectoryData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
 import styles from "./HospitalDetail.module.css";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-const knownHospitalFacets = new Set(
-  design20Directory.flatMap((doctor) => [doctor.hospital, ...(doctor.hospitals ?? [])]),
-);
-
 export default function HospitalDetailPage({ params }: PageProps) {
   const { slug } = React.use(params);
   const detail: HospitalDetailData = getHospitalDetailData(slug);
   const hospitalBookingParams = new URLSearchParams({ location: detail.city });
-  if (knownHospitalFacets.has(detail.name)) {
-    hospitalBookingParams.set("hospitals", detail.name);
-  }
+  const knownHospitalFacets = new Set(design20Directory.flatMap(doctor => [doctor.hospital, ...(doctor.hospitals ?? [])]));
+  if (knownHospitalFacets.has(detail.name)) hospitalBookingParams.set("hospitals", detail.name);
   const hospitalBookingHref = defaultDoctorListingUrl(hospitalBookingParams);
 
   const [activeSection, setActiveSection] = useState<string>("overview");
@@ -160,7 +156,7 @@ export default function HospitalDetailPage({ params }: PageProps) {
             </p>
 
             <div className={styles.heroActionsRow}>
-              <Link
+              <Link 
                 href={hospitalBookingHref}
                 className={styles.heroPrimaryBtn}
               >
@@ -169,35 +165,46 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
 
-              <a href={`tel:${detail.emergencyPhone}`} className={styles.heroPhoneText}>
+              <a href={`tel:${detail.emergencyPhone ? detail.emergencyPhone.replace(/\s+/g, "") : "18003090309"}`} className={styles.heroPhoneText}>
                 <PhoneCall size={14} className={styles.phoneIcon} />
-                <span>24×7 Emergency: <strong>{detail.emergencyPhone}</strong></span>
+                <span className={styles.phoneDesktopSpan}>24×7 Emergency: <strong>{detail.emergencyPhone}</strong></span>
+                <span className={styles.phoneMobileSpan}>Call Emergency 24×7</span>
               </a>
             </div>
           </motion.div>
 
-          {/* Right Hero Analytics */}
+          {/* Bottom Hero Metrics (Matching CSR Hero) */}
           <motion.div 
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.beds}</span>
-              <span className={styles.statLabel}>Total Bed Capacity</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.icu}</span>
-              <span className={styles.statLabel}>ICU / Critical Care</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.emergency}</span>
-              <span className={styles.statLabel}>Emergency Triage</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.accreditation}</span>
-              <span className={styles.statLabel}>Accreditation</span>
+            <div className={styles.statsGrid}>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.beds} />
+                </span>
+                <span className={styles.statLabel}>Total Bed Capacity</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.icu} />
+                </span>
+                <span className={styles.statLabel}>ICU / Critical Care</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.emergency} />
+                </span>
+                <span className={styles.statLabel}>Emergency Triage</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.accreditation} />
+                </span>
+                <span className={styles.statLabel}>Accreditation</span>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -272,6 +279,12 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 </div>
                 {copyToast && <span className={styles.copyToastText}>Link copied to clipboard</span>}
               </div>
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard 
+                title={`${detail.city} Care Helpline`}
+                subtitle="Direct contact with unit patient coordinators for OPD slots, admissions & emergency transfers."
+              />
             </aside>
 
             {/* Reading Content Focus Canvas */}
@@ -355,8 +368,8 @@ export default function HospitalDetailPage({ params }: PageProps) {
                         <h3 className={styles.docName}>{doc.name}</h3>
                         <p className={styles.docDesig}>{doc.designation}</p>
                         <p className={styles.docExp}>{doc.experience} &bull; {detail.city}</p>
-                        <Link
-                          href={procedureDoctorBookingHref(doc.name)}
+                        <Link 
+                          href={hospitalBookingHref}
                           className={styles.docBookBtn}
                         >
                           <span>Consult Doctor</span>
@@ -402,11 +415,11 @@ export default function HospitalDetailPage({ params }: PageProps) {
         title="Emergency Admission or Ambulance Dispatch?"
         subtitle={`Connect directly with ${detail.name} emergency trauma desk, stroke unit, and cath lab coordination team.`}
         primaryBtn={{
-          href: `/doctors?location=${encodeURIComponent(detail.city)}`,
+          href: hospitalBookingHref,
           text: "Book Doctor Appointment",
         }}
         secondaryBtn={{
-          href: "/health-packages",
+          href: "/health-checkups",
           text: "Explore Health Packages",
         }}
         phoneText={`Emergency Helpline: ${detail.emergencyPhone || "1800 309 0309"}`}

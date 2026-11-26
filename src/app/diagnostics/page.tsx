@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useTransition } from "react";
+import React, { useState, useMemo, useEffect, useTransition, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   Search,
   X,
@@ -17,24 +18,21 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import OrganSystemChipsCarousel, {
+  DEFAULT_ORGAN_FILTER_OPTIONS,
+} from "@/components/ui/OrganSystemChipsCarousel";
+import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
+import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { DIAGNOSTICS_DATA, DiagnosticItem } from "@/data/diagnosticsData";
 import styles from "./DiagnosticsLibrary.module.css";
 
-// 10 Key Organ Filters
-const ORGAN_FILTER_OPTIONS = [
-  { label: "Heart", value: "heart", image: "/Specialities icons/Cardiology.jpeg" },
-  { label: "Brain & Spine", value: "brain", image: "/Specialities icons/Neurology.jpeg" },
-  { label: "Kidneys", value: "kidney", image: "/Specialities icons/Nephrology.jpeg" },
-  { label: "Liver", value: "liver", image: "/Specialities icons/Liver Transplant.svg" },
-  { label: "Lungs", value: "lungs", image: "/Specialities icons/Pulmonology.jpeg" },
-  { label: "Bones & Joints", value: "bones", image: "/Specialities icons/Orthopedics.jpeg" },
-  { label: "Stomach", value: "stomach", image: "/Specialities icons/General Surgery.jpeg" },
-  { label: "Cancer Care", value: "cancer", image: "/Specialities icons/Cancer Care.jpeg" },
-  { label: "Urinary & Bladder", value: "urinary", image: "/Specialities icons/Urology.jpeg" },
-  { label: "Children & Neonatal", value: "paediatric", image: "/Specialities icons/Paediatrics.jpeg" },
-];
+// 14 Key Organ & Clinical Filters
+const ORGAN_FILTER_OPTIONS = DEFAULT_ORGAN_FILTER_OPTIONS;
 
 // Secondary credentials on right hero column
 const HERO_ANALYTICS_PARAMETERS = [
@@ -47,11 +45,59 @@ const HERO_ANALYTICS_PARAMETERS = [
 export default function DiagnosticsLibraryPage() {
   const [items, setItems] = useState<DiagnosticItem[]>(DIAGNOSTICS_DATA);
   const [selectedOrgan, setSelectedOrgan] = useState<string | null>(null);
+  const [selectedSubFilter, setSelectedSubFilter] = useState<string>("all");
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
   const [isPageOpening, setIsPageOpening] = useState<boolean>(true);
   const [, startTransition] = useTransition();
+
+  // Screen width detection for automatic mweb switching
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Progressive scroll reveal for directory sub-filters & A–Z rail (desktop only, always visible on mobile)
+  const [isFilterRevealed, setIsFilterRevealed] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (window.scrollY > 30) {
+      setIsFilterRevealed(true);
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    if (
+      params.get("search") ||
+      params.get("q") ||
+      params.get("organ") ||
+      params.get("letter") ||
+      params.get("filter")
+    ) {
+      setIsFilterRevealed(true);
+    }
+  }, []);
+
+  // Reveal on scroll (one-way latch: once revealed, stays in position until page refresh)
+  useEffect(() => {
+    if (isFilterRevealed) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setIsFilterRevealed(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isFilterRevealed]);
 
   useEffect(() => {
     if (isFilterSheetOpen) {
@@ -123,19 +169,187 @@ export default function DiagnosticsLibraryPage() {
   }, [selectedOrgan]);
 
   const handleToggleOrgan = (val: string) => {
+    setIsFilterRevealed(true);
     setSelectedOrgan((prev) => (prev === val ? null : val));
   };
+
+  const isLabItem = useCallback((item: DiagnosticItem) => {
+    const mod = item.modality.toLowerCase();
+    return mod.includes("laboratory") || mod.includes("pathology") || mod.includes("genomics") || mod.includes("molecular");
+  }, []);
+
+  const isImagingItem = useCallback((item: DiagnosticItem) => {
+    const mod = item.modality.toLowerCase();
+    return mod.includes("radiology") || mod.includes("imaging") || mod.includes("cardio") || mod.includes("endoscopy");
+  }, []);
+
+  const displayedItems = useMemo(() => {
+    return items.filter((item) => {
+      // 1. Modality / Sub-filter
+      if (selectedSubFilter === "lab" && !isLabItem(item)) return false;
+      if (selectedSubFilter === "imaging" && !isImagingItem(item)) return false;
+
+      // 2. Alphabetical Letter filter
+      if (selectedLetter) {
+        const firstChar = (item.letter || item.shortTitle[0] || item.title[0]).toUpperCase();
+        if (firstChar !== selectedLetter) return false;
+      }
+
+      return true;
+    });
+  }, [items, selectedSubFilter, selectedLetter, isLabItem, isImagingItem]);
+
+  const availableLetters = useMemo(() => {
+    const set = new Set<string>();
+    items.forEach((item) => {
+      if (selectedSubFilter === "lab" && !isLabItem(item)) return;
+      if (selectedSubFilter === "imaging" && !isImagingItem(item)) return;
+      const char = (item.letter || item.shortTitle[0] || item.title[0]).toUpperCase();
+      if (char >= "A" && char <= "Z") {
+        set.add(char);
+      }
+    });
+    return set;
+  }, [items, selectedSubFilter, isLabItem, isImagingItem]);
+
+  const subFilterTabs = useMemo(() => {
+    const labCount = items.filter(isLabItem).length;
+    const imagingCount = items.filter(isImagingItem).length;
+    return [
+      { id: "all", label: "All Investigations", shortLabel: "All", count: items.length },
+      { id: "lab", label: "Laboratory & Pathology", shortLabel: "Lab", count: labCount },
+      { id: "imaging", label: "Imaging & Radiology", shortLabel: "Imaging", count: imagingCount },
+    ];
+  }, [items, isLabItem, isImagingItem]);
 
   const handleResetFilters = () => {
     setSelectedOrgan(null);
     setSearchQuery("");
+    setSelectedSubFilter("all");
+    setSelectedLetter(null);
   };
 
+  // 1. Unified Dark -> White -> Dark V2 dynamism across the entire page
+  const topProgress = useMotionValue(0);
+  const unifiedWhiteProgress = useMotionValue(0);
+  const ctaSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sy = window.scrollY || 0;
+      const topWhite = Math.max(0, Math.min(1, (sy - 36) / (360 - 36)));
+      topProgress.set(topWhite);
+
+      let bottomDark = 0;
+      const el = ctaSentinelRef.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 900;
+        const startY = vh * 0.72;
+        const endY = vh * 0.28;
+        const raw = (startY - rect.top) / (startY - endY);
+        bottomDark = Math.max(0, Math.min(1, raw));
+      }
+
+      unifiedWhiteProgress.set(Math.max(0, Math.min(topWhite, 1 - bottomDark)));
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [topProgress, unifiedWhiteProgress]);
+
+  // V2 dynamism palette: Dark Navy -> Deep Black -> Alabaster -> Pure White
+  const pageBgColor = useTransform(
+    unifiedWhiteProgress,
+    [0, 0.40, 0.68, 1],
+    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
+  );
+
+  const heroCanvasOpacity = useTransform(
+    topProgress,
+    [0, 0.38, 0.68],
+    [1, 0.75, 0]
+  );
+
+  // Dynamic text, chip, filter & rail color inversions matching Procedure Detail V2
+  const dynHeading = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynSubtitle = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.78)", "rgba(255, 255, 255, 0.84)", "#475569", "#64748b"]);
+  const dynMuted = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.60)", "rgba(255, 255, 255, 0.66)", "#64748b", "#64748b"]);
+  const dynEyebrow = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.56)", "rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]);
+  const dynBubbleLabel = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.74)", "rgba(255, 255, 255, 0.82)", "#334155", "#334155"]);
+  const dynBubbleHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynBubbleActive = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#034EA2", "#034EA2"]);
+  const dynBubbleBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.22)", "rgba(255, 255, 255, 0.26)", "rgba(15, 23, 42, 0.14)", "rgba(15, 23, 42, 0.12)"]);
+  const dynBubbleBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.08)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynArrow = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.80)", "#475569", "#475569"]);
+  const dynArrowHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynFilterBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.14)", "rgba(15, 23, 42, 0.12)"]);
+  const dynFilterBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.08)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynFilterText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.74)", "rgba(255, 255, 255, 0.82)", "#334155", "#334155"]);
+  const dynFilterBgHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.10)", "rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.08)"]);
+  const dynFilterTextHover = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynRailAll = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.58)", "rgba(255, 255, 255, 0.68)", "#475569", "#475569"]);
+  const dynRailLetter = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.48)", "rgba(255, 255, 255, 0.58)", "#64748b", "#64748b"]);
+  const dynRailHoverBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.08)", "rgba(255, 255, 255, 0.12)", "rgba(15, 23, 42, 0.06)", "rgba(15, 23, 42, 0.06)"]);
+  const dynRailHoverText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.08)"]);
+  const dynSearchBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.07)", "rgba(255, 255, 255, 0.09)", "rgba(15, 23, 42, 0.04)", "rgba(15, 23, 42, 0.04)"]);
+  const dynSearchBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.22)", "rgba(255, 255, 255, 0.26)", "rgba(15, 23, 42, 0.16)", "rgba(15, 23, 42, 0.14)"]);
+  const dynSearchText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]);
+  const dynSearchPlaceholder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.78)", "#64748b", "#64748b"]);
+  const dynRedSelBg = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(237, 28, 36, 0.15)", "rgba(237, 28, 36, 0.18)", "rgba(237, 28, 36, 0.06)", "rgba(237, 28, 36, 0.06)"]);
+  const dynRedSelBorder = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(248, 113, 113, 0.75)", "rgba(248, 113, 113, 0.80)", "rgba(220, 38, 38, 0.65)", "rgba(220, 38, 38, 0.65)"]);
+  const dynRedSelText = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["#ff7b82", "#ff7b82", "#cf171f", "#cf171f"]);
+  const heroStatNumColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]);
+  const heroStatLabelColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]);
+  const heroStatDividerColor = useTransform(unifiedWhiteProgress, [0, 0.44, 0.64, 1], ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]);
+
   return (
-    <div className={styles.pageContainer}>
+    <motion.div
+      className={styles.pageContainer}
+      style={{
+        backgroundColor: pageBgColor,
+        ["--dyn-heading" as string]: dynHeading,
+        ["--dyn-subtitle" as string]: dynSubtitle,
+        ["--dyn-muted" as string]: dynMuted,
+        ["--dyn-eyebrow" as string]: dynEyebrow,
+        ["--dyn-bubble-label" as string]: dynBubbleLabel,
+        ["--dyn-bubble-hover" as string]: dynBubbleHover,
+        ["--dyn-bubble-active" as string]: dynBubbleActive,
+        ["--dyn-bubble-border" as string]: dynBubbleBorder,
+        ["--dyn-bubble-bg" as string]: dynBubbleBg,
+        ["--dyn-arrow" as string]: dynArrow,
+        ["--dyn-arrow-hover" as string]: dynArrowHover,
+        ["--dyn-filter-border" as string]: dynFilterBorder,
+        ["--dyn-filter-bg" as string]: dynFilterBg,
+        ["--dyn-filter-text" as string]: dynFilterText,
+        ["--dyn-filter-bg-hover" as string]: dynFilterBgHover,
+        ["--dyn-filter-text-hover" as string]: dynFilterTextHover,
+        ["--dyn-rail-all" as string]: dynRailAll,
+        ["--dyn-rail-letter" as string]: dynRailLetter,
+        ["--dyn-rail-hover-bg" as string]: dynRailHoverBg,
+        ["--dyn-rail-hover-text" as string]: dynRailHoverText,
+        ["--dyn-border" as string]: dynBorder,
+        ["--dyn-search-bg" as string]: dynSearchBg,
+        ["--dyn-search-border" as string]: dynSearchBorder,
+        ["--dyn-search-text" as string]: dynSearchText,
+        ["--dyn-search-placeholder" as string]: dynSearchPlaceholder,
+        ["--dyn-red-sel-bg" as string]: dynRedSelBg,
+        ["--dyn-red-sel-border" as string]: dynRedSelBorder,
+        ["--dyn-red-sel-text" as string]: dynRedSelText,
+        ["--stat-num-color" as string]: heroStatNumColor,
+        ["--stat-label-color" as string]: heroStatLabelColor,
+        ["--stat-divider-color" as string]: heroStatDividerColor,
+      }}
+    >
       {/* ─── TWO-COLUMN HERO SECTION (SIGNATURE DARK MODE) ───────────────── */}
       <section className={styles.hero} data-nav-theme="dark">
-        <div className={styles.heroBg}>
+        <motion.div className={styles.heroBg} style={{ opacity: heroCanvasOpacity }}>
           <motion.div
             className={styles.heroBgMotion}
             initial={{ opacity: 0, scale: 1.02 }}
@@ -143,7 +357,7 @@ export default function DiagnosticsLibraryPage() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Image
-              src="/doctor_patient.png"
+              src="/images/heroes/diagnostics_hero_v3.jpg"
               alt="Medical laboratory scientist analyzing test specimen"
               fill
               priority
@@ -152,7 +366,7 @@ export default function DiagnosticsLibraryPage() {
             />
             <div className={styles.heroBgOverlay} />
           </motion.div>
-        </div>
+        </motion.div>
 
         <div className={styles.heroInner}>
           {/* Left Column */}
@@ -178,12 +392,22 @@ export default function DiagnosticsLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
-              <TextSweepEffect 
-                words={["Diagnostics & Lab Tests"]} 
-                sweepMs={2400} 
-                delayMs={80} 
-                finalColor="#FFFFFF" 
-              />
+              <span className={styles.desktopTitleText}>
+                <TextSweepEffect
+                  words={["Diagnostics & Lab Tests"]}
+                  sweepMs={2400}
+                  delayMs={80}
+                  finalColor="var(--dyn-heading, #FFFFFF)"
+                />
+              </span>
+              <span className={styles.mobileTitleText}>
+                <TextSweepEffect
+                  words={["Diagnostics & Lab Tests"]}
+                  sweepMs={2400}
+                  delayMs={80}
+                  finalColor="var(--dyn-heading, #FFFFFF)"
+                />
+              </span>
             </motion.h1>
 
             <motion.p
@@ -204,8 +428,19 @@ export default function DiagnosticsLibraryPage() {
             >
               <div className={styles.heroSearchRow}>
                 <div className={styles.searchBoxWrap}>
+                  <div className={styles.animatedBorderOutline} aria-hidden="true" />
                   <div className={styles.searchBox}>
-                    <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
+                    <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }} aria-hidden="true">
+                      <defs>
+                        <linearGradient id="nhSearchPillGradDiagnostics" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#00C4FF" />
+                          <stop offset="35%" stopColor="#8B5CF6" />
+                          <stop offset="70%" stopColor="#FF2E93" />
+                          <stop offset="100%" stopColor="#ED1C24" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <Search size={18} strokeWidth={2.0} className={styles.searchIcon} />
                     <input
                       type="text"
                       placeholder="Search test, scan, X-ray, MRI or blood panel..."
@@ -213,12 +448,14 @@ export default function DiagnosticsLibraryPage() {
                       value={searchQuery}
                       onChange={(e) => {
                         const val = e.target.value;
+                        setIsFilterRevealed(true);
                         startTransition(() => setSearchQuery(val));
                       }}
                       aria-label="Search diagnostic test or scan"
                     />
                     {searchQuery && (
                       <button
+                        type="button"
                         className={styles.clearSearchBtn}
                         onClick={() => setSearchQuery("")}
                         aria-label="Clear search input"
@@ -267,98 +504,140 @@ export default function DiagnosticsLibraryPage() {
                 </div>
               )}
             </motion.div>
+
+            {/* Mobile Web Rolling Single-Row Credential Ticker (One by one in same space on mobile) */}
+            <MobileRollingStats items={HERO_ANALYTICS_PARAMETERS} />
           </div>
 
-          {/* Right Column: Secondary Credential Numbers */}
+          {/* C1: Full-Width Spread Metrics Row across bottom */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
-              <div key={index} className={styles.statBlock}>
-                <span className={styles.statNumber}>
-                  {item.staticValue ? (
-                    item.staticValue
-                  ) : (
-                    <MetricValueReveal value={item.value!} suffix={item.suffix} />
-                  )}
-                </span>
-                <span className={styles.statLabel}>{item.label}</span>
-              </div>
-            ))}
+            <div className={styles.statsGrid}>
+              {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
+                <div key={index} className={styles.statBlock}>
+                  <span className={styles.statNumber}>
+                    {item.staticValue ? (
+                      item.staticValue
+                    ) : (
+                      <MetricValueReveal value={item.value!} suffix={item.suffix} />
+                    )}
+                  </span>
+                  <span className={styles.statLabel}>{item.label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── 10 ORGAN BUBBLE FILTERS ──────────────────────────────────────── */}
-      <motion.section
-        className={styles.categorySection}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className={styles.bubblesRow}>
-          {ORGAN_FILTER_OPTIONS.map((opt) => {
-            const isActive = selectedOrgan === opt.value;
-            return (
-              <button
-                key={opt.value}
-                className={`${styles.bubbleBtn} ${isActive ? styles.bubbleBtnActive : ""}`}
-                onClick={() => handleToggleOrgan(opt.value)}
-                type="button"
-                aria-pressed={isActive}
-              >
-                <div className={styles.bubbleImgWrap}>
-                  <Image
-                    src={opt.image}
-                    alt={opt.label}
-                    fill
-                    sizes="52px"
-                    className={styles.bubbleImg}
-                  />
-                </div>
-                <span className={styles.bubbleLabel}>{opt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </motion.section>
+      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" ────────────────────── */}
+      <OrganSystemChipsCarousel
+        options={ORGAN_FILTER_OPTIONS}
+        selectedOrgan={selectedOrgan}
+        onSelectOrgan={(val) => {
+          if (val === null) {
+            setSelectedOrgan(null);
+            setSearchQuery("");
+          } else {
+            handleToggleOrgan(val);
+          }
+        }}
+        eyebrow="Explore Diagnostics & Lab Tests by Organ System"
+      />
 
-      {/* ─── DYNAMIC FEEDBACK TEXT ROW ─────────────────────────────────────── */}
+      {/* ─── DIRECTORY CONTROLS: SUB-FILTER TABS (LAB/IMAGING) & A–Z INDEX (PROGRESSIVE SCROLL REVEAL) ─── */}
       <motion.div
-        className={styles.feedbackTextRow}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.45, delay: 0.55 }}
+        className={styles.directoryControlsWrap}
+        initial={false}
+        animate={{
+          height: (isMobile || isFilterRevealed) ? "auto" : 0,
+          opacity: (isMobile || isFilterRevealed) ? 1 : 0,
+          marginTop: (isMobile || isFilterRevealed) ? 14 : 0,
+          marginBottom: (isMobile || isFilterRevealed) ? (isMobile ? 12 : 20) : 0,
+        }}
+        transition={{
+          duration: 0.48,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        style={{
+          overflow: isMobile ? "visible" : (isFilterRevealed ? "visible" : "hidden"),
+          pointerEvents: (isMobile || isFilterRevealed) ? "auto" : "none",
+        }}
       >
-        <div className={styles.feedbackTextWrapper}>
-          <p className={styles.feedbackText}>
-            {searchQuery.trim() ? (
-              <>
-                Here based on your search for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "test" : "tests"} found</span>
-              </>
-            ) : selectedOrgan ? (
-              <>
-                Here based on your selection for tests under <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "test" : "tests"} found</span>
-              </>
-            ) : (
-              <>
-                Here based on our diagnostic investigations directory &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "test" : "tests"} available</span>
-              </>
-            )}
-          </p>
+        <div className={styles.directoryTopBar}>
+          <LibrarySubFilterTabs
+            tabs={subFilterTabs}
+            activeTab={selectedSubFilter}
+            onTabChange={(tab) => {
+              setSelectedSubFilter(tab);
+              setSelectedLetter(null);
+            }}
+            ariaLabel="Filter investigations by modality"
+          />
 
-          {(selectedOrgan || searchQuery.trim()) && (
+          <div className={styles.feedbackTextWrapper}>
+            <p className={styles.feedbackText}>
+              {searchQuery.trim() ? (
+                <>
+                  Search: <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "test" : "tests"} found
+                  </span>
+                </>
+              ) : selectedOrgan ? (
+                <>
+                  Organ: <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "test" : "tests"} found
+                  </span>
+                </>
+              ) : (
+                <span className={styles.feedbackCount}>
+                  Showing {displayedItems.length} {displayedItems.length === 1 ? "test" : "tests"}
+                </span>
+              )}
+            </p>
+
+            {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
+              <button
+                type="button"
+                className={styles.clearFilterChip}
+                onClick={handleResetFilters}
+                aria-label="Clear active filters"
+              >
+                <RotateCcw size={12} />
+                <span>Reset all</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Alphabetical A–Z Filter Rail */}
+        <AlphabeticalFilterRail
+          availableLetters={availableLetters}
+          selectedLetter={selectedLetter}
+          onSelectLetter={setSelectedLetter}
+          resultCount={displayedItems.length}
+        />
+
+        {/* Mobile Results Summary (Placed below A-Z rail on mobile to match Figma) */}
+        <div className={styles.mobileFeedbackWrap}>
+          <p className={styles.mobileFeedbackText}>
+            Showing {displayedItems.length} {displayedItems.length === 1 ? "investigation" : "investigations"}
+          </p>
+          {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
             <button
               type="button"
               className={styles.clearFilterChip}
               onClick={handleResetFilters}
-              aria-label="Clear active filter"
+              aria-label="Clear active filters"
             >
               <RotateCcw size={12} />
-              <span>Reset filter</span>
+              <span>Reset all</span>
             </button>
           )}
         </div>
@@ -414,7 +693,7 @@ export default function DiagnosticsLibraryPage() {
             animate={{ opacity: isApiLoading ? 0.78 : 1, y: 0 }}
             transition={{ duration: 0.35 }}
           >
-            {items.length === 0 ? (
+            {displayedItems.length === 0 ? (
               <div className={styles.emptyState} style={{ gridColumn: "1 / -1" }}>
                 <div className={styles.emptyIconWrapper}>
                   <Search size={26} />
@@ -429,9 +708,9 @@ export default function DiagnosticsLibraryPage() {
               </div>
             ) : (
               <AnimatePresence mode="popLayout">
-                {items.map((item, idx) => {
+                {displayedItems.map((item, idx) => {
                   const detailUrl = `/diagnostics/${item.slug}`;
-                  const bookingUrl = `/health-checkups?tab=tests&q=${encodeURIComponent(item.shortTitle)}`;
+                  const doctorsUrl = specialityBookingEntry(item.specialitySlug);
 
                   return (
                     <motion.article
@@ -451,45 +730,52 @@ export default function DiagnosticsLibraryPage() {
                         className={styles.cardBgImage}
                       />
 
-                      {/* 2. Soft Top Gradient Scrim for Top Category Text */}
-                      <div className={styles.cardTopScrim} />
+                      {/* 2. Atmospheric Gradient Scrim (Exact Figma "Image fade") */}
+                      <div className={styles.cardGradient} />
 
-                      {/* 3. Pure Top-Left Category Text (NO bulky pill container) */}
-                      <span className={styles.cardTopCategoryText}>
-                        {item.modality}
-                      </span>
-
-                      {/* 4. Rich Photography Bottom Gradient Scrim */}
-                      <div className={styles.cardBottomScrim} />
-
-                      {/* 5. Content Overlaid on Scrim */}
+                      {/* 3. Content Overlaid on Scrim */}
                       <div className={styles.cardContent}>
                         <div className={styles.cardTextGroup}>
+                          <div className={styles.cardEyebrow}>
+                            {item.modality}
+                          </div>
+
                           <Link href={detailUrl} className={styles.cardTitleLink}>
                             <h2 className={styles.cardTitle}>
-                              {item.title}
+                              <CardTitleText title={item.title} />
                             </h2>
                           </Link>
 
-                          <p className={styles.cardSub}>
-                            {item.summary}
-                          </p>
+                          <div className={styles.cardSubReveal}>
+                            <div className={styles.cardSubInner}>
+                              <p className={styles.cardSub}>
+                                {buildCardHoverReading([
+                                  item.overview,
+                                  item.summary,
+                                  item.testProcedure,
+                                  item.turnaroundTime ? `Report turnaround: ${item.turnaroundTime}` : null,
+                                  item.preparation ? `Preparation: ${item.preparation}` : null,
+                                ])}
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
                         <div className={styles.cardBottomSlot}>
                           <div className={styles.cardRestingMeta}>
                             <span className={styles.metaBadge}>
-                              <Clock size={11} className={styles.metaIcon} />
-                              <span>{item.turnaroundTime}</span>
+                              <Clock size={13} className={styles.metaIcon} />
+                              <span>{item.turnaroundTime || "Within 30 Minutes"}</span>
                             </span>
+                            <span className={styles.metaDivider} aria-hidden="true" />
                             <span className={styles.metaBadge}>
-                              <Activity size={11} className={styles.metaIcon} />
-                              <span>{item.preparation}</span>
+                              <Activity size={13} className={styles.metaIcon} />
+                              <span>{item.preparation || "No Fasting Required"}</span>
                             </span>
                           </div>
 
                           <div className={styles.cardActions}>
-                            <Link href={bookingUrl} className={styles.cardDoctorBtn}>
+                            <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
                               Book test
                             </Link>
 
@@ -509,23 +795,31 @@ export default function DiagnosticsLibraryPage() {
         )}
       </AnimatePresence>
 
+      {/* Sentinel for smooth pre-footer CTA background return to dark */}
+      <div
+        ref={ctaSentinelRef}
+        style={{ height: "1px", width: "100%", pointerEvents: "none" }}
+        aria-hidden="true"
+      />
+
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner
-        bg="dark"
+        bg="transparent"
         eyebrow="NABL ACCREDITED LABORATORY NETWORK"
-        title="Need Doorstep Home Sample Collection?"
+        title="Need Doorstep Home Sample Collection or Specialist Advice?"
         subtitle="Our trained, vaccinated phlebotomists collect blood and pathology samples directly from your home with barcode verification and automated temperature-controlled transit."
         primaryBtn={{
-          href: "/doctors",
-          text: "Schedule Home Collection",
+          href: "/book-an-appointment",
+          text: "Find a Specialist",
         }}
         secondaryBtn={{
-          href: "/health-packages",
+          href: "/health-checkups",
           text: "Explore Health Packages",
         }}
         phoneText="Diagnostics Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
+      <ClinicalFloatingSideActions />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>
@@ -606,6 +900,6 @@ export default function DiagnosticsLibraryPage() {
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

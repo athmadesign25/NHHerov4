@@ -3,12 +3,11 @@
 import React, { useState, useMemo, useEffect, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  X,
-  ArrowUpRight,
+import { 
+  Search, 
+  X, 
+  ArrowUpRight, 
   PhoneCall,
   Calendar,
   Building,
@@ -19,7 +18,9 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { HOSPITALS_DIRECTORY_DATA, HospitalDirectoryItem } from "@/data/hospitalsDirectoryData";
 import styles from "./HospitalsLibrary.module.css";
@@ -175,11 +176,11 @@ export default function HospitalsLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
-              <TextSweepEffect
-                words={["Hospitals & Clinics Network"]}
-                sweepMs={2400}
-                delayMs={80}
-                finalColor="#FFFFFF"
+              <TextSweepEffect 
+                words={["Hospitals & Clinics Network"]} 
+                sweepMs={2400} 
+                delayMs={80} 
+                finalColor="#FFFFFF" 
               />
             </motion.h1>
 
@@ -266,25 +267,27 @@ export default function HospitalsLibraryPage() {
             </motion.div>
           </div>
 
-          {/* Right Column: Secondary Credential Numbers */}
+          {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
-            {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
-              <div key={index} className={styles.statBlock}>
-                <span className={styles.statNumber}>
-                  {item.staticValue ? (
-                    item.staticValue
-                  ) : (
-                    <MetricValueReveal value={item.value!} suffix={item.suffix} />
-                  )}
-                </span>
-                <span className={styles.statLabel}>{item.label}</span>
-              </div>
-            ))}
+            <div className={styles.statsGrid}>
+              {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
+                <div key={index} className={styles.statBlock}>
+                  <span className={styles.statNumber}>
+                    {item.staticValue ? (
+                      item.staticValue
+                    ) : (
+                      <MetricValueReveal value={item.value!} suffix={item.suffix} />
+                    )}
+                  </span>
+                  <span className={styles.statLabel}>{item.label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -348,9 +351,9 @@ export default function HospitalsLibraryPage() {
           </p>
 
           {(selectedCity || searchQuery.trim()) && (
-            <button
-              type="button"
-              className={styles.clearFilterChip}
+            <button 
+              type="button" 
+              className={styles.clearFilterChip} 
               onClick={handleResetFilters}
               aria-label="Clear active filter"
             >
@@ -428,7 +431,7 @@ export default function HospitalsLibraryPage() {
               <AnimatePresence mode="popLayout">
                 {items.map((item, idx) => {
                   const detailUrl = `/hospitals/${item.slug}`;
-                  const doctorsUrl = defaultDoctorListingUrl(new URLSearchParams({ location: item.city }));
+                  const doctorsUrl = `/doctors?location=${encodeURIComponent(item.city)}`;
 
                   return (
                     <motion.article
@@ -458,13 +461,22 @@ export default function HospitalsLibraryPage() {
 
                           <Link href={detailUrl} className={styles.cardTitleLink}>
                             <h2 className={styles.cardTitle}>
-                              {item.name}
+                              <CardTitleText title={item.name} />
                             </h2>
                           </Link>
 
-                          <p className={styles.cardSub}>
-                            {item.summary}
-                          </p>
+                          <div className={styles.cardSubReveal}>
+                            <div className={styles.cardSubInner}>
+                              <p className={styles.cardSub}>
+                                {buildCardHoverReading([
+                                  item.overview,
+                                  item.summary,
+                                  item.keySpecialities?.length ? `Centres of excellence: ${item.keySpecialities.slice(0, 4).join(", ")}` : null,
+                                  item.accreditations?.length ? `Accreditations: ${item.accreditations.join(", ")}` : null,
+                                ])}
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
                         <div className={styles.cardBottomSlot}>
@@ -507,16 +519,17 @@ export default function HospitalsLibraryPage() {
         title="Emergency Admission or Ambulance Dispatch?"
         subtitle="Our central emergency control dispatch coordinates directly with the nearest Narayana Health hospital trauma team, stroke units, and cath labs."
         primaryBtn={{
-          href: "/doctors",
-          text: "Book Doctor Appointment",
+          href: "/book-an-appointment",
+          text: "Find a Specialist",
         }}
         secondaryBtn={{
-          href: "/health-packages",
+          href: "/health-checkups",
           text: "Explore Health Packages",
         }}
         phoneText="Emergency Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
+      <ClinicalFloatingSideActions />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>
