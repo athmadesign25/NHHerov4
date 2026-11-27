@@ -17,6 +17,8 @@ export interface MedicallyReviewedBandProps {
   reviewer?: DoctorReviewer;
   className?: string;
   theme?: "light" | "dark";
+  fluid?: boolean;
+  id?: string;
 }
 
 const DEFAULT_REVIEWER: DoctorReviewer = {
@@ -25,7 +27,7 @@ const DEFAULT_REVIEWER: DoctorReviewer = {
   specialty: "Surgical Oncology & Robotic Surgery",
   qualifications: "MBBS, MS, MCh",
   image: "/doctors/doc_bagirath.jpg",
-  reviewDate: "October 2024",
+  reviewDate: "November 2026",
 };
 
 export default function MedicallyReviewedBand({
@@ -33,11 +35,17 @@ export default function MedicallyReviewedBand({
   reviewer = DEFAULT_REVIEWER,
   className,
   theme = "light",
+  fluid = false,
+  id,
 }: MedicallyReviewedBandProps) {
   const isLight = theme === "light";
 
   return (
-    <div className={`${styles.bandWrapper} ${isLight ? styles.bandWrapperLight : ""} ${className || ""}`} aria-label="Medical Review">
+    <div
+      id={id}
+      className={`${styles.bandWrapper} ${isLight ? styles.bandWrapperLight : ""} ${fluid ? styles.bandWrapperFluid : ""} ${className || ""}`}
+      aria-label="Medical Review"
+    >
       <div className={styles.bandContainer}>
         <div className={styles.sleekBar}>
           {/* Trust Badge & Context */}

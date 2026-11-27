@@ -3,7 +3,6 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Stethoscope, PhoneCall, ArrowRight, ShieldCheck } from "lucide-react";
 import styles from "./BlogCtaBanner.module.css";
 
 export interface BlogCtaBannerProps {
@@ -178,7 +177,6 @@ export default function BlogCtaBanner({
 
           <div className={styles.cardContent}>
             <div className={styles.eyebrowBadge}>
-              {eyebrowIcon || <ShieldCheck size={14} />}
               <span>{resolvedEyebrow}</span>
             </div>
 
@@ -189,7 +187,6 @@ export default function BlogCtaBanner({
             <div className={styles.actionsRow}>
               {resolvedPrimaryBtn && (
                 <Link href={resolvedPrimaryBtn.href} className={styles.primaryBtn}>
-                  {resolvedPrimaryBtn.icon || <Stethoscope size={17} />}
                   <span>{resolvedPrimaryBtn.text}</span>
                 </Link>
               )}
@@ -197,7 +194,6 @@ export default function BlogCtaBanner({
               {resolvedSecondaryBtn && (
                 <Link href={resolvedSecondaryBtn.href} className={styles.secondaryBtn}>
                   <span>{resolvedSecondaryBtn.text}</span>
-                  {resolvedSecondaryBtn.icon || <ArrowRight size={15} />}
                 </Link>
               )}
             </div>

@@ -137,7 +137,7 @@ export default function BlogBentoGrid({ scrollYProgress }: BlogBentoGridProps) {
             <TextSweepEffect
               words={["Why Millions Trust Narayana Health Information"]}
               sweepMs={1500}
-              finalColor="#FFFFFF"
+              finalColor="var(--bento-title-color, #ffffff)"
             />
           </motion.h2>
           <motion.p

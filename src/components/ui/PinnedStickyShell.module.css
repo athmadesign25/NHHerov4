@@ -1,0 +1,85 @@
+.fixedStickyShell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 940;
+  pointer-events: none;
+  transform: translate3d(0, 68px, 0);
+  transition: transform var(--duration-slowest) var(--ease-spring);
+}
+
+@media (max-width: 1099px) {
+  .fixedStickyShell {
+    transform: translate3d(0, 56px, 0);
+  }
+}
+
+:global(html[data-nav-visible="false"]) .fixedStickyShell {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.fixedStickyPanel {
+  position: relative;
+  width: 100%;
+  pointer-events: auto;
+  background: transparent;
+}
+
+/* Crisp breadcrumb-only bar (no gradient mist overhang) */
+.fixedStickyPanelCrisp {
+  padding: 0;
+}
+
+.fixedStickyPanelCrisp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(var(--white-rgb), 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(var(--slate-900-rgb), 0.06);
+}
+
+/* Filter-pinned bar: crisp solid white behind controls, smoothly fading white -> transparent below */
+.fixedStickyPanelBlurred {
+  padding: 0 0 var(--space-8, 8px);
+}
+
+.fixedStickyPanelBlurred::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  bottom: -28px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--white-rgb), 1) 0%,
+    rgba(var(--white-rgb), 0.98) calc(100% - 28px),
+    rgba(var(--white-rgb), 0.88) calc(100% - 21px),
+    rgba(var(--white-rgb), 0.62) calc(100% - 14px),
+    rgba(var(--white-rgb), 0.28) calc(100% - 7px),
+    rgba(var(--white-rgb), 0) 100%
+  );
+}
+
+@media (max-width: 768px) {
+  .fixedStickyPanelBlurred {
+    padding: 0 0 var(--space-4, 4px);
+  }
+
+  .fixedStickyPanelBlurred::before {
+    bottom: -20px;
+    background: linear-gradient(
+      180deg,
+      rgba(var(--white-rgb), 1) 0%,
+      rgba(var(--white-rgb), 0.98) calc(100% - 20px),
+      rgba(var(--white-rgb), 0.84) calc(100% - 14px),
+      rgba(var(--white-rgb), 0.50) calc(100% - 8px),
+      rgba(var(--white-rgb), 0) 100%
+    );
+  }
+}

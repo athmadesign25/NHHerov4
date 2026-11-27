@@ -1,71 +1,27 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
 import { ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
+import { useLibraryHeroBlendShrink } from "@/lib/useHeroShrink";
 import styles from "./BlogHeroV3.module.css";
+
+const BLOG_HERO_STATS = [
+  { staticValue: "400+", label: "Clinical Guides" },
+  { staticValue: "40+", label: "Medical Specialities" },
+  { staticValue: "100%", label: "Doctor Reviewed" },
+  { staticValue: "24×7", label: "Health Advisory" },
+];
 
 export default function BlogHeroV3() {
   const featuredRef = useRef<HTMLDivElement>(null);
-  const heroTransitionProgress = useMotionValue(0);
-
-  useEffect(() => {
-    const updateTransition = () => {
-      // Exact Procedure Detail V2 transition:
-      // At scrollY = 0..36px, keep background 100% dark (#060c18) so Hero and Featured Blogs start in unified dark mode.
-      // From 36px to 360px, smoothly morph #060c18 -> #020408 -> #f4f7fb -> #ffffff while crossfading the hero photo out.
-      const sy = window.scrollY || 0;
-      const startScroll = 36;
-      const endScroll = 360;
-      const raw = (sy - startScroll) / (endScroll - startScroll);
-      const clamped = Math.max(0, Math.min(1, raw));
-      heroTransitionProgress.set(clamped);
-    };
-
-    updateTransition();
-    window.addEventListener("scroll", updateTransition, { passive: true });
-    window.addEventListener("resize", updateTransition, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", updateTransition);
-      window.removeEventListener("resize", updateTransition);
-    };
-  }, [heroTransitionProgress]);
-
-  const sectionBgColor = useTransform(
-    heroTransitionProgress,
-    [0, 0.40, 0.68, 1],
-    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
-  );
-
-  // Smoothly crossfade hero photo into the unified dynamic canvas so there is ZERO gradient mist band or horizontal seam
-  const heroCanvasOpacity = useTransform(
-    heroTransitionProgress,
-    [0, 0.38, 0.68],
-    [1, 0.75, 0]
-  );
-
-  // Hero bottom metrics dynamic color inversion as the unified canvas transitions from dark/black to white
-  const heroStatNumColor = useTransform(
-    heroTransitionProgress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
-  );
-  const heroStatLabelColor = useTransform(
-    heroTransitionProgress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
-  );
-  const heroStatDividerColor = useTransform(
-    heroTransitionProgress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
-  );
+  const { progress, heroMotionStyle } = useLibraryHeroBlendShrink();
 
   const featuredArticles = React.useMemo(() => {
     const popular = ARTICLES_DIRECTORY_DATA.filter((a) => a.isPopular);
@@ -82,28 +38,26 @@ export default function BlogHeroV3() {
   };
 
   return (
-    <motion.div
-      style={{
-        backgroundColor: "transparent",
-        ["--stat-num-color" as string]: heroStatNumColor,
-        ["--stat-label-color" as string]: heroStatLabelColor,
-        ["--stat-divider-color" as string]: heroStatDividerColor,
-      }}
-    >
-      {/* ── SECTION 1: CLEAN GENERIC BLOGS PAGE HEADER HERO BANNER ── */}
-      <section className={styles.heroSection} data-nav-theme="dark">
-        <motion.div className={styles.heroBg} style={{ opacity: heroCanvasOpacity }}>
-          <Image
-            src="/images/specialities/Advance Heart Care.jpg"
-            alt="Narayana Health Blogs & Medical Insights"
-            fill
-            priority
-            loading="eager"
-            sizes="100vw"
-            className={styles.heroBgImage}
-          />
-          <div className={styles.scrimOverlay} />
-        </motion.div>
+    <div>
+      {/* ── SECTION 1: HERO BANNER (BLENDED DARK AT REST -> INSETS OVER WHITE ON SCROLL) ── */}
+      <div style={{ position: "relative", overflowX: "clip" }}>
+        <motion.section
+          className={styles.heroSection}
+          data-nav-theme="dark"
+          style={heroMotionStyle}
+        >
+          <div className={styles.heroBg}>
+            <Image
+              src="/images/specialities/Advance Heart Care.jpg"
+              alt="Narayana Health Blogs & Medical Insights"
+              fill
+              priority
+              loading="eager"
+              sizes="100vw"
+              className={styles.heroBgImage}
+            />
+            <div className={styles.scrimOverlay} />
+          </div>
 
         <div className={styles.heroInner}>
           <motion.div
@@ -142,9 +96,10 @@ export default function BlogHeroV3() {
                 className={styles.exploreBtn}
               >
                 <span>Explore More</span>
-                <ArrowRight size={16} />
               </a>
             </div>
+
+            <MobileRollingStats items={BLOG_HERO_STATS} />
           </motion.div>
 
           {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
@@ -182,18 +137,19 @@ export default function BlogHeroV3() {
             </div>
           </motion.div>
         </div>
-      </section>
+        </motion.section>
+      </div>
 
-      {/* ── SECTION 2: SEPARATE FEATURED & SUGGESTED BLOGS CAROUSEL BELOW HERO (SCROLL-DRIVEN TRANSITION) ── */}
-      <div id="featured-blogs" ref={featuredRef} className={styles.featuredCarouselWrapper}>
+      {/* ── SECTION 2: SEPARATE FEATURED & SUGGESTED BLOGS CAROUSEL (SMOOTH DARK -> WHITE TRANSITION) ── */}
+      <div id="featured-blogs" ref={featuredRef} className={styles.featuredCarouselWrapper} data-nav-theme="light">
         <MoreFromOurBlogCarousel
           articles={featuredArticles}
           title="Featured & Suggested Blogs"
           subtitle="Doctor-curated guides, symptom breakthroughs, and preventive clinical insights"
-          scrollYProgress={heroTransitionProgress}
+          scrollYProgress={progress}
           seamless
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

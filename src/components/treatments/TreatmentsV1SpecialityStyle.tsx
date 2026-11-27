@@ -921,7 +921,6 @@ function SpecialityProcedureCard({ item }: { item: TreatmentProcedureItem }) {
 
         <div className={styles.procedureNameRow}>
           <span className={styles.procedureName}>{item.shortTitle || item.title}</span>
-          <ArrowRight className={styles.nameArrow} size={16} strokeWidth={2.5} />
         </div>
 
         <span className={styles.cardAction}>

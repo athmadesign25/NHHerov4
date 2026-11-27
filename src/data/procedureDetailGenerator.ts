@@ -112,7 +112,7 @@ export interface ProcedureDetailData {
   toc: TOCItem[];
 }
 
-// Flagship high-definition doctor cards (Dr. Devi Prasad Shetty & Dr. Varun Shetty)
+// Flagship high-definition doctor cards (5 senior specialists for reel carousel)
 export const FLAGSHIP_TOP_DOCTORS: DoctorItem[] = [
   {
     name: "Dr. Devi Prasad Shetty",
@@ -133,6 +133,36 @@ export const FLAGSHIP_TOP_DOCTORS: DoctorItem[] = [
     speciality: "Consultant Cardiothoracic Surgeon",
     bio: "Dr. Varun Shetty is a dedicated Consultant Cardiac Surgeon at Narayana Institute of Cardiac Sciences in Bangalore. With a focus on delivering high-quality cardiac care, he brings expertise and commitment to his role as a Cardiac Surgery Consultant.",
     profileSlug: "dr-varun-shetty",
+  },
+  {
+    name: "Dr. Vivek Jawali",
+    designation: "Chief Cardiothoracic & Vascular Surgeon",
+    experience: "35+ Years Experience",
+    hospital: "Mazumdar Shaw Medical Centre, Bangalore",
+    image: "/doctors/doc_vivek.jpg",
+    speciality: "Cardiothoracic Surgery",
+    bio: "Dr. Vivek Jawali is a pioneer in minimally invasive beating-heart bypass surgery and complex valvular reconstructions with over 35 years of clinical surgical excellence across Narayana Health.",
+    profileSlug: "dr-vivek-jawali",
+  },
+  {
+    name: "Dr. Bagirath Raghuraman",
+    designation: "Director - Heart Failure & Transplant",
+    experience: "24+ Years Experience",
+    hospital: "Narayana Health City, Bangalore",
+    image: "/doctors/doc_bagirath.jpg",
+    speciality: "Heart Failure Cardiology",
+    bio: "Dr. Bagirath Raghuraman leads specialized heart failure programmes, mechanical circulatory support, and thoracic organ transplantation protocols with exceptional long-term survival metrics.",
+    profileSlug: "dr-bagirath-raghuraman",
+  },
+  {
+    name: "Dr. Sanjay Rao",
+    designation: "Senior Consultant Surgeon",
+    experience: "25+ Years Experience",
+    hospital: "Mazumdar Shaw Medical Centre, Bangalore",
+    image: "/images/doctors/dr_sanjay_rao_hd.jpg",
+    speciality: "Minimally Invasive Surgery",
+    bio: "Dr. Sanjay Rao is a seasoned surgical specialist known for precision minimally invasive protocols, structured perioperative pathways, and multidisciplinary patient safety boards across Narayana Health.",
+    profileSlug: "dr-sanjay-rao",
   },
 ];
 

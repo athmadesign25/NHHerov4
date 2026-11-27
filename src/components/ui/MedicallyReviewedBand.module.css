@@ -18,6 +18,23 @@
   }
 }
 
+.bandWrapper.bandWrapperFluid {
+  background: transparent;
+  padding: 40px 0 8px 0;
+}
+
+@media (min-width: 769px) {
+  .bandWrapper.bandWrapperFluid {
+    padding-top: 48px;
+    padding-bottom: 12px;
+  }
+}
+
+.bandWrapperFluid .bandContainer {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 .bandContainer {
   width: 100%;
   max-width: 100%;
@@ -280,7 +297,7 @@
 }
 
 .bandWrapperLight .sleekBar {
-  background: 
+  background:
     radial-gradient(ellipse at 0% 100%, color-mix(in srgb, var(--color-primary, #034EA2) 6%, transparent), color-mix(in srgb, var(--color-primary, #034EA2) 2%, transparent) 45%, transparent 70%),
     radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--color-primary, #034EA2) 3%, transparent), transparent 50%),
     linear-gradient(to right, #f6f8fb 0%, rgba(248, 250, 253, 0.9) 45%, rgba(253, 254, 255, 0.92) 80%, #fbfcfd 100%);

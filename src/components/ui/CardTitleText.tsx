@@ -70,31 +70,39 @@ export function splitBalancedCardTitle(title: string): [string, string] | null {
 }
 
 /**
- * Combines distinct summary/overview/clinical sentences cleanly without duplicating
- * identical text so hover reading shows 5–7 rich lines of helpful context.
+ * Combines up to two distinct, concise clinical sentences (~3–4 lines) so card
+ * hover overlays provide helpful reading context while staying clean and balanced.
  */
 export function buildCardHoverReading(parts: Array<string | undefined | null>): string {
   const seen = new Set<string>();
-  const cleanParts: string[] = [];
+  const sentences: string[] = [];
 
   for (const raw of parts) {
     if (!raw) continue;
     const trimmed = raw.trim().replace(/\s+/g, " ");
     if (!trimmed) continue;
-    const norm = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-    if (!norm || seen.has(norm)) continue;
 
-    const alreadyContained = cleanParts.some((existing) =>
-      existing.toLowerCase().replace(/[^a-z0-9]+/g, " ").includes(norm)
-    );
-    if (alreadyContained) continue;
+    for (const part of trimmed.split(/(?<=[.!?])\s+/)) {
+      const s = part.trim();
+      if (!s) continue;
+      const norm = s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      if (!norm || seen.has(norm)) continue;
 
-    seen.add(norm);
-    const punctuated = /[.!?]$/.test(trimmed) ? trimmed : `${trimmed}.`;
-    cleanParts.push(punctuated);
+      const alreadyContained = sentences.some((existing) =>
+        existing.toLowerCase().replace(/[^a-z0-9]+/g, " ").includes(norm)
+      );
+      if (alreadyContained) continue;
+
+      seen.add(norm);
+      sentences.push(/[.!?]$/.test(s) ? s : `${s}.`);
+
+      if (sentences.length >= 2) {
+        return sentences.join(" ");
+      }
+    }
   }
 
-  return cleanParts.join(" ");
+  return sentences.join(" ");
 }
 
 export function CardTitleText({ title }: { title: string }) {
