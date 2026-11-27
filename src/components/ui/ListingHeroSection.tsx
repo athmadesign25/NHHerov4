@@ -9,6 +9,7 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import RollingNumber from "@/components/ui/RollingNumber";
 import { duration, ease } from "@/lib/motion";
+import { useLibraryHeroBlendShrink } from "@/lib/useHeroShrink";
 import styles from "./ListingHeroSection.module.css";
 
 export interface ListingHeroCta {
@@ -40,6 +41,7 @@ export interface ListingHeroSectionProps {
   className?: string;
   children?: React.ReactNode;
   id?: string;
+  shrinkOnScroll?: boolean;
 }
 
 export default function ListingHeroSection({
@@ -55,7 +57,15 @@ export default function ListingHeroSection({
   className = "",
   children,
   id,
+  shrinkOnScroll = true,
 }: ListingHeroSectionProps) {
+  const { heroMotionStyle } = useLibraryHeroBlendShrink();
+  const heroShrinkStyle = shrinkOnScroll
+    ? {
+        ...heroMotionStyle,
+        backgroundColor: "#060e1b",
+      }
+    : undefined;
   // Title content helper (TextSweepEffect or plain text)
   const titleWords = Array.isArray(title) ? title : [title];
 
@@ -133,8 +143,14 @@ export default function ListingHeroSection({
   };
 
   return (
-    <section className={`${styles.hero} ${className}`} data-nav-theme="dark" id={id}>
-      {/* ── 1. BACKGROUND LAYERS & PARALLAX IMAGE ── */}
+    <div className={styles.heroOuterWrapper}>
+      <motion.section
+        className={`${styles.hero} ${className}`}
+        data-nav-theme="dark"
+        id={id}
+        style={heroShrinkStyle}
+      >
+        {/* ── 1. BACKGROUND LAYERS & PARALLAX IMAGE ── */}
       <div className={styles.heroBg}>
         <motion.div
           className={styles.heroBgMotion}
@@ -255,7 +271,8 @@ export default function ListingHeroSection({
           {children}
         </div>
       </div>
-    </section>
-  );
+    </motion.section>
+  </div>
+);
 }
 

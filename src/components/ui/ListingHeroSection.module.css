@@ -1,13 +1,7 @@
 /* ─── REUSABLE LISTING HERO SECTION ─────────────────────────────────────────── */
-.hero {
+.heroOuterWrapper {
   position: relative;
-  min-height: 620px;
-  display: flex;
-  align-items: center;
-  padding-top: calc(var(--nav-height, 72px) + 32px);
-  padding-bottom: 48px;
-  overflow: hidden;
-  background: #060e1b;
+  overflow-x: clip;
   margin-left: -48px;
   margin-right: -48px;
   margin-top: calc(-1 * var(--nav-actual-height, var(--page-nav-height, 68px)));
@@ -15,21 +9,43 @@
 }
 
 @media (max-width: 900px) {
-  .hero {
-    min-height: auto;
-    padding-top: calc(var(--nav-height, 72px) + 24px);
-    padding-bottom: 36px;
+  .heroOuterWrapper {
     margin-bottom: var(--sp-3, 24px);
   }
 }
 
 @media (max-width: 640px) {
-  .hero {
+  .heroOuterWrapper {
     margin-left: -16px;
     margin-right: -16px;
+    margin-bottom: var(--sp-2, 16px);
+  }
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  padding-top: calc(var(--nav-height, 72px) + 32px);
+  padding-bottom: 48px;
+  overflow: hidden;
+  background: #060e1b;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    padding-top: calc(var(--nav-height, 72px) + 24px);
+    padding-bottom: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
     padding-top: calc(var(--nav-height, 72px) + 16px);
     padding-bottom: 24px;
-    margin-bottom: var(--sp-2, 16px);
   }
 }
 
