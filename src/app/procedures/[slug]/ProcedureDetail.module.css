@@ -749,6 +749,30 @@
   width: 100%;
 }
 
+@media (min-width: 1181px) and (max-width: 1400px) {
+  .topDoctorsGrid {
+    gap: clamp(20px, 2.2vw, 28px);
+  }
+
+  .doctorBlendCard {
+    padding: clamp(16px, 1.6vw, 22px);
+    gap: clamp(16px, 1.8vw, 24px);
+    min-height: 440px;
+    border-radius: 22px;
+  }
+
+  .doctorImageBlendCol {
+    width: 40%;
+    min-width: 175px;
+    max-width: 235px;
+  }
+
+  .doctorCardBio {
+    font-size: clamp(13.5px, 1.05vw, 14.5px);
+    line-height: 1.6;
+  }
+}
+
 @media (min-width: 1025px) and (max-width: 1180px) {
   .topDoctorsGrid {
     gap: clamp(16px, 2vw, 22px);

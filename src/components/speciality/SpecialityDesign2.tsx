@@ -1466,12 +1466,14 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
     const track = featuredDoctorTrackRef.current;
     if (!track) return;
     const trackRect = track.getBoundingClientRect();
+    const trackPaddingLeft = typeof window !== "undefined" ? (parseFloat(window.getComputedStyle(track).paddingLeft) || 0) : 0;
+    const targetLeft = trackRect.left + trackPaddingLeft;
     let closestIndex = 0;
     let minDiff = Infinity;
     featuredDoctorCardRefs.current.forEach((card, idx) => {
       if (!card) return;
       const cardRect = card.getBoundingClientRect();
-      const diff = Math.abs(cardRect.left - trackRect.left);
+      const diff = Math.abs(cardRect.left - targetLeft);
       if (diff < minDiff) {
         minDiff = diff;
         closestIndex = idx;
@@ -1490,6 +1492,16 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
         inline: "start",
       });
     }
+  };
+
+  const scrollFeaturedDoctorPrev = () => {
+    const nextIdx = Math.max(0, activeFeaturedDoctorIndex - 1);
+    scrollToFeaturedDoctor(nextIdx);
+  };
+
+  const scrollFeaturedDoctorNext = (total: number) => {
+    const nextIdx = Math.min(total - 1, activeFeaturedDoctorIndex + 1);
+    scrollToFeaturedDoctor(nextIdx);
   };
 
   const handleDoctorScroll = () => {
@@ -1937,13 +1949,13 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 />
               </motion.div>
               <h1 className={styles.heroTitle}>
-                <TextSweepEffect words={[title]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
+                <TextSweepEffect words={[title]} sweepMs={1000} delayMs={80} finalColor="#FFFFFF" />
               </h1>
               <motion.p
                 className={styles.heroDesc}
                 initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ delay: 0.25, duration: 0.5, ease: "easeOut" }}
+                transition={{ delay: 0.55, duration: 0.5, ease: "easeOut" }}
               >
                 {isCardiac
                   ? cardiacBannerData.subtitle
@@ -1952,7 +1964,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
               <motion.div
                 initial={{ opacity: 0, y: 16, filter: "blur(12px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ delay: 0.6, duration: 0.5, ease: "easeOut" }}
+                transition={{ delay: 0.7, duration: 0.5, ease: "easeOut" }}
                 style={{ display: "inline-flex" }}
               >
                 <Link href="/doctors" className={styles.heroButton}>
@@ -2148,7 +2160,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
             >
               <TextSweepEffect
                 words={[isCardiac ? "Conditions & Heart Care Programmes" : "Cancer We Treat"]}
-                sweepMs={2600}
+                sweepMs={1000}
                 delayMs={80}
                 finalColor="#FFFFFF"
               />
@@ -2158,7 +2170,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: 0.55, ease: "easeOut" }}
             >
               {isCardiac
                 ? "Since 2000, we’ve pioneered heart care for adults and children at Narayana Health, with expert cardiologists and cardiac surgeons treating the entire spectrum of heart conditions."
@@ -2171,7 +2183,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
           >
             <div className={styles.toggleGroup}>
               {(["Adult", "Paediatric"] as const).map((type) => {
@@ -2421,7 +2433,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                   <TextSweepEffect
                     key={activeCategory}
                     words={[activeProcedureInfo.title]}
-                    sweepMs={2600}
+                    sweepMs={1000}
                     delayMs={80}
                     finalColor="var(--color-text)"
                   />
@@ -2434,7 +2446,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    transition={{ duration: 0.4, delay: 0.45, ease: "easeOut" }}
                   >
                     {activeProcedureInfo.desc}
                   </motion.p>
@@ -2550,7 +2562,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                       : section.title
                   }
                   words={[section.title]}
-                  sweepMs={2600}
+                  sweepMs={1000}
                   delayMs={80}
                   finalColor={titleColor}
                 />
@@ -2564,7 +2576,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    transition={{ duration: 0.4, delay: 0.45, ease: "easeOut" }}
                   >
                     {section.desc}
                   </motion.p>
@@ -2576,7 +2588,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                   initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
                   whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+                  transition={{ duration: 0.6, delay: 0.55, ease: "easeOut" }}
                 >
                   {section.desc}
                 </motion.p>
@@ -2586,105 +2598,139 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
           {section.id === "featured-doctors" ? (
             (() => {
               const featuredDoctors = getSpecialityFeaturedDoctors(slug, isCardiac);
+              const isSingle = featuredDoctors.length === 1;
+              const isMulti = featuredDoctors.length > 2;
               return (
                 <>
-                  <div
-                    className={styles.featuredDoctorsContainer}
-                    ref={featuredDoctorTrackRef}
-                    onScroll={handleFeaturedDoctorScroll}
-                  >
-                    <div className={styles.topDoctorsGrid}>
-                      {featuredDoctors.map((doc, idx) => (
-                        <motion.div
-                          key={idx}
-                          ref={(el) => {
-                            featuredDoctorCardRefs.current[idx] = el;
-                          }}
-                          className={styles.doctorBlendCard}
-                          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-                          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                          viewport={{ once: true, margin: "-60px" }}
-                          transition={{
-                            duration: duration.slower,
-                            delay: idx * 0.1,
-                            ease: ease.spring,
-                          }}
-                        >
-                          {/* Left: Image Container inside Card */}
-                          <Link
-                            href={`/doctors/${doc.profileSlug || doc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                            className={styles.doctorImageBlendCol}
-                            aria-label={`View profile of ${doc.name}`}
+                  <div className={styles.featuredDoctorsCarouselWrapper}>
+                    {isMulti && (
+                      <button
+                        type="button"
+                        className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${styles.desktopOnly}`}
+                        onClick={() => scrollFeaturedDoctorPrev()}
+                        disabled={activeFeaturedDoctorIndex === 0}
+                        aria-label="Previous featured doctors"
+                      >
+                        <ChevronLeft size={22} strokeWidth={2} />
+                      </button>
+                    )}
+
+                    <div
+                      className={`${styles.featuredDoctorsContainer} ${isSingle ? styles.featuredDoctorsContainerSingle : ""} ${isMulti ? styles.featuredDoctorsContainerCarousel : ""}`}
+                      ref={featuredDoctorTrackRef}
+                      onScroll={handleFeaturedDoctorScroll}
+                    >
+                      <div className={`${styles.topDoctorsGrid} ${isSingle ? styles.topDoctorsGridSingle : ""} ${isMulti ? styles.topDoctorsGridCarousel : ""}`}>
+                        {featuredDoctors.map((doc, idx) => (
+                          <motion.div
+                            key={idx}
+                            ref={(el) => {
+                              featuredDoctorCardRefs.current[idx] = el;
+                            }}
+                            className={`${styles.doctorBlendCard} ${isSingle ? styles.doctorBlendCardSingle : ""}`}
+                            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+                            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{
+                              duration: duration.slower,
+                              delay: 0.65 + idx * 0.1,
+                              ease: ease.spring,
+                            }}
                           >
-                            <Image
-                              src={doc.image}
-                              alt={doc.name}
-                              fill
-                              sizes="(max-width: 640px) 260px, (max-width: 1024px) 340px, 420px"
-                              className={styles.doctorBlendImg}
-                            />
-                          </Link>
+                            {/* Left: Image Container inside Card */}
+                            <Link
+                              href={`/doctors/${doc.profileSlug || doc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                              className={styles.doctorImageBlendCol}
+                              aria-label={`View profile of ${doc.name}`}
+                            >
+                              <Image
+                                src={doc.image}
+                                alt={doc.name}
+                                fill
+                                sizes="(max-width: 640px) 260px, (max-width: 1024px) 340px, 420px"
+                                className={styles.doctorBlendImg}
+                              />
+                            </Link>
 
-                          {/* Right: Text Col */}
-                          <div className={styles.doctorTextCol}>
-                            <div className={styles.doctorTextTop}>
-                              {doc.bio && (
-                                <p className={styles.doctorCardBio}>
-                                  {doc.bio}
-                                </p>
-                              )}
-                            </div>
-
-                            <div className={styles.identityText}>
-                              <h2 className={styles.name} aria-label={doc.name}>
-                                <span>{doc.name}</span>
-                              </h2>
-                              <div className={styles.identityMeta}>
-                                <div className={styles.specialityGroup}>
-                                  <span className={styles.speciality}>{doc.speciality || doc.designation}</span>
-                                </div>
-                                {doc.experience && (() => {
-                                  const years = doc.experience.match(/\d+(?:\.\d+)?/)?.[0];
-                                  const label = years ? `${years}+ yrs` : doc.experience;
-                                  const aria = years ? `${years}+ years experience` : `${doc.experience} experience`;
-                                  return (
-                                    <span className={styles.experience} aria-label={aria}>
-                                      <span className={styles.metaSeparator} aria-hidden="true">·</span>
-                                      <strong>{label}</strong>
-                                    </span>
-                                  );
-                                })()}
+                            {/* Right: Text Col */}
+                            <div className={styles.doctorTextCol}>
+                              <div className={styles.doctorTextTop}>
+                                {doc.bio && (
+                                  <div className={styles.doctorCardBioWrapper}>
+                                    {doc.bio.split("\n\n").map((para, pIdx) => (
+                                      <p key={pIdx} className={styles.doctorCardBio}>
+                                        {para}
+                                      </p>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
-                              <Link
-                                href={`/doctors/${doc.profileSlug || doc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                                className={styles.profileLink}
-                                aria-label={`View profile of ${doc.name}`}
-                              >
-                                View profile <ArrowRight size={14} aria-hidden="true" />
-                              </Link>
+
+                              <div className={styles.identityText}>
+                                <h2 className={styles.name} aria-label={doc.name}>
+                                  <span>{doc.name}</span>
+                                </h2>
+                                <div className={styles.identityMeta}>
+                                  <div className={styles.specialityGroup}>
+                                    <span className={styles.speciality}>{doc.speciality || doc.designation}</span>
+                                  </div>
+                                  {doc.experience && (() => {
+                                    const years = doc.experience.match(/\d+(?:\.\d+)?/)?.[0];
+                                    const label = years ? `${years}+ yrs` : doc.experience;
+                                    const aria = years ? `${years}+ years experience` : `${doc.experience} experience`;
+                                    return (
+                                      <span className={styles.experience} aria-label={aria}>
+                                        <span className={styles.metaSeparator} aria-hidden="true">·</span>
+                                        <strong>{label}</strong>
+                                      </span>
+                                    );
+                                  })()}
+                                </div>
+                                <Link
+                                  href={`/doctors/${doc.profileSlug || doc.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                                  className={styles.profileLink}
+                                  aria-label={`View profile of ${doc.name}`}
+                                >
+                                  View profile <ArrowRight size={14} aria-hidden="true" />
+                                </Link>
+                              </div>
                             </div>
-                          </div>
-                        </motion.div>
-                      ))}
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
+
+                    {isMulti && (
+                      <button
+                        type="button"
+                        className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${styles.desktopOnly}`}
+                        onClick={() => scrollFeaturedDoctorNext(featuredDoctors.length)}
+                        disabled={activeFeaturedDoctorIndex >= featuredDoctors.length - 2}
+                        aria-label="Next featured doctors"
+                      >
+                        <ChevronRight size={22} strokeWidth={2} />
+                      </button>
+                    )}
                   </div>
 
-                  {/* Responsive Carousel Controls (< 768px) - Consistent Carousel Dots */}
-                  <div className={styles.featuredDoctorCarouselControls}>
-                    <div className={styles.doctorCarouselDots} role="tablist" aria-label="Featured doctors carousel pagination">
-                      {featuredDoctors.map((_, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          role="tab"
-                          aria-selected={activeFeaturedDoctorIndex === idx}
-                          aria-label={`Featured Doctor ${idx + 1} of ${featuredDoctors.length}`}
-                          className={`${styles.doctorCarouselDot} ${activeFeaturedDoctorIndex === idx ? styles.doctorActiveDot : ""}`}
-                          onClick={() => scrollToFeaturedDoctor(idx)}
-                        />
-                      ))}
+                  {/* Responsive & Web Carousel Controls */}
+                  {featuredDoctors.length > 1 && (
+                    <div className={`${styles.featuredDoctorCarouselControls} ${isMulti ? styles.featuredDoctorCarouselControlsWeb : ""}`}>
+                      <div className={styles.doctorCarouselDots} role="tablist" aria-label="Featured doctors carousel pagination">
+                        {featuredDoctors.map((_, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            role="tab"
+                            aria-selected={activeFeaturedDoctorIndex === idx}
+                            aria-label={`Featured Doctor ${idx + 1} of ${featuredDoctors.length}`}
+                            className={`${styles.doctorCarouselDot} ${activeFeaturedDoctorIndex === idx ? styles.doctorActiveDot : ""}`}
+                            onClick={() => scrollToFeaturedDoctor(idx)}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </>
               );
             })()
@@ -2699,7 +2745,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.4, delay: i * 0.05 }}
+                    transition={{ duration: 0.4, delay: 0.65 + i * 0.05 }}
                     style={{
                       boxSizing: "border-box",
                       backgroundColor: "rgba(255, 255, 255, 0.953)",
@@ -2738,7 +2784,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
               >
                 <AdvanceTestsCarousel tests={isCardiac ? cardiacTestsData : undefined} theme={isDarkSection ? "dark" : "light"} />
               </motion.div>
@@ -2762,7 +2808,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 0.5, delay: 0.1 }}
+                      transition={{ duration: 0.5, delay: 0.65 }}
                       onScroll={handleDoctorScroll}
                       onMouseDown={handleMouseDown}
                       onMouseMove={handleMouseMove}
@@ -2863,7 +2909,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
               >
                 <DoctorOverviewCarousel videos={isCardiac ? cardiacDoctorVideosList : undefined} />
               </motion.div>
@@ -2880,7 +2926,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
               >
                 <HospitalCarousel hospitals={HOSPITALS_DATA} theme="light" />
               </motion.div>

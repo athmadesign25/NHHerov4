@@ -325,7 +325,7 @@ function SpecialitiesContent() {
           className={heroStyles.heroSearchContainer}
           initial={{ opacity: 0, y: 14, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.5, delay: 0.82, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className={heroStyles.heroSearchRow}>
             <div className={heroStyles.searchBoxWrap}>
@@ -360,7 +360,7 @@ function SpecialitiesContent() {
           aria-label="Filter specialities by alphabetical letter"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.45, delay: 0.88, ease: [0.16, 1, 0.3, 1] }}
         >
           <button
             type="button"
