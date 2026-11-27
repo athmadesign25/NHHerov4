@@ -45,7 +45,7 @@ export interface ListingHeroSectionProps {
 export default function ListingHeroSection({
   breadcrumbs,
   title,
-  titleSweepMs = 1000,
+  titleSweepMs = 1200,
   subtext,
   cta,
   stats,
@@ -195,7 +195,7 @@ export default function ListingHeroSection({
               className={styles.heroSubtitle}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.55, ease: ease.spring }}
+              transition={{ duration: 0.45, delay: 0.6, ease: ease.spring }}
             >
               {subtext}
             </motion.p>
@@ -206,7 +206,7 @@ export default function ListingHeroSection({
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.68, ease: ease.spring }}
+              transition={{ duration: 0.45, delay: 0.72, ease: ease.spring }}
             >
               {renderCta()}
             </motion.div>
@@ -218,7 +218,7 @@ export default function ListingHeroSection({
               className={styles.statsContainer}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.75, ease: ease.spring }}
+              transition={{ duration: 0.45, delay: 0.8, ease: ease.spring }}
             >
               <div className={styles.statsGrid}>
                 {stats.map((stat, idx) => (

@@ -1949,13 +1949,13 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 />
               </motion.div>
               <h1 className={styles.heroTitle}>
-                <TextSweepEffect words={[title]} sweepMs={1000} delayMs={80} finalColor="#FFFFFF" />
+                <TextSweepEffect words={[title]} sweepMs={1200} delayMs={80} finalColor="#FFFFFF" />
               </h1>
               <motion.p
                 className={styles.heroDesc}
                 initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ delay: 0.55, duration: 0.5, ease: "easeOut" }}
+                transition={{ delay: 0.6, duration: 0.5, ease: "easeOut" }}
               >
                 {isCardiac
                   ? cardiacBannerData.subtitle
@@ -1964,7 +1964,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
               <motion.div
                 initial={{ opacity: 0, y: 16, filter: "blur(12px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ delay: 0.7, duration: 0.5, ease: "easeOut" }}
+                transition={{ delay: 0.75, duration: 0.5, ease: "easeOut" }}
                 style={{ display: "inline-flex" }}
               >
                 <Link href="/doctors" className={styles.heroButton}>
@@ -2160,7 +2160,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
             >
               <TextSweepEffect
                 words={[isCardiac ? "Conditions & Heart Care Programmes" : "Cancer We Treat"]}
-                sweepMs={1000}
+                sweepMs={1200}
                 delayMs={80}
                 finalColor="#FFFFFF"
               />
@@ -2170,7 +2170,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.55, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
             >
               {isCardiac
                 ? "Since 2000, we’ve pioneered heart care for adults and children at Narayana Health, with expert cardiologists and cardiac surgeons treating the entire spectrum of heart conditions."
@@ -2183,7 +2183,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: 0.75, ease: "easeOut" }}
           >
             <div className={styles.toggleGroup}>
               {(["Adult", "Paediatric"] as const).map((type) => {
@@ -2433,7 +2433,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                   <TextSweepEffect
                     key={activeCategory}
                     words={[activeProcedureInfo.title]}
-                    sweepMs={1000}
+                    sweepMs={1200}
                     delayMs={80}
                     finalColor="var(--color-text)"
                   />
@@ -2446,7 +2446,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                    transition={{ duration: 0.4, delay: 0.45, ease: "easeOut" }}
+                    transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
                   >
                     {activeProcedureInfo.desc}
                   </motion.p>
@@ -2562,7 +2562,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                       : section.title
                   }
                   words={[section.title]}
-                  sweepMs={1000}
+                  sweepMs={1200}
                   delayMs={80}
                   finalColor={titleColor}
                 />
@@ -2576,7 +2576,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                    transition={{ duration: 0.4, delay: 0.45, ease: "easeOut" }}
+                    transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
                   >
                     {section.desc}
                   </motion.p>
@@ -2588,7 +2588,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                   initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
                   whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: 0.55, ease: "easeOut" }}
+                  transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
                 >
                   {section.desc}
                 </motion.p>
@@ -2633,7 +2633,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                             viewport={{ once: true, margin: "-60px" }}
                             transition={{
                               duration: duration.slower,
-                              delay: 0.65 + idx * 0.1,
+                              delay: 0.72 + idx * 0.1,
                               ease: ease.spring,
                             }}
                           >
@@ -2745,7 +2745,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.4, delay: 0.65 + i * 0.05 }}
+                    transition={{ duration: 0.4, delay: 0.72 + i * 0.05 }}
                     style={{
                       boxSizing: "border-box",
                       backgroundColor: "rgba(255, 255, 255, 0.953)",
@@ -2784,7 +2784,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
               >
                 <AdvanceTestsCarousel tests={isCardiac ? cardiacTestsData : undefined} theme={isDarkSection ? "dark" : "light"} />
               </motion.div>
@@ -2808,7 +2808,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 0.5, delay: 0.65 }}
+                      transition={{ duration: 0.5, delay: 0.72 }}
                       onScroll={handleDoctorScroll}
                       onMouseDown={handleMouseDown}
                       onMouseMove={handleMouseMove}
@@ -2909,7 +2909,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
               >
                 <DoctorOverviewCarousel videos={isCardiac ? cardiacDoctorVideosList : undefined} />
               </motion.div>
@@ -2926,7 +2926,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
               >
                 <HospitalCarousel hospitals={HOSPITALS_DATA} theme="light" />
               </motion.div>

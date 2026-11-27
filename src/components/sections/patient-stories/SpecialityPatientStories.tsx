@@ -474,7 +474,7 @@ export default function SpecialityPatientStories({
               <TextSweepEffect
                 key={activeCategory ? `patient-stories-title-${activeCategory}` : title}
                 words={[title]}
-                sweepMs={1000}
+                sweepMs={1200}
                 finalColor={isLight ? "#1A1A2E" : "#FFFFFF"}
               />
             </h2>
@@ -486,7 +486,7 @@ export default function SpecialityPatientStories({
                 initial={{ opacity: 0, filter: "blur(12px)", y: -16 }}
                 animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                 exit={{ opacity: 0, filter: "blur(8px)", y: 16 }}
-                transition={{ duration: 0.5, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               >
                 {subtitle}
               </motion.p>
