@@ -19,7 +19,6 @@ import {
   Stethoscope,
   Award,
   MapPin,
-  Filter,
   Check,
 } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
@@ -384,19 +383,6 @@ function SpecialitiesContent() {
                     )}
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  className={heroStyles.mobileFilterBtn}
-                  onClick={() => setMobileFilterOpen(true)}
-                  aria-label="Open filters"
-                >
-                  <Filter size={15} />
-                  <span>Filters</span>
-                  {activeFiltersCount > 0 && (
-                    <span className={heroStyles.mobileFilterDot} />
-                  )}
-                </button>
               </div>
             </motion.div>
 

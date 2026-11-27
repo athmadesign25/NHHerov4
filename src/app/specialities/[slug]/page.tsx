@@ -16,7 +16,7 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
   const { slug } = React.use(params);
 
   return (
-    <Suspense fallback={<SpecialityDesign2 slug={slug} />}>
+    <Suspense fallback={<SpecialityDesign2 slug={slug} isCoE={false} />}>
       <SpecialityPageContent slug={slug} />
     </Suspense>
   );

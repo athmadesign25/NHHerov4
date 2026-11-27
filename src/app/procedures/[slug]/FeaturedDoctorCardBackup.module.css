@@ -1,0 +1,186 @@
+/* Backup stylesheet for original Featured Doctors blend card */
+.doctorBlendCard {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 calc((100vw - 2 * var(--reel-gutter, 32px) - var(--reel-card-gap, 28px)) / 2);
+  background: var(--white, #ffffff);
+  border: 1px solid var(--v4-card-border, rgba(15, 23, 42, 0.09));
+  border-radius: 22px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: none !important;
+  outline: none !important;
+  min-height: 360px;
+  scroll-snap-align: start;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .doctorBlendCard {
+    flex: 0 0 min(480px, 78vw);
+  }
+}
+
+.doctorBlendCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--blue-brand-rgb, 3, 78, 162), 0.28);
+}
+
+.doctorImageBlendCol {
+  position: relative;
+  width: 44%;
+  min-width: 210px;
+  max-width: 260px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.doctorBlendImg {
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.doctorBlendCard:hover .doctorBlendImg {
+  transform: scale(1.04);
+}
+
+.doctorImageBlendOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, transparent 0%, transparent 55%, rgba(255, 255, 255, 0.65) 82%, #ffffff 100%),
+    linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, transparent 18%);
+}
+
+.doctorTextCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(22px, 2.2vw, 30px) clamp(20px, 2vw, 28px);
+  flex: 1;
+  min-width: 0;
+}
+
+.doctorTextTop {
+  margin-bottom: 14px;
+}
+
+.doctorCardBio {
+  font-size: clamp(14px, 1.1vw, 15px);
+  line-height: 1.62;
+  color: var(--slate-700, #334155);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+.doctorTextBottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.doctorCardName {
+  font-size: clamp(20px, 1.8vw, 23px);
+  font-weight: 700;
+  color: var(--slate-900, #0f172a);
+  letter-spacing: -0.02em;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.doctorCardRole {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-brand, #034ea2);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.doctorMetaBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.doctorExperienceText,
+.doctorHospitalName {
+  font-size: 13px;
+  color: var(--slate-500, #64748b);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.doctorMetaDot {
+  color: var(--slate-400, #94a3b8);
+  font-size: 12px;
+  user-select: none;
+}
+
+.doctorCtaContainer {
+  display: flex;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  width: 100%;
+}
+
+.doctorProfileLink {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-brand, #034ea2);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.doctorProfileLink:hover {
+  text-decoration: underline;
+  color: var(--navy-900, #022d61);
+}
+
+@media (max-width: 768px) {
+  .doctorBlendCard {
+    flex: 0 0 84vw !important;
+    min-width: 84vw !important;
+    max-width: 340px !important;
+    min-height: auto !important;
+    flex-direction: column !important;
+    scroll-snap-align: start !important;
+  }
+
+  .doctorImageBlendCol {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 215px !important;
+  }
+
+  .doctorImageBlendOverlay {
+    background: linear-gradient(
+      to top,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0.55) 28%,
+      transparent 68%
+    ) !important;
+  }
+
+  .doctorTextCol {
+    padding: 14px 18px 18px !important;
+  }
+
+  .doctorCardBio {
+    -webkit-line-clamp: 3 !important;
+    font-size: 13.5px !important;
+  }
+}

@@ -192,22 +192,25 @@
 }
 
 .heroPrimaryBtn {
-  background: var(--color-primary, var(--blue-brand));
-  color: var(--white);
-  font-size: var(--font-size-sm, 14px);
+  background: var(--white);
+  color: var(--color-primary, var(--blue-brand));
+  font-size: var(--font-size-base, 16px);
   font-weight: 600;
-  padding: 11px 22px;
+  padding: 12px 26px;
   border-radius: var(--radius-md, 8px);
+  border: 1.5px solid var(--white);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   text-decoration: none;
-  border: none;
+  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.12);
   transition: all var(--duration-base) var(--ease-spring);
 }
 
 .heroPrimaryBtn:hover {
-  background: var(--color-primary-dark, var(--blue-900));
+  background: rgba(var(--white-rgb), 0.92);
+  border-color: rgba(var(--white-rgb), 0.92);
+  color: var(--color-primary-dark, var(--blue-900));
   transform: translateY(-2px);
 }
 
@@ -436,14 +439,14 @@
 }
 
 .tocLink:hover {
-  color: var(--blue-brand);
-  background: rgba(var(--blue-brand-rgb), 0.05);
+  color: var(--red-600);
+  background: rgba(var(--red-600-rgb), 0.05);
 }
 
 .tocLinkActive {
-  color: var(--blue-brand) !important;
+  color: var(--red-600) !important;
   font-weight: 600;
-  background: rgba(var(--blue-brand-rgb), 0.08) !important;
+  background: rgba(var(--red-600-rgb), 0.08) !important;
 }
 
 .tocLinkActive::before {
@@ -454,7 +457,7 @@
   transform: translateY(-50%);
   width: 3px;
   height: 18px;
-  background: var(--blue-brand);
+  background: var(--red-600);
   border-radius: 0 2px 2px 0;
 }
 

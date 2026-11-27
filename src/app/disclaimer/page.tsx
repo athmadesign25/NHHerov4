@@ -151,7 +151,6 @@ export default function DisclaimerPage() {
 
             <div className={styles.heroActionsRow}>
               <a href="#emergency-protocol" className={styles.heroPrimaryBtn}>
-                <AlertTriangle size={15} />
                 <span>Emergency Protocol</span>
               </a>
               <a href="tel:18003090309" className={styles.heroSecondaryBtn}>

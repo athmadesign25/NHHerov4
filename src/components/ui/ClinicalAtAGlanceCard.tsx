@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import styles from "./ClinicalAtAGlanceCard.module.css";
 
 interface ClinicalAtAGlanceCardProps {
@@ -37,7 +36,6 @@ export default function ClinicalAtAGlanceCard({
           title="Check Specialist Consultations"
         >
           <span>Check Consultations</span>
-          <ArrowUpRight size={13} className={styles.btnArrow} />
         </Link>
       </div>
     </div>

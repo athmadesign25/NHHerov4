@@ -26,10 +26,13 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import { getCsrProgramBySlug, CSR_PROGRAMS_DATA, CsrProgramItem } from "@/data/csrData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ShareWidget from "@/components/ui/ShareWidget";
+import DetailStickyBreadcrumb from "@/components/ui/DetailStickyBreadcrumb";
+import { HEALTH_LIBRARY_SIBLING_PAGES } from "@/components/ui/StickyBreadcrumbBar";
 import styles from "./CsrDetail.module.css";
 
 interface PageProps {
@@ -178,9 +181,7 @@ export default function CsrDetailPage({ params }: PageProps) {
 
             <div className={styles.heroActionsRow}>
               <Link href="/doctors" className={styles.heroPrimaryBtn}>
-                <Calendar size={15} />
                 <span>Support This Initiative</span>
-                <ArrowRight size={14} />
               </Link>
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
@@ -189,6 +190,16 @@ export default function CsrDetailPage({ params }: PageProps) {
                 <span className={styles.phoneMobileSpan}>Call Helpline</span>
               </a>
             </div>
+
+            <MobileRollingStats
+              items={[
+                ...(program.statBadge ? [{ staticValue: program.statBadge.number, label: program.statBadge.label }] : []),
+                ...program.modalContent.metrics.slice(0, 3).map((m) => ({
+                  staticValue: m.value,
+                  label: m.label,
+                })),
+              ]}
+            />
           </motion.div>
 
           {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
@@ -219,6 +230,25 @@ export default function CsrDetailPage({ params }: PageProps) {
           </motion.div>
         </div>
       </section>
+
+      <DetailStickyBreadcrumb
+        currentTitle={program.title}
+        parentLabel="CSR Overview"
+        siblingPages={[
+          {
+            label: "CSR Overview",
+            href: "/csr",
+            description: "Narayana Health Foundation impact",
+          },
+          {
+            label: "Community Radio Program",
+            href: "/csr/community-radioprogram",
+            description: "Grassroots health broadcasting",
+          },
+          ...HEALTH_LIBRARY_SIBLING_PAGES,
+        ]}
+        motionKey={`csr-sticky-breadcrumb-${slug}`}
+      />
 
       {/* ─── READING EXPERIENCE SHEET (PURE WHITE EDITORIAL CONTAINER) ─────── */}
       <div className={styles.readingExperienceWrapper}>

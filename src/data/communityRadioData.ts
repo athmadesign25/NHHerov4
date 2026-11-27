@@ -50,14 +50,14 @@ export const COMMUNITY_RADIO_HERO = {
 };
 
 export const RADIO_CATEGORIES: RadioCategoryItem[] = [
-  { id: "all", name: "All Topics", icon: "/Specialities icons/General Surgery.jpeg", slugMatch: [] },
-  { id: "cardiology", name: "Cardiology", icon: "/Specialities icons/Cardiology.jpeg", slugMatch: ["cardiology", "heart"] },
-  { id: "paediatrics", name: "Paediatrics", icon: "/Specialities icons/Paediatrics.jpeg", slugMatch: ["paediatrics", "pediatric", "child"] },
-  { id: "oncology", name: "Oncology", icon: "/Specialities icons/Cancer Care.jpeg", slugMatch: ["oncology", "cancer"] },
-  { id: "neurology", name: "Neurology", icon: "/Specialities icons/Neurology.jpeg", slugMatch: ["neurology", "mental", "brain"] },
-  { id: "orthopaedics", name: "Orthopaedics", icon: "/Specialities icons/Orthopedics.jpeg", slugMatch: ["orthopaedics", "orthopedics", "bones"] },
-  { id: "diabetes", name: "Diabetes & Diet", icon: "/Specialities icons/Endocrinology.jpeg", slugMatch: ["endocrinology", "diabetes", "diet"] },
-  { id: "community", name: "Community Health", icon: "/Specialities icons/General Medicine.jpeg", slugMatch: ["community", "sanitation", "rural"] },
+  { id: "all", name: "All", icon: "/Specialities icons/General Surgery.svg", slugMatch: [] },
+  { id: "cardiology", name: "Cardiology", icon: "/Specialities icons/Cardiology.svg", slugMatch: ["cardiology", "heart"] },
+  { id: "paediatrics", name: "Paediatrics", icon: "/Specialities icons/Paedratic.svg", slugMatch: ["paediatrics", "pediatric", "child"] },
+  { id: "oncology", name: "Oncology", icon: "/Specialities icons/Cancercare.svg", slugMatch: ["oncology", "cancer"] },
+  { id: "neurology", name: "Neurology", icon: "/Specialities icons/Neurology.svg", slugMatch: ["neurology", "mental", "brain"] },
+  { id: "orthopaedics", name: "Orthopaedics", icon: "/Specialities icons/Orthopaedics.svg", slugMatch: ["orthopaedics", "orthopedics", "bones"] },
+  { id: "diabetes", name: "Diabetes", icon: "/Specialities icons/Diabetology.svg", slugMatch: ["endocrinology", "diabetes", "diet"] },
+  { id: "community", name: "Community", icon: "/Specialities icons/General Medicine.svg", slugMatch: ["community", "sanitation", "rural"] },
 ];
 
 export const RADIO_EPISODES: RadioEpisode[] = [

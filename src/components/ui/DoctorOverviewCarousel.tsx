@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
   X,
-  ArrowLeft,
-  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import styles from "./DoctorOverviewCarousel.module.css";
 
@@ -98,6 +98,129 @@ export interface DoctorOverviewCarouselProps {
   videos?: DoctorVideoItem[];
 }
 
+function DoctorVideoCard({
+  item,
+  isCenter = true,
+  isPlaying = false,
+  onPlay,
+  onClose,
+  onClick,
+}: {
+  item: DoctorVideoItem;
+  isCenter?: boolean;
+  isPlaying?: boolean;
+  onPlay?: () => void;
+  onClose?: () => void;
+  onClick?: () => void;
+}) {
+  return (
+    <div
+      className={`${styles.videoCard} ${isCenter ? styles.videoCardActive : styles.videoCardSide}`}
+      onClick={!isCenter && onClick ? onClick : undefined}
+      role={!isCenter ? "button" : undefined}
+      tabIndex={!isCenter ? 0 : undefined}
+      aria-label={!isCenter ? `View video: ${item.title}` : undefined}
+      onKeyDown={
+        !isCenter && onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+    >
+      {/* 16:9 Landscape Video Container */}
+      <div className={styles.videoWrapper}>
+        {isCenter && isPlaying ? (
+          <>
+            {/* Active Video Player with YouTube / Local fallback */}
+            <iframe
+              className={styles.videoIframe}
+              src={`https://www.youtube-nocookie.com/embed/${item.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
+              title={item.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            <button
+              type="button"
+              className={styles.closePlayerBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose?.();
+              }}
+              aria-label="Close video player"
+            >
+              <X size={18} strokeWidth={2.5} />
+            </button>
+          </>
+        ) : (
+          <>
+            {/* Landscape Cover Thumbnail */}
+            <img
+              src={item.thumbnail}
+              alt={item.title}
+              className={styles.thumbnailImage}
+              loading="lazy"
+            />
+
+            {/* Ambient Scrim */}
+            <div className={styles.bottomOverlay} />
+            {!isCenter && <div className={styles.sideCardScrim} aria-hidden />}
+
+            {/* Play Button */}
+            {isCenter ? (
+              <button
+                type="button"
+                className={styles.playButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPlay?.();
+                }}
+                aria-label={`Play video: ${item.title}`}
+              >
+                <Play size={28} fill="currentColor" strokeWidth={0} className={styles.playIcon} />
+              </button>
+            ) : (
+              <div className={`${styles.playButton} ${styles.playButtonSide}`} aria-hidden>
+                <Play size={24} fill="currentColor" strokeWidth={0} className={styles.playIcon} />
+              </div>
+            )}
+
+            {/* Bottom Overlay Title on Video */}
+            <div className={styles.videoBottomContent}>
+              <h3 className={styles.videoTitle}>{item.title}</h3>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Doctor Information Bar — Positioned outside the video container */}
+      <div className={styles.doctorProfileBar}>
+        <div className={styles.doctorProfile}>
+          <img
+            src={item.doctor.avatar}
+            alt={item.doctor.name}
+            className={styles.doctorAvatar}
+          />
+          <div className={styles.doctorMeta}>
+            <div className={styles.doctorNameRow}>
+              <h4 className={styles.doctorName}>{item.doctor.name}</h4>
+            </div>
+            <p className={styles.doctorRole}>{item.doctor.role}</p>
+            <p className={styles.doctorHospital}>
+              <span>{item.doctor.hospital}</span>
+              <span className={styles.hospitalDot} />
+              <span>{item.doctor.experience}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DoctorOverviewCarousel({ videos = DOCTOR_VIDEOS }: DoctorOverviewCarouselProps = {}) {
   const videoList = videos && videos.length > 0 ? videos : DOCTOR_VIDEOS;
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -106,33 +229,26 @@ export default function DoctorOverviewCarousel({ videos = DOCTOR_VIDEOS }: Docto
 
   const currentItem = videoList[currentIndex] || videoList[0];
   const totalItems = videoList.length;
-  const nextItem = currentIndex < totalItems - 1 ? videoList[currentIndex + 1] : null;
 
-  const isPrevDisabled = currentIndex === 0;
-  const isNextDisabled = currentIndex === totalItems - 1;
-
-  // Reset playing state when slide changes
+  // Infinite looping navigation: side cards on left and right allow wrap-around
   const goToNext = useCallback(() => {
-    if (currentIndex < totalItems - 1) {
-      setIsPlaying(false);
-      setDirection(1);
-      setCurrentIndex((prev) => prev + 1);
-    }
-  }, [currentIndex, totalItems]);
+    setIsPlaying(false);
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % totalItems);
+  }, [totalItems]);
 
   const goToPrev = useCallback(() => {
-    if (currentIndex > 0) {
-      setIsPlaying(false);
-      setDirection(-1);
-      setCurrentIndex((prev) => prev - 1);
-    }
-  }, [currentIndex]);
-
-  const goToIndex = (index: number) => {
-    if (index === currentIndex) return;
     setIsPlaying(false);
-    setDirection(index > currentIndex ? 1 : -1);
-    setCurrentIndex(index);
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + totalItems) % totalItems);
+  }, [totalItems]);
+
+  const goToIndex = (targetIndex: number) => {
+    if (targetIndex === currentIndex) return;
+    setIsPlaying(false);
+    const diff = (targetIndex - currentIndex + totalItems) % totalItems;
+    setDirection(diff <= totalItems / 2 ? 1 : -1);
+    setCurrentIndex(targetIndex);
   };
 
   // Keyboard navigation
@@ -149,9 +265,9 @@ export default function DoctorOverviewCarousel({ videos = DOCTOR_VIDEOS }: Docto
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [goToNext, goToPrev]);
 
-const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
+  const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
 
-  // Framer motion slide animation variants
+  // Framer motion slide animation variants for mobile
   const slideVariants = {
     enter: (dir: number) => ({
       x: dir > 0 ? 36 : -36,
@@ -181,138 +297,143 @@ const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
     }),
   };
 
+  const prevIndex = (currentIndex - 1 + totalItems) % totalItems;
+  const nextIndex = (currentIndex + 1) % totalItems;
+
   return (
     <div className={styles.carouselContainer} role="region" aria-label="Doctor's Overview Videos">
-      {/* Animated Single Video Slide Card */}
-      <AnimatePresence mode="wait" custom={direction}>
-        <motion.div
-          key={currentItem.id}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          className={styles.videoCard}
+      {/* DESKTOP 3-CARD PERSPECTIVE STAGE WITH HALF-CUT SIDE CARDS (WEB ONLY) */}
+      <div className={`${styles.desktopStage} ${styles.desktopOnly}`}>
+        <div className={styles.edgeFadeLeft} aria-hidden />
+        <div className={styles.edgeFadeRight} aria-hidden />
+
+        {/* Navigation Arrows (Web only, matching AdvanceTestsCarousel) */}
+        <button
+          type="button"
+          className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${styles.arrowBtnLight} ${styles.desktopOnly}`}
+          onClick={goToPrev}
+          aria-label="Previous video"
         >
-          {/* 16:9 Landscape Video Container */}
-          <div className={styles.videoWrapper}>
-            {isPlaying ? (
-              <>
-                {/* Active Video Player with YouTube / Local fallback */}
-                <iframe
-                  className={styles.videoIframe}
-                  src={`https://www.youtube-nocookie.com/embed/${currentItem.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
-                  title={currentItem.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-                <button
-                  type="button"
-                  className={styles.closePlayerBtn}
-                  onClick={() => setIsPlaying(false)}
-                  aria-label="Close video player"
-                >
-                  <X size={18} strokeWidth={2.5} />
-                </button>
-              </>
-            ) : (
-              <>
-                {/* Landscape Cover Thumbnail */}
-                <img
-                  src={currentItem.thumbnail}
-                  alt={currentItem.title}
-                  className={styles.thumbnailImage}
-                  loading="lazy"
-                />
+          <ChevronLeft size={22} strokeWidth={2} />
+        </button>
 
-                {/* Ambient Scrim */}
-                <div className={styles.bottomOverlay} />
+        <button
+          type="button"
+          className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${styles.arrowBtnLight} ${styles.desktopOnly}`}
+          onClick={goToNext}
+          aria-label="Next video"
+        >
+          <ChevronRight size={22} strokeWidth={2} />
+        </button>
 
-
-                {/* Center Play Button */}
-                <button
-                  type="button"
-                  className={styles.playButton}
-                  onClick={() => setIsPlaying(true)}
-                  aria-label={`Play video: ${currentItem.title}`}
-                >
-                  <Play size={28} fill="currentColor" strokeWidth={0} className={styles.playIcon} />
-                </button>
-
-                {/* Bottom Overlay Title on Video */}
-                <div className={styles.videoBottomContent}>
-                  <h3 className={styles.videoTitle}>{currentItem.title}</h3>
-                </div>
-              </>
-            )}
+        <div className={styles.desktopCardFrame}>
+          {/* Left Peeking Card */}
+          <div className={`${styles.sideCardSlot} ${styles.leftCardSlot}`}>
+            <DoctorVideoCard
+              item={videoList[prevIndex]}
+              isCenter={false}
+              onClick={goToPrev}
+            />
           </div>
 
-          {/* Doctor Information Bar — Positioned outside the video container */}
-          <div className={styles.doctorProfileBar}>
-            <div className={styles.doctorProfile}>
-              <img
-                src={currentItem.doctor.avatar}
-                alt={currentItem.doctor.name}
-                className={styles.doctorAvatar}
+          {/* Active Center Card (Natural fluid height, never vertically cropped) */}
+          <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+            <motion.div
+              key={`desktop-card-${currentItem.id}`}
+              className={styles.centerMotionCard}
+              initial={{
+                opacity: 0,
+                filter: "blur(6px)",
+                x: direction * 48,
+              }}
+              animate={{
+                opacity: 1,
+                filter: "blur(0px)",
+                x: 0,
+              }}
+              exit={{
+                opacity: 0,
+                filter: "blur(6px)",
+                x: direction * -48,
+              }}
+              transition={{
+                duration: 0.45,
+                ease: EASE_CURVE,
+              }}
+            >
+              <DoctorVideoCard
+                item={currentItem}
+                isCenter={true}
+                isPlaying={isPlaying}
+                onPlay={() => setIsPlaying(true)}
+                onClose={() => setIsPlaying(false)}
               />
-              <div className={styles.doctorMeta}>
-                <div className={styles.doctorNameRow}>
-                  <h4 className={styles.doctorName}>{currentItem.doctor.name}</h4>
-                </div>
-                <p className={styles.doctorRole}>{currentItem.doctor.role}</p>
-                <p className={styles.doctorHospital}>
-                  <span>{currentItem.doctor.hospital}</span>
-                  <span className={styles.hospitalDot} />
-                  <span>{currentItem.doctor.experience}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
 
-      {/* Navigation Controls — Matching ModernCarousel */}
-      <div className={styles.navigationWrapper}>
-        <div className={styles.indicatorContainer}>
-          <span className={styles.indicatorText}>
-            {String(currentIndex + 1).padStart(2, "0")} / {String(totalItems).padStart(2, "0")}
-          </span>
-          <div className={styles.indicatorBars}>
-            {videoList.map((item, idx) => (
-              <div
-                key={item.id}
-                className={`${styles.indicatorBar} ${idx === currentIndex ? styles.indicatorBarActive : ""}`}
-                onClick={() => goToIndex(idx)}
-                role="button"
-                tabIndex={0}
-                aria-label={`Go to video ${idx + 1}`}
-              />
-            ))}
+          {/* Right Peeking Card */}
+          <div className={`${styles.sideCardSlot} ${styles.rightCardSlot}`}>
+            <DoctorVideoCard
+              item={videoList[nextIndex]}
+              isCenter={false}
+              onClick={goToNext}
+            />
           </div>
         </div>
+      </div>
 
-
-
-        <div className={styles.navButtons}>
-          <button
-            type="button"
-            className={`${styles.navBtn} ${isPrevDisabled ? styles.navBtnDisabled : ""}`}
-            onClick={goToPrev}
-            disabled={isPrevDisabled}
-            aria-label="Previous item"
+      {/* MOBILE SINGLE CARD LAYOUT (MOBILE ONLY) */}
+      <div className={`${styles.mobileContainer} ${styles.mobileOnly}`}>
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={`mobile-${currentItem.id}`}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
           >
-            <ArrowLeft size={16} />
-          </button>
+            <DoctorVideoCard
+              item={currentItem}
+              isCenter={true}
+              isPlaying={isPlaying}
+              onPlay={() => setIsPlaying(true)}
+              onClose={() => setIsPlaying(false)}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* DESKTOP CAROUSEL INDICATOR (Matching AdvanceTestsCarousel) */}
+      <div className={`${styles.desktopNavigator} ${styles.desktopOnly}`}>
+        {videoList.map((item, idx) => (
           <button
+            key={item.id}
             type="button"
-            className={`${styles.navBtn} ${isNextDisabled ? styles.navBtnDisabled : ""}`}
-            onClick={goToNext}
-            disabled={isNextDisabled}
-            aria-label="Next item"
-          >
-            <ArrowRight size={16} />
-          </button>
-        </div>
+            className={`${styles.navDot} ${styles.navDotLight} ${
+              idx === currentIndex ? `${styles.navDotActive} ${styles.navDotActiveLight}` : ""
+            }`}
+            onClick={() => goToIndex(idx)}
+            aria-label={`Go to video ${idx + 1}`}
+            aria-current={idx === currentIndex ? "true" : undefined}
+          />
+        ))}
+      </div>
+
+      {/* MOBILE CAROUSEL INDICATOR */}
+      <div className={`${styles.mobileNavigator} ${styles.mobileOnly}`}>
+        {videoList.map((item, idx) => (
+          <button
+            key={item.id}
+            type="button"
+            className={`${styles.navDot} ${styles.navDotLight} ${
+              idx === currentIndex ? `${styles.navDotActive} ${styles.navDotActiveLight}` : ""
+            }`}
+            onClick={() => goToIndex(idx)}
+            aria-label={`Go to video ${idx + 1}`}
+            aria-current={idx === currentIndex ? "true" : undefined}
+          />
+        ))}
       </div>
     </div>
   );

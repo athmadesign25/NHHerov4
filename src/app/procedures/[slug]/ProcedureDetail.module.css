@@ -1,40 +1,32 @@
 .detailPageContainer {
   min-height: 100vh;
-  background: #060e1b;
+  background: #060c18;
   color: var(--color-text, var(--navy-ink));
   position: relative;
+  overflow-x: clip;
 }
 
-/* ─── STATIONARY ATMOSPHERIC BACKGROUND CANVAS (FIXED IN VIEWPORT) ───────── */
+/* ─── STATIONARY ATMOSPHERIC BACKGROUND CANVAS (CONTAINED INSIDE SHRINKING HERO) ─── */
 .stationaryCanvas {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   width: 100%;
-  height: clamp(680px, 84vh, 940px);
+  height: 100%;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  /* Smoothly feather bottom edge to 0% alpha so there is NEVER a sharp horizontal cut at the bottom of the hero */
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 52%,
-    rgba(0, 0, 0, 0.72) 68%,
-    rgba(0, 0, 0, 0.32) 82%,
-    rgba(0, 0, 0, 0.07) 93%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 52%,
-    rgba(0, 0, 0, 0.72) 68%,
-    rgba(0, 0, 0, 0.32) 82%,
-    rgba(0, 0, 0, 0.07) 93%,
-    transparent 100%
-  );
+  -webkit-mask-image: linear-gradient(to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.72) 76%,
+      rgba(0, 0, 0, 0.28) 90%,
+      transparent 100%);
+  mask-image: linear-gradient(to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.72) 76%,
+      rgba(0, 0, 0, 0.28) 90%,
+      transparent 100%);
 }
 
 .stationaryMotionWrapper {
@@ -77,9 +69,75 @@
 
 @media (max-width: 768px) {
   .detailHero {
-    min-height: auto;
-    padding-top: calc(var(--nav-height, 72px) + clamp(36px, 10vh, 72px));
-    padding-bottom: 32px;
+    min-height: auto !important;
+    padding-top: 44dvh !important;
+    padding-bottom: 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  .stationaryImage {
+    object-position: 74% 26% !important;
+  }
+
+  .heroBgOverlay {
+    background: linear-gradient(180deg,
+        rgba(6, 14, 27, 0.62) 0%,
+        rgba(6, 14, 27, 0.24) 15%,
+        transparent 24%,
+        transparent 38%,
+        rgba(6, 14, 27, 0.72) 50%,
+        rgba(6, 14, 27, 0.96) 64%,
+        #060e1b 84%,
+        #060e1b 100%) !important;
+  }
+
+  .heroBgOverlay::before {
+    display: none;
+  }
+
+  .heroInner {
+    width: calc(100% - 32px) !important;
+    position: static !important;
+    gap: 0 !important;
+  }
+
+  .breadcrumbsWrapper {
+    position: absolute !important;
+    top: calc(var(--nav-height, 56px) + 12px) !important;
+    left: 16px !important;
+    right: 16px !important;
+    width: calc(100% - 32px) !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+    box-sizing: border-box !important;
+  }
+
+  .heroMainTitle {
+    font-size: clamp(24px, 6.8vw, 28px) !important;
+    line-height: 1.18 !important;
+    margin: 0 0 10px 0 !important;
+  }
+
+  .heroSubTitle {
+    font-size: 13.5px !important;
+    line-height: 1.48 !important;
+    margin: 0 0 14px 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .heroPrimaryBtn {
+    font-size: 13.5px !important;
+    padding: 8px 18px !important;
+    min-height: 36px !important;
+    border-radius: var(--radius-md, 8px) !important;
+    border-width: 1px !important;
+  }
+
+  .metricsBottomWrap {
+    display: none !important;
   }
 }
 
@@ -87,34 +145,34 @@
   position: absolute;
   inset: 0;
   background:
-    /* Exact Figma 524:2 Left Photo Edge Blend (no hard bottom bar so bottom feathers seamlessly with stationaryCanvas) */
     linear-gradient(90deg,
-      rgba(22, 25, 32, 0.88) 0%,
-      rgba(22, 25, 32, 0.64) 24%,
-      rgba(6, 16, 31, 0.24) 40%,
-      rgba(6, 16, 31, 0) 54%),
+      rgba(6, 14, 27, 0.94) 0%,
+      rgba(6, 14, 27, 0.82) 28%,
+      rgba(6, 14, 27, 0.44) 46%,
+      rgba(6, 14, 27, 0.10) 62%,
+      transparent 74%),
+    linear-gradient(0deg,
+      rgba(6, 14, 27, 0.88) 0%,
+      rgba(6, 14, 27, 0.45) 14%,
+      transparent 34%),
     linear-gradient(180deg,
-      rgba(6, 18, 38, 0.36) 0%,
-      transparent 18%);
+      rgba(6, 14, 27, 0.48) 0%,
+      transparent 20%);
   /* Match stationaryCanvas vertical feather so the overlay never creates a horizontal cut at the bottom of detailHero */
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 52%,
-    rgba(0, 0, 0, 0.72) 68%,
-    rgba(0, 0, 0, 0.32) 82%,
-    rgba(0, 0, 0, 0.07) 93%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 52%,
-    rgba(0, 0, 0, 0.72) 68%,
-    rgba(0, 0, 0, 0.32) 82%,
-    rgba(0, 0, 0, 0.07) 93%,
-    transparent 100%
-  );
+  -webkit-mask-image: linear-gradient(to bottom,
+      #000 0%,
+      #000 52%,
+      rgba(0, 0, 0, 0.72) 68%,
+      rgba(0, 0, 0, 0.32) 82%,
+      rgba(0, 0, 0, 0.07) 93%,
+      transparent 100%);
+  mask-image: linear-gradient(to bottom,
+      #000 0%,
+      #000 52%,
+      rgba(0, 0, 0, 0.72) 68%,
+      rgba(0, 0, 0, 0.32) 82%,
+      rgba(0, 0, 0, 0.07) 93%,
+      transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -205,34 +263,47 @@
 }
 
 .heroPrimaryBtn {
+  background: var(--white);
+  color: var(--color-primary, var(--blue-brand));
+  font-size: var(--font-size-base, 16px);
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: var(--radius-md, 8px);
+  border: 1.5px solid var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.12);
+  transition: background var(--duration-base) var(--ease-spring), border-color var(--duration-base) ease, color var(--duration-base) ease, transform var(--duration-base) var(--ease-spring);
+}
+
+.heroPrimaryBtn:hover {
+  background: rgba(var(--white-rgb), 0.92);
+  border-color: rgba(var(--white-rgb), 0.92);
+  color: var(--color-primary-dark, var(--blue-900));
+  transform: translateY(-2px);
+}
+
+.costPrimaryBtn {
   background: var(--color-primary, var(--blue-brand));
   color: var(--white);
   font-size: var(--font-size-sm);
   font-weight: 600;
   padding: 12px 24px;
   border-radius: var(--radius-md, 8px);
+  border: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   text-decoration: none;
-  border: none;
   box-shadow: none;
-  transition: all var(--duration-base) var(--ease-spring);
+  transition: background var(--duration-base) ease, transform var(--duration-base) var(--ease-spring);
 }
 
-.heroPrimaryBtn:hover {
+.costPrimaryBtn:hover {
   background: var(--color-primary-dark, var(--blue-900));
   transform: translateY(-2px);
-  box-shadow: none;
-  border: none;
-}
-
-.btnArrow {
-  transition: transform var(--duration-base) ease;
-}
-
-.heroPrimaryBtn:hover .btnArrow {
-  transform: translate(2px, -2px);
 }
 
 
@@ -368,9 +439,10 @@
 }
 
 
-/* ─── V2: SCROLL-DRIVEN UNIFIED CANVAS COLOUR CHANGE (ZERO HORIZONTAL BAND / MATCHING BLOGS PAGE) ─── */
+/* ─── V2: HERO INSET OVER PURE WHITE READING SURFACE ─── */
 .detailHeroV2 {
-  /* Inherits standard 84vh height and 36vh top artwork breathing room */
+  background: #060e1b;
+  padding-top: clamp(140px, 28vh, 320px);
 }
 
 .detailHeroV2::after {
@@ -397,12 +469,12 @@
   --summary-badge-text: var(--slate-700);
 }
 
-/* ─── V2: SCROLL-DRIVEN SECTION COLOUR CHANGE (#0a1128 -> #172d56 -> #e2ebf6 -> var(--white)) ─── */
+/* ─── V2: PURE WHITE READING SHEET FOLLOWING HERO INSET ─── */
 .readingExperienceWrapperV2 {
-  margin-top: -1px;
+  margin-top: 0;
   border-radius: 0;
   box-shadow: none;
-  background: var(--v2-bg, #0a1128);
+  background: transparent;
 }
 
 .readingExperienceWrapperV2 .mainSectionTitle,
@@ -431,17 +503,17 @@
 }
 
 .readingExperienceWrapperV2 .tocLink:hover {
-  color: var(--v2-toc-active, var(--blue-brand));
-  background: var(--v2-toc-active-bg, rgba(var(--blue-brand-rgb), 0.05));
+  color: var(--v2-toc-active, var(--red-600));
+  background: var(--v2-toc-active-bg, rgba(var(--red-600-rgb), 0.05));
 }
 
 .readingExperienceWrapperV2 .tocLinkActive {
-  color: var(--v2-toc-active, var(--blue-brand));
-  background: var(--v2-toc-active-bg, rgba(var(--blue-brand-rgb), 0.08));
+  color: var(--v2-toc-active, var(--red-600));
+  background: var(--v2-toc-active-bg, rgba(var(--red-600-rgb), 0.08));
 }
 
 .readingExperienceWrapperV2 .tocIndicatorMarker {
-  background: var(--v2-toc-active, var(--blue-brand));
+  background: var(--v2-toc-active, var(--red-600));
 }
 
 .readingExperienceWrapperV2 .shareWidgetBorderless {
@@ -576,17 +648,17 @@
 }
 
 .readingExperienceWrapperV4 .tocLink:hover {
-  color: var(--v4-toc-active, var(--blue-brand));
-  background: var(--v4-toc-active-bg, rgba(var(--blue-brand-rgb), 0.05));
+  color: var(--v4-toc-active, var(--red-600));
+  background: var(--v4-toc-active-bg, rgba(var(--red-600-rgb), 0.05));
 }
 
 .readingExperienceWrapperV4 .tocLinkActive {
-  color: var(--v4-toc-active, var(--blue-brand));
-  background: var(--v4-toc-active-bg, rgba(var(--blue-brand-rgb), 0.08));
+  color: var(--v4-toc-active, var(--red-600));
+  background: var(--v4-toc-active-bg, rgba(var(--red-600-rgb), 0.08));
 }
 
 .readingExperienceWrapperV4 .tocIndicatorMarker {
-  background: var(--v4-toc-active, var(--blue-brand));
+  background: var(--v4-toc-active, var(--red-600));
 }
 
 .readingExperienceWrapperV4 .shareWidgetBorderless {
@@ -701,7 +773,7 @@
 .topDoctorsSection {
   width: 100%;
   margin-top: clamp(40px, 5vw, 64px);
-  margin-bottom: clamp(72px, 8vw, 104px);
+  margin-bottom: clamp(88px, 10vw, 128px);
   position: relative;
   z-index: 2;
 }
@@ -741,26 +813,137 @@
   margin: 0;
 }
 
-/* 2 Large Spacious Cards in Desktop Row (Dr. Devi Prasad Shetty & Dr. Varun Shetty) */
+/* 4–5 Doctor Horizontal Reel Carousel with 2 Clear Center Cards + Blurred Partial Side Cards */
+.topDoctorsReelOuter {
+  --reel-gutter: max(clamp(16px, 4vw, 32px), calc((100vw - 1176px) / 2));
+  --reel-card-gap: clamp(20px, 2.2vw, 28px);
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+.topDoctorsEdgeFadeLeft,
+.topDoctorsEdgeFadeRight {
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  width: max(36px, calc(var(--reel-gutter) - 4px));
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  transition: opacity 0.35s ease;
+}
+
+.topDoctorsEdgeFadeLeft {
+  left: 0;
+  background: linear-gradient(to right,
+      #ffffff 0%,
+      rgba(var(--white-rgb), 0.78) 38%,
+      rgba(var(--white-rgb), 0.25) 78%,
+      transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 58%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 58%, transparent 100%);
+}
+
+.topDoctorsEdgeFadeRight {
+  right: 0;
+  background: linear-gradient(to left,
+      #ffffff 0%,
+      rgba(var(--white-rgb), 0.78) 38%,
+      rgba(var(--white-rgb), 0.25) 78%,
+      transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 58%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 0%, #000 58%, transparent 100%);
+}
+
+.topDoctorsEdgeFadeVisible {
+  opacity: 1;
+}
+
+.topDoctorsArrowBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 8;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--slate-900-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--slate-800);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(var(--slate-900-rgb), 0.12);
+  transition: transform 0.22s var(--ease-spring), background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.topDoctorsArrowBtn:hover {
+  background: var(--white);
+  color: var(--blue-brand);
+  border-color: rgba(var(--blue-brand-rgb), 0.35);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.topDoctorsArrowLeft {
+  left: max(12px, calc(var(--reel-gutter) - 21px));
+}
+
+.topDoctorsArrowRight {
+  right: max(12px, calc(var(--reel-gutter) - 21px));
+}
+
 .topDoctorsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(24px, 3vw, 36px);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--reel-card-gap);
   width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--reel-gutter);
+  -webkit-overflow-scrolling: touch;
+  padding: 6px var(--reel-gutter) 12px;
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+.topDoctorsGrid::-webkit-scrollbar {
+  display: none;
 }
 
 .doctorBlendCard {
   display: flex;
   flex-direction: row;
-  background: #ffffff;
+  flex: 0 0 calc((100vw - 2 * var(--reel-gutter) - var(--reel-card-gap)) / 2);
+  background:
+    radial-gradient(ellipse at 25% 100%, color-mix(in srgb, var(--color-primary, #034EA2) 10%, transparent), color-mix(in srgb, var(--color-primary, #034EA2) 4%, transparent) 42%, transparent 78%),
+    radial-gradient(ellipse at 0 0, color-mix(in srgb, var(--color-primary, #034EA2) 5%, transparent), transparent 55%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.92));
+  backdrop-filter: blur(12px) saturate(108%);
+  -webkit-backdrop-filter: blur(12px) saturate(108%);
   border: 1px solid var(--v4-card-border, rgba(15, 23, 42, 0.09));
-  border-radius: 22px;
+  border-radius: 24px;
   overflow: hidden;
   position: relative;
   box-shadow: none !important;
   outline: none !important;
-  min-height: 400px;
+  min-height: 480px;
+  padding: clamp(16px, 1.8vw, 24px);
+  gap: clamp(20px, 2.2vw, 32px);
+  scroll-snap-align: start;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .doctorBlendCard {
+    flex: 0 0 min(480px, 78vw);
+  }
 }
 
 .doctorBlendCard:hover {
@@ -771,11 +954,13 @@
 .doctorImageBlendCol {
   position: relative;
   width: 44%;
-  min-width: 210px;
-  max-width: 260px;
+  min-width: 220px;
+  max-width: 280px;
+  border-radius: 16px;
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+  background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
+  border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .doctorBlendImg {
@@ -788,20 +973,11 @@
   transform: scale(1.04);
 }
 
-.doctorImageBlendOverlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to right, transparent 0%, transparent 55%, rgba(255, 255, 255, 0.65) 82%, #ffffff 100%),
-    linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, transparent 18%);
-}
-
 .doctorTextCol {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(26px, 2.5vw, 36px) clamp(22px, 2vw, 32px);
+  padding: 6px 4px 6px 0;
   flex: 1;
   min-width: 0;
 }
@@ -815,163 +991,79 @@
   line-height: 1.65;
   color: #334155;
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
   font-weight: 400;
   letter-spacing: -0.005em;
 }
 
-.doctorTextBottom {
+/* ─── DefaultDoctorCard Identity Text Layout (Toshib Featured Doctor Card) ─── */
+.identityText {
   display: flex;
   flex-direction: column;
+  gap: var(--space-8, 8px);
+  min-width: 0;
 }
 
-.doctorCardName {
-  font-size: clamp(20px, 1.8vw, 23px);
+.name {
+  margin: 0;
+  font-size: clamp(19px, 1.8vw, 23px);
   font-weight: 700;
   color: #0f172a;
   letter-spacing: -0.02em;
-  margin: 0 0 4px 0;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
-.doctorCardRole {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--blue-brand, #034EA2);
-  line-height: 1.35;
-  margin-bottom: 4px;
+.name span {
+  display: block;
 }
 
-.doctorMetaBlock {
+.identityMeta {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 22px;
-  flex-wrap: wrap;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: var(--space-6, 6px);
+  min-width: 0;
+  font-size: var(--font-size-sm, 14px);
+  line-height: 1.5;
+  color: #475569;
 }
 
-.doctorExperienceText {
-  font-size: 13px;
-  color: #64748b;
+.specialityGroup {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: var(--font-size-sm, 14px);
+  line-height: 1.5;
+}
+
+.speciality {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-weight: 500;
-  line-height: 1.4;
+  color: #1e293b;
 }
 
-.doctorMetaDot {
-  color: #94a3b8;
-  font-size: 12px;
-  user-select: none;
-}
-
-.doctorHospitalName {
-  font-size: 13px;
-  color: #64748b;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-/* Auto-layout equally spaced CTA */
-.doctorCtaContainer {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding-top: 16px;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  width: 100%;
-  transition: gap 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.doctorProfileLink {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--blue-brand, #034EA2);
-  text-decoration: none;
+.profileLink {
   display: inline-flex;
   align-items: center;
+  justify-self: start;
+  gap: 6px;
+  color: var(--blue-brand, #034EA2);
+  font-size: var(--font-size-sm, 14px);
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: normal;
+  white-space: nowrap;
+  text-decoration: none;
   transition: color 0.2s ease;
-  white-space: nowrap;
+  margin-top: 6px;
+  width: fit-content;
 }
 
-.doctorProfileLink:hover {
-  text-decoration: underline;
+.profileLink:hover {
   color: #022d61;
-}
-
-.doctorCtaDivider {
-  color: #cbd5e1;
-  font-weight: 400;
-  font-size: 14px;
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-  text-align: center;
-  display: inline-block;
-  user-select: none;
-  transition: opacity 0.25s ease, width 0.25s ease;
-}
-
-.doctorConsultLink {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--blue-brand, #034EA2);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  opacity: 0;
-  max-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  pointer-events: none;
-  transition: opacity 0.25s ease, max-width 0.25s ease;
-}
-
-.ctaArrow {
-  transition: transform 0.2s ease;
-}
-
-.doctorConsultLink:hover {
   text-decoration: underline;
-  color: #022d61;
-}
-
-.doctorConsultLink:hover .ctaArrow {
-  transform: translate(2px, -2px);
-}
-
-/* On hover of card: smooth split into auto-layout spaced "View Profile | Consult Now" */
-.doctorBlendCard:hover .doctorCtaContainer {
-  gap: 16px;
-}
-
-.doctorBlendCard:hover .doctorCtaDivider {
-  opacity: 1;
-  width: 10px;
-}
-
-.doctorBlendCard:hover .doctorConsultLink {
-  opacity: 1;
-  max-width: 160px;
-  pointer-events: auto;
-}
-
-/* Touch & mobile fallback: always keep both visible */
-@media (hover: none) {
-  .doctorCtaContainer {
-    gap: 12px;
-  }
-  .doctorCtaDivider {
-    opacity: 1;
-    width: 8px;
-  }
-  .doctorConsultLink {
-    opacity: 1;
-    max-width: 150px;
-    pointer-events: auto;
-  }
 }
 
 .topDoctorsDivider {
@@ -998,7 +1090,8 @@
 .stickySidebar {
   position: -webkit-sticky;
   position: sticky;
-  top: calc(var(--nav-height, 72px) + 24px);
+  top: calc(var(--nav-height, 72px) + 52px);
+  transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   align-self: start;
   display: flex;
   flex-direction: column;
@@ -1008,6 +1101,12 @@
   border: none;
   box-shadow: none;
   padding: 0;
+}
+
+@media (min-width: 961px) {
+  :global(html[data-nav-visible="false"]) .stickySidebar {
+    top: 56px;
+  }
 }
 
 /* Unboxed Section Selector */
@@ -1086,9 +1185,9 @@
 }
 
 .tocLink:hover {
-  color: var(--color-primary, var(--blue-brand));
+  color: var(--red-600);
   transform: translateX(3px);
-  background: rgba(var(--blue-brand-rgb), 0.05);
+  background: rgba(var(--red-600-rgb), 0.05);
 }
 
 .tocIndicatorMarker {
@@ -1098,21 +1197,21 @@
   transform: translateY(-50%);
   width: 3px;
   height: 0;
-  background: var(--color-primary, var(--blue-brand));
+  background: var(--red-600);
   border-radius: 4px;
   transition: height var(--duration-base) var(--ease-spring), box-shadow var(--duration-base) ease;
 }
 
 .tocLinkActive {
-  color: var(--color-primary, var(--blue-brand));
+  color: var(--red-600);
   font-weight: 700;
-  background: rgba(var(--blue-brand-rgb), 0.08);
+  background: rgba(var(--red-600-rgb), 0.08);
   transform: translateX(3px);
 }
 
 .tocLinkActive .tocIndicatorMarker {
   height: 20px;
-  box-shadow: 0 0 8px rgba(var(--blue-brand-rgb), 0.6);
+  box-shadow: 0 0 8px rgba(var(--red-600-rgb), 0.55);
 }
 
 .tocLinkLabel {
@@ -1273,11 +1372,11 @@
 
 /* ─── CLINICAL FIGURE MEDIA ─────────────────────────────────────────────── */
 .clinicalFigureContainer {
-  margin: 36px 0 48px;
+  margin: 28px 0 40px;
   border-radius: var(--radius-lg, 12px);
-  overflow: hidden;
-  border: 1px solid var(--slate-200, var(--slate-200));
-  background: #091322;
+  overflow: visible;
+  border: none;
+  background: transparent;
   position: relative;
 }
 
@@ -1288,12 +1387,13 @@
   object-fit: cover;
   object-position: center 25%;
   display: block;
+  border-radius: var(--radius-lg, 12px);
 }
 
 .clinicalFigureCaption {
-  padding: 10px 18px;
-  background: var(--white);
-  border-top: 1px solid var(--slate-100, var(--slate-100));
+  padding: 10px 0 0;
+  background: transparent;
+  border-top: none;
   font-size: 12.5px;
   color: var(--slate-500, var(--slate-500));
   font-weight: 500;
@@ -1302,56 +1402,62 @@
   gap: 6px;
 }
 
-/* ─── KEY POINTS CARD (WHAT IS IT) ───────────────────────────────────────── */
+/* ─── KEY POINTS (WHAT IS IT — UNBOXED EDITORIAL LIST) ───────────────────── */
 .keyPointsCard {
-  background: var(--slate-50);
-  border: 1px solid var(--slate-200, var(--slate-200));
-  border-radius: var(--radius-lg, 12px);
-  padding: 22px 24px;
-  margin-top: 16px;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.02);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 4px 0 0;
+  margin-top: 12px;
+  box-shadow: none;
 }
 
-/* ─── SYMPTOMS: INTERACTIVE TRIAGE SIGNAL LIST ───────────────────────────── */
+/* ─── SYMPTOMS: UNBOXED INTERACTIVE TRIAGE SIGNAL LIST ───────────────────── */
 .symptomsTriageList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 0;
+  margin-top: 14px;
 }
 
 .symptomTriageItem {
   display: grid;
-  grid-template-columns: 24px 1fr 20px;
-  gap: 14px;
+  grid-template-columns: 18px 1fr auto;
+  gap: 12px;
   align-items: center;
-  padding: 14px 18px;
-  background: var(--slate-50);
-  border: 1px solid var(--slate-200, var(--slate-200));
-  border-radius: var(--radius-md, 10px);
+  padding: 12px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--slate-900-rgb), 0.08);
+  border-radius: 0;
   text-decoration: none;
-  box-shadow: 0 1px 2px rgba(var(--black-rgb), 0.02);
-  transition: all var(--duration-base) var(--ease-spring);
+  box-shadow: none;
+  transition: color var(--duration-base) ease, border-color var(--duration-base) ease;
+}
+
+.symptomTriageItem:last-child {
+  border-bottom: none;
 }
 
 .symptomTriageItem:hover {
-  background: var(--slate-50);
-  border-color: rgba(var(--blue-brand-rgb), 0.35);
-  transform: translateX(3px);
+  background: transparent;
+  border-color: rgba(var(--blue-brand-rgb), 0.25);
+  transform: none;
 }
 
 .symptomTriageIndicator {
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: center;
 }
 
 .triageSignalDot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--color-primary, var(--blue-brand));
-  box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.15);
+  box-shadow: none;
   display: block;
 }
 
@@ -1369,10 +1475,14 @@
   color: var(--slate-900);
 }
 
+.symptomTriageItem:hover .symptomTriageName {
+  color: var(--color-primary, var(--blue-brand));
+}
+
 .symptomTriageDesc {
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--slate-500);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .symptomTriageArrow {
@@ -1385,23 +1495,20 @@
   transform: translate(2px, -2px);
 }
 
-/* ─── INDICATIONS: STRUCTURED CLINICAL CONDITION DOSSIER ─────────────────── */
+/* ─── INDICATIONS: UNBOXED CLINICAL CONDITION DOSSIER ────────────────────── */
 .conditionDossierContainer {
-  background: var(--slate-50);
-  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
-  border-radius: var(--radius-lg, 12px);
-  overflow: hidden;
-  margin-top: 18px;
-  box-shadow: 0 2px 8px -2px rgba(var(--slate-900-rgb), 0.03);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  margin-top: 12px;
+  box-shadow: none;
 }
 
 .conditionDossierRow {
-  display: grid;
-  grid-template-columns: 32px 1fr;
-  gap: 16px;
-  padding: 18px 22px;
-  align-items: flex-start;
-  border-bottom: 1px solid var(--slate-100, var(--slate-100));
+  display: block;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(var(--slate-900-rgb), 0.08);
 }
 
 .conditionDossierRow:last-child {
@@ -1455,20 +1562,40 @@
 }
 
 .eligibilityCol {
-  background: var(--slate-50);
-  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
-  border-radius: var(--radius-lg, 12px);
-  padding: 22px;
-  box-shadow: 0 2px 8px -2px rgba(var(--slate-900-rgb), 0.03);
+  background: var(--white);
+  border: 1px solid rgba(var(--slate-900-rgb), 0.1);
+  border-radius: var(--radius-lg, 14px);
+  padding: var(--space-20, 20px) var(--space-24, 24px);
+  box-shadow: none;
+}
+
+.eligibilityColPositive {
+  border-color: rgba(var(--green-500-rgb), 0.22);
+  background: rgba(var(--green-500-rgb), 0.03);
+}
+
+.eligibilityColCaution {
+  border-color: rgba(var(--red-500-rgb), 0.22);
+  background: rgba(var(--red-500-rgb), 0.03);
 }
 
 .eligibilityHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--slate-100, var(--slate-100));
+  border-bottom: 1px solid rgba(var(--slate-900-rgb), 0.08);
+}
+
+.eligibilityIconPositive {
+  color: var(--emerald-500, #10b981);
+  flex-shrink: 0;
+}
+
+.eligibilityIconCaution {
+  color: var(--red-500);
+  flex-shrink: 0;
 }
 
 .eligibilityHeading {
@@ -1477,6 +1604,29 @@
   font-weight: 600;
   color: var(--slate-900);
   margin: 0;
+}
+
+.comparisonList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.comparisonItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 14.5px;
+  line-height: var(--leading-relaxed, 1.65);
+  color: var(--slate-700);
+}
+
+.comparisonItemIcon {
+  margin-top: 4px;
 }
 
 .bulletList {
@@ -1489,33 +1639,48 @@
 }
 
 .bulletItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  position: relative;
+  padding-left: 16px;
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 14.5px;
-  line-height: 1.55;
+  line-height: 1.6;
   color: #374151;
+}
+
+.bulletItem::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--slate-500, #64748b);
 }
 
 /* ─── SURGICAL APPROACH & STEPS (EDITORIAL SEQUENCE) ─────────────────────── */
 .approachSequence {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 0;
+  margin-top: 14px;
 }
 
 .approachStepItem {
   display: grid;
   grid-template-columns: 44px 1fr;
   gap: 16px;
-  background: var(--slate-50);
-  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
-  border-radius: var(--radius-lg, 12px);
-  padding: 18px 20px;
-  box-shadow: 0 2px 8px -2px rgba(var(--slate-900-rgb), 0.03);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--slate-900-rgb), 0.08);
+  border-radius: 0;
+  padding: 14px 0;
+  box-shadow: none;
   align-items: flex-start;
+}
+
+.approachStepItem:last-child {
+  border-bottom: none;
 }
 
 .stepNumCol {
@@ -1559,14 +1724,14 @@
   margin: 0;
 }
 
-/* ─── RECOVERY CARE MILESTONES (LIGHT, COHESIVE TRACK) ───────────────────── */
+/* ─── RECOVERY CARE MILESTONES (UNBOXED EDITORIAL TRACK) ────────────────── */
 .recoveryTrackCard {
-  background: var(--slate-50);
-  border: 1px solid var(--slate-200, var(--slate-200));
-  border-radius: var(--radius-lg, 12px);
-  padding: 24px;
-  margin-top: 20px;
-  box-shadow: 0 2px 8px -2px rgba(var(--slate-900-rgb), 0.03);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-top: 16px;
+  box-shadow: none;
 }
 
 .recoveryTrackHeader {
@@ -1658,14 +1823,14 @@
   margin: 0;
 }
 
-/* ─── COST & INSURANCE (HARMONIOUS LIGHT THEME) ──────────────────────────── */
+/* ─── COST & INSURANCE (HARMONIOUS UNBOXED SURFACE) ───────────────────────── */
 .costCard {
   background: var(--slate-50);
-  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
+  border: none;
   border-radius: var(--radius-lg, 12px);
   padding: 28px 30px;
   margin-top: 20px;
-  box-shadow: 0 2px 8px -2px rgba(var(--slate-900-rgb), 0.03);
+  box-shadow: none;
 }
 
 .costHeader {
@@ -1715,8 +1880,10 @@
 .costInclusionsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 10px 18px;
+  margin: 0 0 20px 0;
+  padding: 0;
+  list-style: none;
 }
 
 @media (max-width: 640px) {
@@ -1726,19 +1893,30 @@
 }
 
 .costInclusionItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  position: relative;
+  padding-left: 16px;
   font-size: 13.5px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--slate-700);
 }
 
+.costInclusionItem::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--slate-500, #64748b);
+}
+
 .costInsuranceNote {
-  background: var(--slate-50);
-  border: 1px solid var(--slate-200);
-  border-radius: var(--radius-md, 8px);
-  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(var(--slate-900-rgb), 0.08);
+  border-radius: 0;
+  padding: 16px 0 0;
   font-size: 13px;
   line-height: 1.55;
   color: var(--slate-600);
@@ -2099,10 +2277,11 @@
     max-width: 100% !important;
   }
 
-  /* Sticky Horizontal TOC Rail directly sticking on top of the viewport on mobile */
+  /* Sticky Horizontal TOC Rail synced below mobile Navbar + StickyBreadcrumbBar */
   .stickySidebar {
     position: sticky !important;
-    top: 0 !important;
+    top: 90px !important;
+    transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 40 !important;
     margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) 16px !important;
     padding: 10px clamp(16px, 4vw, 24px) 10px !important;
@@ -2118,6 +2297,10 @@
     width: calc(100% + 2 * clamp(16px, 4vw, 24px)) !important;
     box-sizing: border-box !important;
     overflow: visible !important;
+  }
+
+  :global(html[data-nav-visible="false"]) .stickySidebar {
+    top: 34px !important;
   }
 
   /* Smooth gradient fade below the sticky bar & share button to eliminate sharp cut */
@@ -2197,11 +2380,11 @@
   }
 
   .tocLinkActive {
-    background: #EFF6FF !important;
-    border-color: #BFDBFE !important;
-    color: var(--blue-brand) !important;
+    background: var(--red-50) !important;
+    border-color: rgba(var(--red-600-rgb), 0.30) !important;
+    color: var(--red-600) !important;
     font-weight: 700 !important;
-    box-shadow: 0 1px 4px rgba(var(--blue-brand-rgb), 0.12) !important;
+    box-shadow: 0 1px 4px rgba(var(--red-600-rgb), 0.14) !important;
   }
 
   .tocIndicatorMarker {
@@ -2209,23 +2392,22 @@
   }
 
   /* Persistent Mobile Sticky Share Pill Button */
+  /* Persistent Mobile Sticky Share Icon Button */
   .mobileStickyShareBtn {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 5px !important;
-    height: 32px !important;
-    padding: 0 12px !important;
-    border-radius: 9999px !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
     background: var(--blue-brand) !important;
     color: var(--white) !important;
     border: none !important;
-    font-size: var(--font-size-xs) !important;
-    font-weight: 600 !important;
     cursor: pointer !important;
     flex-shrink: 0 !important;
-    box-shadow: 0 2px 8px rgba(var(--blue-brand-rgb), 0.25) !important;
-    white-space: nowrap !important;
-    transition: background var(--duration-fast) ease;
+    box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.28), 0 1px 3px rgba(var(--black-rgb), 0.12) !important;
+    transition: background var(--duration-fast) ease, transform var(--duration-fast) ease;
     position: relative !important;
     z-index: 2 !important;
   }
@@ -2263,64 +2445,9 @@
 
 /* ─── BESPOKE MOBILE WEB (MWEB <= 640PX) OPTIMIZATIONS ───────────────────── */
 @media (max-width: 640px) {
-
-  /* Title truncation to max 2 lines with comfortable breathing line-height */
-  .heroMainTitle {
-    font-size: clamp(20px, 5.5vw, 24px) !important;
-    line-height: 1.25 !important;
-    margin-bottom: 10px !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-  }
-
-  .heroSubTitle {
-    font-size: 13.5px !important;
-    line-height: 1.5 !important;
-    margin-bottom: 20px !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-  }
-
-  .breadcrumbsWrapper {
-    margin-bottom: 14px;
-    max-width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  /* Right column credential stats on mobile: matching library page typography */
-  .heroRightCol {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px 18px !important;
-    border-left: none !important;
-    border-top: 1px solid rgba(var(--white-rgb), 0.12) !important;
-    padding-left: 0 !important;
-    padding-top: 18px !important;
-    margin-top: 20px !important;
-  }
-
-  .statNumber {
-    font-size: var(--font-size-lg) !important;
-    font-weight: 500 !important;
-    color: rgba(var(--white-rgb), 0.76) !important;
-    line-height: 1.15 !important;
-    letter-spacing: -0.01em !important;
-  }
-
-  .statLabel {
-    font-size: 11px !important;
-    color: rgba(var(--white-rgb), 0.46) !important;
-    font-weight: 500 !important;
-    margin-top: 5px !important;
-    line-height: 1.25 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
+  .mainLayoutContainer {
+    padding-bottom: 108px !important;
+    /* Cushion for floating dock */
   }
 
   /* Horizontal swipeable rail for hospital & doctor cards on mobile */
@@ -2331,10 +2458,13 @@
     scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 14px !important;
+    width: auto !important;
+    max-width: none !important;
     padding-bottom: 12px !important;
     margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) !important;
     padding-left: clamp(16px, 4vw, 24px) !important;
     padding-right: clamp(16px, 4vw, 24px) !important;
+    scroll-padding-inline: clamp(16px, 4vw, 24px) !important;
     scrollbar-width: none !important;
   }
 
@@ -2349,17 +2479,33 @@
     max-width: 320px !important;
     scroll-snap-align: start !important;
   }
+}
 
-  /* Top Featured Doctors Rail on Mobile */
+/* ─── MWEB FEATURED DOCTORS RAIL (<= 768PX): SCRIM PORTRAIT CARD + FULL BIO ─── */
+@media (max-width: 768px) {
   .topDoctorsSection {
     margin-top: 24px !important;
-    margin-bottom: 44px !important;
+    margin-bottom: 32px !important;
+  }
+
+  .topDoctorsReelOuter {
+    width: calc(100% + clamp(32px, 8vw, 48px));
+    margin-inline: calc(-1 * clamp(16px, 4vw, 24px));
+  }
+
+  .topDoctorsEdgeFadeLeft,
+  .topDoctorsEdgeFadeRight {
+    display: none !important;
+  }
+
+  .topDoctorsArrowBtn {
+    display: none !important;
   }
 
   .topDoctorsHeader {
     text-align: left !important;
     align-items: flex-start !important;
-    margin-bottom: 24px !important;
+    margin-bottom: 20px !important;
   }
 
   .topDoctorsGrid {
@@ -2368,10 +2514,9 @@
     scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 14px !important;
-    padding-bottom: 12px !important;
-    margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) !important;
-    padding-left: clamp(16px, 4vw, 24px) !important;
-    padding-right: clamp(16px, 4vw, 24px) !important;
+    padding: 4px clamp(16px, 4vw, 24px) 12px !important;
+    scroll-padding-inline: clamp(16px, 4vw, 24px) !important;
+    margin: 0 !important;
     scrollbar-width: none !important;
   }
 
@@ -2380,20 +2525,107 @@
   }
 
   .doctorBlendCard {
-    flex: 0 0 88vw !important;
-    min-width: 88vw !important;
-    min-height: 360px !important;
+    flex: 0 0 82vw !important;
+    min-width: 82vw !important;
+    max-width: 344px !important;
+    height: 468px !important;
+    min-height: 468px !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
     scroll-snap-align: start !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    border-radius: 20px !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: #060b14 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .doctorImageBlendCol {
-    width: 40% !important;
-    min-width: 140px !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    border: none !important;
+    z-index: 0 !important;
+    background: #0b111e !important;
+  }
+
+  .doctorImageBlendCol::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgba(6, 11, 20, 0.98) 0%,
+      rgba(6, 11, 20, 0.92) 38%,
+      rgba(6, 11, 20, 0.62) 56%,
+      rgba(6, 11, 20, 0.16) 72%,
+      transparent 86%
+    );
+  }
+
+  .doctorBlendImg {
+    object-fit: cover !important;
+    object-position: center 12% !important;
+  }
+
+  .doctorTextCol {
+    position: relative !important;
+    z-index: 2 !important;
+    flex: 0 0 auto !important;
+    justify-content: flex-end !important;
+    padding: 18px 20px 20px !important;
+  }
+
+  .doctorTextTop {
+    margin-bottom: 12px !important;
   }
 
   .doctorCardBio {
-    -webkit-line-clamp: 4 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 5 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    font-size: 13px !important;
+    line-height: 1.48 !important;
+    color: rgba(var(--white-rgb), 0.84) !important;
+  }
+
+  .identityText {
+    gap: 4px !important;
+  }
+
+  .name {
+    color: var(--white) !important;
+    font-size: 19px !important;
+    line-height: 1.25 !important;
+  }
+
+  .identityMeta {
+    color: rgba(var(--white-rgb), 0.86) !important;
+  }
+
+  .speciality {
+    color: rgba(var(--white-rgb), 0.86) !important;
+    font-size: 13px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .profileLink {
+    color: var(--white) !important;
     font-size: 13.5px !important;
+    margin-top: 6px !important;
   }
 
   .mainLayoutContainer {

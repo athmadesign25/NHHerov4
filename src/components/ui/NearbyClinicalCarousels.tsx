@@ -1,13 +1,42 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import { HospitalItem } from "@/data/hospitalsData";
+import { useCarouselPeekHint } from "@/lib/useCarouselPeekHint";
 import styles from "./NearbyClinicalCarousels.module.css";
+
+function useCarouselShowingCount(total: number, trackRef: React.RefObject<HTMLDivElement | null>) {
+  const [shownCount, setShownCount] = useState(() => Math.min(3, total));
+
+  const syncVisibleCount = useCallback(() => {
+    const track = trackRef.current;
+    if (!track || total === 0) {
+      setShownCount(0);
+      return;
+    }
+    const slides = track.children;
+    if (!slides || slides.length === 0) return;
+    const firstSlide = slides[0] as HTMLElement;
+    const step = firstSlide.offsetWidth + 18;
+    const visibleSlots = Math.max(1, Math.floor((track.clientWidth + 18) / Math.max(step, 1)));
+    const scrolledSlides = step > 0 ? Math.round(track.scrollLeft / step) : 0;
+    const nextShown = Math.min(total, Math.max(visibleSlots, scrolledSlides + visibleSlots));
+    setShownCount(nextShown);
+  }, [total, trackRef]);
+
+  useEffect(() => {
+    syncVisibleCount();
+    window.addEventListener("resize", syncVisibleCount, { passive: true });
+    return () => window.removeEventListener("resize", syncVisibleCount);
+  }, [syncVisibleCount]);
+
+  return { shownCount, syncVisibleCount };
+}
 
 export interface SpecialistCarouselItem {
   name: string;
@@ -35,10 +64,10 @@ export function NearbySpecialistsCarousel({
   doctors,
   specialityFilter = "",
   actionLabel = "Book",
-  defaultVisible = true,
 }: NearbySpecialistsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(defaultVisible);
+  const { shownCount, syncVisibleCount } = useCarouselShowingCount(doctors.length, trackRef);
+  useCarouselPeekHint(trackRef, doctors.length);
 
   const handleScroll = (direction: -1 | 1) => {
     const track = trackRef.current;
@@ -46,24 +75,6 @@ export function NearbySpecialistsCarousel({
     const scrollAmount = Math.max(track.clientWidth * 0.68, 280);
     track.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
   };
-
-  if (!isVisible) {
-    return (
-      <section id={id} className={styles.carouselSection}>
-        <div className={styles.collapsedNoticeBar}>
-          <span>Nearby Specialists section hidden (Stakeholder review toggle)</span>
-          <button
-            type="button"
-            className={styles.stakeholderToggleBtn}
-            onClick={() => setIsVisible(true)}
-          >
-            <Eye size={13} />
-            <span>Show Doctors Section</span>
-          </button>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id={id} className={styles.carouselSection}>
@@ -74,15 +85,11 @@ export function NearbySpecialistsCarousel({
         </div>
 
         <div className={styles.controlsCol}>
-          <button
-            type="button"
-            className={styles.stakeholderToggleBtn}
-            onClick={() => setIsVisible(false)}
-            title="Toggle Doctors Section visibility for stakeholder review"
-          >
-            <EyeOff size={13} />
-            <span>Hide Section</span>
-          </button>
+          {doctors.length > 0 && (
+            <span className={styles.resultsCountText}>
+              Showing <strong>{shownCount}</strong> of <strong>{doctors.length}</strong>
+            </span>
+          )}
 
           <div className={styles.arrowsGroup}>
             <button
@@ -105,7 +112,7 @@ export function NearbySpecialistsCarousel({
         </div>
       </div>
 
-      <div ref={trackRef} className={styles.carouselTrack}>
+      <div ref={trackRef} className={styles.carouselTrack} onScroll={syncVisibleCount}>
         {doctors.map((doc, idx) => (
           <div key={`${doc.name}-${idx}`} className={styles.carouselSlide}>
             <div className={styles.doctorCard}>
@@ -159,7 +166,6 @@ export function NearbySpecialistsCarousel({
           className={styles.viewAllTextLink}
         >
           <span>View All Doctors</span>
-          <ArrowRight size={14} />
         </Link>
       </div>
     </section>
@@ -180,6 +186,8 @@ export function NearbyCareCentresCarousel({
   hospitals,
 }: NearbyCareCentresCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const { shownCount, syncVisibleCount } = useCarouselShowingCount(hospitals.length, trackRef);
+  useCarouselPeekHint(trackRef, hospitals.length);
 
   const handleScroll = (direction: -1 | 1) => {
     const track = trackRef.current;
@@ -197,9 +205,11 @@ export function NearbyCareCentresCarousel({
         </div>
 
         <div className={styles.controlsCol}>
-          <span className={styles.unitCountBadge}>
-            {hospitals.length} Units Available
-          </span>
+          {hospitals.length > 0 && (
+            <span className={styles.resultsCountText}>
+              Showing <strong>{shownCount}</strong> of <strong>{hospitals.length}</strong>
+            </span>
+          )}
           <div className={styles.arrowsGroup}>
             <button
               type="button"
@@ -221,7 +231,7 @@ export function NearbyCareCentresCarousel({
         </div>
       </div>
 
-      <div ref={trackRef} className={styles.carouselTrack}>
+      <div ref={trackRef} className={styles.carouselTrack} onScroll={syncVisibleCount}>
         {hospitals.map((hosp, idx) => (
           <div key={hosp.id || idx} className={styles.carouselSlide}>
             <HospitalCard
@@ -237,7 +247,6 @@ export function NearbyCareCentresCarousel({
       <div className={styles.footerLinkRow}>
         <Link href="/hospitals/narayana-health-city-bangalore" className={styles.viewAllTextLink}>
           <span>Explore All Care Centres</span>
-          <ArrowRight size={14} />
         </Link>
       </div>
     </section>

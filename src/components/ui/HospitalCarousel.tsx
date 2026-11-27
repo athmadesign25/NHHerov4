@@ -4,8 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Phone, ChevronLeft, ChevronRight } from "lucide-react";
 import { HospitalItem } from "@/data/hospitalsData";
+import { useCarouselPeekHint } from "@/lib/useCarouselPeekHint";
 import styles from "./HospitalCarousel.module.css";
 
 interface HospitalCarouselProps {
@@ -93,16 +94,9 @@ export function HospitalCard({ hosp, cardIndex = 0, priority = false, isLight = 
         </div>
       )}
 
-      {/* One Health clinic tag */}
+      {/* One Health clinic tag (text-only for clarity) */}
       {hosp.isOneHealth && (
         <div className={styles.oneHealthTag} aria-label="Narayana One Health Clinic">
-          <Image
-            src="/assets/One Health.svg"
-            alt="One Health"
-            width={26}
-            height={21}
-            className={styles.oneHealthLogo}
-          />
           <span className={styles.oneHealthText}>One Health</span>
         </div>
       )}
@@ -127,7 +121,6 @@ export function HospitalCard({ hosp, cardIndex = 0, priority = false, isLight = 
               title={`Open ${hosp.name} on Google Maps`}
               aria-label={`Open Google Maps for ${hosp.name}`}
             >
-              <MapPin className={styles.mapPinIcon} aria-hidden />
               <span className={styles.hospitalAddress} title={hosp.address}>
                 {hosp.address || "Bengaluru, Karnataka"}
               </span>
@@ -160,6 +153,7 @@ export default function HospitalCarousel({ hospitals, theme = "dark" }: Hospital
   const [direction, setDirection] = useState(1);
   const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  useCarouselPeekHint(scrollContainerRef, cardsCount);
 
   const handleMobileScroll = () => {
     if (!scrollContainerRef.current) return;
@@ -179,7 +173,7 @@ export default function HospitalCarousel({ hospitals, theme = "dark" }: Hospital
     if (!container) return;
     const card = container.children[idx] as HTMLElement;
     if (card) {
-      card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      card.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
     }
   };
 

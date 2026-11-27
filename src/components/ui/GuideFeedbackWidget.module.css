@@ -1,0 +1,198 @@
+/* ─── UNBOXED SIDEBAR FEEDBACK WIDGET (ShareWidget & ContactCareSidebarCard Parity) ─── */
+.feedbackSidebarSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10, 10px);
+  padding-top: var(--space-14, 14px);
+  box-sizing: border-box;
+  border-top: 1.5px solid rgba(var(--blue-brand-rgb), 0.10);
+}
+
+.feedbackEyebrow {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slate-400);
+  margin-bottom: 1px;
+}
+
+.feedbackDynamic .feedbackEyebrow {
+  color: var(--v2-muted, var(--slate-400));
+}
+
+.feedbackWhite .feedbackEyebrow {
+  color: var(--slate-400);
+}
+
+.thumbRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 8px);
+  flex-wrap: wrap;
+}
+
+.thumbBtn {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid rgba(var(--slate-900-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--slate-600);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  box-shadow: none;
+  transition: all var(--duration-fast, 0.15s) ease;
+}
+
+.thumbBtn:hover {
+  border-color: rgba(var(--blue-brand-rgb), 0.35);
+  color: var(--blue-brand);
+  background: rgba(var(--blue-brand-rgb), 0.05);
+}
+
+.thumbBtnActiveUp {
+  background: rgba(var(--blue-brand-rgb), 0.10);
+  border-color: var(--blue-brand);
+  color: var(--blue-brand);
+}
+
+.thumbBtnActiveDown {
+  background: rgba(var(--red-600-rgb), 0.08);
+  border-color: var(--red-600);
+  color: var(--red-600);
+}
+
+.writeMoreTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 4px 2px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--blue-brand);
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity var(--duration-fast, 0.15s) ease;
+}
+
+.writeMoreTrigger:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+.statusNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--slate-500);
+  margin-top: 2px;
+}
+
+.statusIcon {
+  color: var(--emerald-500);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.noteForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8, 8px);
+  padding-top: 4px;
+}
+
+.noteTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid rgba(var(--slate-900-rgb), 0.14);
+  background: rgba(var(--white-rgb), 0.92);
+  color: var(--slate-800);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  line-height: 1.45;
+  padding: 9px 11px;
+  resize: vertical;
+  min-height: 68px;
+  outline: none;
+  transition: border-color var(--duration-fast, 0.15s) ease, box-shadow var(--duration-fast, 0.15s) ease;
+}
+
+.noteTextarea::placeholder {
+  color: var(--slate-400);
+}
+
+.noteTextarea:focus {
+  border-color: var(--blue-brand);
+  box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.12);
+}
+
+.noteActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-8, 8px);
+}
+
+.noteCancelBtn {
+  background: transparent;
+  border: none;
+  padding: 5px 8px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--slate-500);
+  cursor: pointer;
+}
+
+.noteCancelBtn:hover {
+  color: var(--slate-800);
+}
+
+.noteSubmitBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--radius-md, 8px);
+  border: none;
+  background: var(--blue-brand);
+  color: var(--white);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 0.15s) ease, opacity var(--duration-fast, 0.15s) ease;
+}
+
+.noteSubmitBtn:hover:not(:disabled) {
+  background: var(--blue-900);
+}
+
+.noteSubmitBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Keep sticky single-row mobile TOC bar clean at <= 960px */
+@media (max-width: 960px) {
+  .feedbackSidebarSection {
+    display: none !important;
+  }
+}

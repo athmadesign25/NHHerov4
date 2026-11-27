@@ -7,10 +7,16 @@
   z-index: 3;
 }
 
-/* Hide circular organ carousel on mobile web — mweb uses the dedicated [ Filters ] sheet */
+/* Hide full circular organ carousel on mobile web when page uses [ Filters ] sheet;
+   keep centered carousels (Blog, Radio) and horizontal mini-pills scrollable on mobile */
 @media (max-width: 768px) {
-  .carouselOuterSection {
+  .carouselOuterSection:not(.miniPillsOuter):not(.carouselCentered) {
     display: none !important;
+  }
+
+  .carouselCentered,
+  .miniPillsOuter {
+    width: calc(100% - 32px);
   }
 }
 
@@ -93,6 +99,17 @@
 
 .bubblesRow::-webkit-scrollbar {
   display: none;
+}
+
+.bubblesRowCentered {
+  justify-content: center;
+  gap: clamp(14px, 1.8vw, 24px);
+}
+
+@media (max-width: 1024px) {
+  .bubblesRowCentered {
+    justify-content: flex-start;
+  }
 }
 
 .bubbleBtn {
@@ -187,6 +204,158 @@
 .bubbleBtnActive .bubbleLabel {
   color: var(--dyn-red-sel-text, #ef4444) !important;
   font-weight: 700;
+}
+
+.bubbleBtnActive .cleanAllDotGrid span {
+  background: var(--dyn-red-sel-text, #b91c1c);
+  opacity: 1;
+}
+
+/* ─── STICKY COMPACT MODE (MINIMISED CIRCLES WHEN PINNED AT TOP ON SCROLL) ─── */
+.carouselCompact {
+  padding: 2px 0 0 0;
+}
+
+.carouselCompact .bubblesRow {
+  gap: clamp(8px, 1vw, 14px);
+  padding: 2px 2px 4px;
+}
+
+.carouselCompact .bubbleBtn {
+  width: 64px;
+  gap: 4px;
+}
+
+.carouselCompact .bubbleImgWrap {
+  width: 36px;
+  height: 36px;
+}
+
+.carouselCompact .bubbleImg {
+  width: 20px;
+  height: 20px;
+}
+
+.carouselCompact .cleanAllDotGrid {
+  grid-template-columns: repeat(2, 4.5px);
+  gap: 2.5px;
+}
+
+.carouselCompact .cleanAllDotGrid span {
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 1.5px;
+}
+
+.carouselCompact .bubbleLabel {
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+
+/* ─── MINI-PILLS MODE (HORIZONTAL MINI-CIRCLE ORGAN CAPSULES FOR STICKY DOCK) ─── */
+.miniPillsOuter {
+  padding: 0 !important;
+}
+
+.miniPillsTrackContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.miniPillsRow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 2px 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.miniPillsRow::-webkit-scrollbar {
+  display: none;
+}
+
+.miniPillBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 3px 12px 3px 5px;
+  border-radius: 9999px;
+  border: 1px solid #cbd5e1;
+  background: rgba(255, 255, 255, 0.96);
+  color: #334155;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.miniPillBtn:hover {
+  border-color: #94a3b8;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.miniPillBtnActive {
+  border-color: #dc2626 !important;
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  font-weight: 600;
+}
+
+.miniPillCircle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.miniPillBtnActive .miniPillCircle {
+  background: #fee2e2;
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.miniPillIcon {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+.miniAllDotGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 4px);
+  gap: 2px;
+}
+
+.miniAllDotGrid span {
+  width: 4px;
+  height: 4px;
+  border-radius: 1.5px;
+  background: #334155;
+}
+
+.miniPillBtnActive .miniAllDotGrid span {
+  background: #b91c1c;
+}
+
+.miniPillLabel {
+  letter-spacing: -0.01em;
 }
 
 /* ─── F5: CLEAN UNBOXED ICON TABS BAR (ZERO CIRCLES, EQUAL SPACING) ─── */

@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Stethoscope, FlaskConical, FileCheck2 } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Calendar, Stethoscope, FlaskConical, FileCheck2, Phone } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
@@ -14,6 +14,7 @@ interface ClinicalFloatingSideActionsProps {
   consultHref?: string;
   consultLabel?: string;
   conditionTitle?: string;
+  mobileSubtitle?: string;
   pulseQuery?: string;
   supportPhone?: string;
   secondOpinionHref?: string;
@@ -24,15 +25,17 @@ export default function ClinicalFloatingSideActions({
   consultHref,
   consultLabel,
   conditionTitle,
+  mobileSubtitle,
   pulseQuery,
   supportPhone = "18003090309",
   secondOpinionHref = "/book-an-appointment?flow=second-opinion",
   isScrolled: propIsScrolled,
 }: ClinicalFloatingSideActionsProps) {
   const pathname = usePathname() || "/";
+  const reduced = useReducedMotion();
   const [internalScrolled, setInternalScrolled] = useState(false);
   const [isPulseOpen, setIsPulseOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
 
   // Page-aware defaults based on current route
   const pageContext = useMemo(() => {
@@ -127,12 +130,12 @@ export default function ClinicalFloatingSideActions({
   }, [pathname]);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(typeof window !== "undefined" && window.innerWidth <= 640);
+    const checkViewport = () => {
+      setIsMobileOrTablet(typeof window !== "undefined" && window.innerWidth <= 1024);
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile, { passive: true });
-    return () => window.removeEventListener("resize", checkMobile);
+    checkViewport();
+    window.addEventListener("resize", checkViewport, { passive: true });
+    return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
   useEffect(() => {
@@ -162,17 +165,15 @@ export default function ClinicalFloatingSideActions({
     : consultLabel.replace("\n", " ");
   const resolvedHref = consultHref && consultHref !== "/doctors" ? consultHref : pageContext.href;
   const resolvedConditionTitle = conditionTitle || pageContext.title;
+  const resolvedMobileSubtitle = mobileSubtitle || "Expert care & consultations";
   const defaultQuery =
     pulseQuery ||
     (conditionTitle
       ? `I want to know about ${conditionTitle}: clinical guidance, diagnosis, and treatment options.`
       : pageContext.query);
 
-  // Render label with <br /> if newline is present on desktop, inline on mobile
+  // Render label with <br /> if newline is present on desktop
   const renderLabel = (text: string) => {
-    if (isMobile) {
-      return text.replace("\n", " ");
-    }
     const parts = text.split("\n");
     return (
       <>
@@ -195,12 +196,13 @@ export default function ClinicalFloatingSideActions({
   return (
     <>
       <AnimatePresence>
-        {showActions && (
+        {showActions && !isMobileOrTablet && (
           <motion.div
+            key="desktop-clinical-rail"
             className={styles.floatingSideBoxes}
-            initial={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
-            animate={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, x: 0, y: "-50%", scale: 1 }}
-            exit={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
+            initial={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
+            animate={{ opacity: 1, x: 0, y: "-50%", scale: 1 }}
+            exit={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
             transition={{ type: "spring", stiffness: 380, damping: 28 }}
             role="region"
             aria-label="Quick clinical actions"
@@ -216,7 +218,7 @@ export default function ClinicalFloatingSideActions({
                 {renderPrimaryIcon()}
               </div>
               <span className={styles.boxLabel}>
-                {isMobile ? resolvedMobileLabel : renderLabel(resolvedDesktopLabel)}
+                {renderLabel(resolvedDesktopLabel)}
               </span>
             </Link>
 
@@ -233,7 +235,7 @@ export default function ClinicalFloatingSideActions({
                 <FileCheck2 size={17} />
               </div>
               <span className={styles.boxLabel}>
-                {isMobile ? "2nd Opinion" : <>Second<br />Opinion</>}
+                <>Second<br />Opinion</>
               </span>
             </Link>
 
@@ -249,13 +251,65 @@ export default function ClinicalFloatingSideActions({
             >
               <div className={`${styles.boxIconWrap} ${styles.boxIconPulse}`}>
                 <div className={styles.pulseLottieBox}>
-                  <Lottie animationData={pulseAnimation} loop={true} />
+                  <Lottie animationData={pulseAnimation} loop={!reduced} autoplay={!reduced} />
                 </div>
               </div>
               <span className={styles.boxLabel}>
-                {isMobile ? "Ask Pulse" : <>Ask<br />Pulse</>}
+                <>Ask<br />Pulse</>
               </span>
             </button>
+          </motion.div>
+        )}
+
+        {showActions && isMobileOrTablet && (
+          <motion.div
+            key="mweb-clinical-dock"
+            className={styles.dock}
+            initial={{ y: 50, opacity: 0, scale: 0.98 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 40, opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            role="region"
+            aria-label="Quick clinical actions"
+          >
+            <div className={styles.animatedSurface}>
+              <span className={styles.bookingAccent} aria-hidden="true">
+                <span className={styles.accentGlow}><span className={styles.accentTrack} /></span>
+                <span className={styles.accentStroke}><span className={styles.accentTrack} /></span>
+              </span>
+              <div className={styles.surface}>
+                <div className={styles.summary} data-appointment-summary="true">
+                  <div className={styles.infoCol}>
+                    <strong>{resolvedConditionTitle}</strong>
+                    <span>{resolvedMobileSubtitle}</span>
+                  </div>
+                  <div className={styles.actionGroup}>
+                    <button
+                      type="button"
+                      className={styles.pulseAction}
+                      onClick={() => setIsPulseOpen(true)}
+                      title={`Ask Pulse AI about ${resolvedConditionTitle}`}
+                      aria-label={`Ask Pulse AI about ${resolvedConditionTitle}`}
+                    >
+                      <div className={styles.mobilePulseLottieBox}>
+                        <Lottie animationData={pulseAnimation} loop={!reduced} autoplay={!reduced} />
+                      </div>
+                    </button>
+                    <a
+                      className={styles.callAction}
+                      href={`tel:${supportPhone.replace(/\s+/g, "")}`}
+                      aria-label={`Call ${supportPhone} to book an appointment`}
+                      title="Call 24×7 care helpline"
+                    >
+                      <Phone size={18} aria-hidden="true" />
+                    </a>
+                    <Link href={resolvedHref} className={styles.primary}>
+                      {resolvedMobileLabel}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

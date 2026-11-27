@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AdvanceTestItem, ADVANCE_TESTS_DATA } from "@/data/advanceTestsData";
+import { useCarouselPeekHint } from "@/lib/useCarouselPeekHint";
 import styles from "./AdvanceTestsCarousel.module.css";
 
 interface AdvanceTestsCarouselProps {
   tests?: AdvanceTestItem[];
+  theme?: "dark" | "light";
 }
 
 const CARD_STEP = 572; // 528px card width + 44px gap
@@ -53,13 +55,46 @@ function AdvanceTestCard({ test }: { test: AdvanceTestItem }) {
   );
 }
 
-export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: AdvanceTestsCarouselProps) {
+/**
+ * Mobile-specific card wrapper with IntersectionObserver for responsive indicators
+ */
+function MobileAdvanceTestCard({
+  test,
+  index,
+  onVisible,
+}: {
+  test: AdvanceTestItem;
+  index: number;
+  onVisible: (idx: number) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { amount: 0.6 });
+
+  useEffect(() => {
+    if (isInView) {
+      onVisible(index);
+    }
+  }, [isInView, index, onVisible]);
+
+  return (
+    <div ref={ref} className={styles.mobileCarouselItem}>
+      <AdvanceTestCard test={test} />
+    </div>
+  );
+}
+
+export default function AdvanceTestsCarousel({ 
+  tests = ADVANCE_TESTS_DATA,
+  theme = "light"
+}: AdvanceTestsCarouselProps) {
+  const isLight = theme === "light";
   const cardsCount = tests.length;
-  // Card 1 (2nd card) sits at center slot (slot 2) initially
-  const [centerIndex, setCenterIndex] = useState(1);
+  // Card 0 (1st card) sits at center slot (slot 2) initially, matching active dot 0
+  const [centerIndex, setCenterIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  useCarouselPeekHint(scrollContainerRef, cardsCount);
 
   const goNext = () => {
     setDirection(1);
@@ -69,6 +104,13 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
   const goPrev = () => {
     setDirection(-1);
     setCenterIndex((prev) => (prev - 1 + cardsCount) % cardsCount);
+  };
+
+  const goToIndex = (targetIndex: number) => {
+    if (targetIndex === centerIndex) return;
+    const diff = (targetIndex - centerIndex + cardsCount) % cardsCount;
+    setDirection(diff <= cardsCount / 2 ? 1 : -1);
+    setCenterIndex(targetIndex);
   };
 
   const handleMobileScroll = () => {
@@ -91,7 +133,7 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
         (items[index] as HTMLElement).scrollIntoView({
           behavior: "smooth",
           block: "nearest",
-          inline: "center",
+          inline: "start",
         });
       }
     }
@@ -160,7 +202,7 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
       {/* Navigation Arrows */}
       <button
         type="button"
-        className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${styles.arrowBtnLight} ${styles.desktopOnly}`}
+        className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${isLight ? styles.arrowBtnLight : ""} ${styles.desktopOnly}`}
         onClick={goPrev}
         aria-label="Previous test"
       >
@@ -169,12 +211,28 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
 
       <button
         type="button"
-        className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${styles.arrowBtnLight} ${styles.desktopOnly}`}
+        className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${isLight ? styles.arrowBtnLight : ""} ${styles.desktopOnly}`}
         onClick={goNext}
         aria-label="Next test"
       >
         <ChevronRight size={22} strokeWidth={2} />
       </button>
+
+      {/* DESKTOP CAROUSEL INDICATOR */}
+      <div className={`${styles.desktopNavigator} ${styles.desktopOnly}`}>
+        {tests.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            className={`${styles.navDot} ${isLight ? styles.navDotLight : ""} ${
+              i === centerIndex ? `${styles.navDotActive} ${isLight ? styles.navDotActiveLight : ""}` : ""
+            }`}
+            onClick={() => goToIndex(i)}
+            aria-label={`Go to test ${i + 1}`}
+            aria-current={i === centerIndex ? "true" : undefined}
+          />
+        ))}
+      </div>
 
       {/* MOBILE / TABLET NATIVE SWIPE LAYOUT */}
       <div
@@ -182,10 +240,13 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
         onScroll={handleMobileScroll}
         className={`${styles.mobileCarouselContainer} ${styles.mobileOnly}`}
       >
-        {tests.map((test) => (
-          <div key={`mobile-test-${test.id}`} className={styles.mobileCarouselItem}>
-            <AdvanceTestCard test={test} />
-          </div>
+        {tests.map((test, index) => (
+          <MobileAdvanceTestCard
+            key={`mobile-test-${test.id}`}
+            test={test}
+            index={index}
+            onVisible={setMobileActiveIndex}
+          />
         ))}
       </div>
 
@@ -194,9 +255,12 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
           <button
             key={i}
             type="button"
-            className={`${styles.navDot} ${i === mobileActiveIndex ? styles.navDotActive : ""}`}
+            className={`${styles.navDot} ${isLight ? styles.navDotLight : ""} ${
+              i === mobileActiveIndex ? `${styles.navDotActive} ${isLight ? styles.navDotActiveLight : ""}` : ""
+            }`}
             onClick={() => scrollToMobileCard(i)}
             aria-label={`Go to test ${i + 1}`}
+            aria-current={i === mobileActiveIndex ? "true" : undefined}
           />
         ))}
       </div>

@@ -60,9 +60,65 @@
 
 @media (max-width: 768px) {
   .detailHero {
-    min-height: auto;
-    padding-top: calc(var(--nav-height, 72px) + clamp(36px, 10vh, 72px));
-    padding-bottom: 32px;
+    min-height: auto !important;
+    padding-top: 44dvh !important;
+    padding-bottom: 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  .stationaryImage {
+    object-position: center 14% !important;
+  }
+
+  .stationaryCanvasOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(6, 14, 27, 0.45) 0%,
+      rgba(6, 14, 27, 0.12) 14%,
+      transparent 22%,
+      transparent 36%,
+      rgba(6, 14, 27, 0.72) 48%,
+      rgba(6, 14, 27, 0.96) 62%,
+      #060e1b 82%,
+      #060e1b 100%
+    ) !important;
+  }
+
+  .heroInner {
+    width: calc(100% - 32px) !important;
+    position: static !important;
+    gap: 0 !important;
+  }
+
+  .breadcrumbsWrapper {
+    position: absolute !important;
+    top: calc(var(--nav-height, 56px) + 12px) !important;
+    left: 16px !important;
+    right: 16px !important;
+    width: calc(100% - 32px) !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+    box-sizing: border-box !important;
+  }
+
+  .heroMainTitle {
+    font-size: clamp(24px, 6.8vw, 28px) !important;
+    line-height: 1.18 !important;
+    margin: 0 0 10px 0 !important;
+  }
+
+  .heroSubTitle {
+    font-size: 13.5px !important;
+    line-height: 1.48 !important;
+    margin: 0 0 16px 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .metricsBottomWrap {
+    display: none !important;
   }
 }
 
@@ -157,22 +213,24 @@
 .heroPrimaryBtn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 13px 26px;
-  background: var(--color-primary, var(--blue-brand));
-  color: var(--white);
-  border-radius: 8px;
-  font-size: var(--font-size-sm);
+  justify-content: center;
+  padding: 12px 28px;
+  background: var(--white);
+  color: var(--color-primary, var(--blue-brand));
+  border: 1.5px solid var(--white);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-base, 16px);
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(var(--blue-brand-rgb), 0.35);
-  transition: transform var(--transition-fast, var(--duration-fast) ease), background-color var(--transition-fast, var(--duration-fast) ease), box-shadow var(--transition-fast, var(--duration-fast) ease);
+  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.12);
+  transition: transform var(--transition-fast, var(--duration-fast) ease), background-color var(--transition-fast, var(--duration-fast) ease), border-color var(--transition-fast, var(--duration-fast) ease), color var(--transition-fast, var(--duration-fast) ease);
 }
 
 .heroPrimaryBtn:hover {
-  background: #023877;
+  background: rgba(var(--white-rgb), 0.92);
+  border-color: rgba(var(--white-rgb), 0.92);
+  color: var(--color-primary-dark, var(--blue-900));
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(var(--blue-brand-rgb), 0.45);
 }
 
 .heroPhoneText {
@@ -324,6 +382,10 @@
 }
 
 @media (max-width: 960px) {
+  .mainLayoutContainer {
+    padding-bottom: 108px;
+  }
+
   .twoColumnGrid {
     grid-template-columns: 1fr;
     gap: 36px;
@@ -333,10 +395,17 @@
 /* ─── STICKY TOC SIDEBAR ─── */
 .stickySidebar {
   position: sticky;
-  top: calc(var(--nav-height, 72px) + 24px);
+  top: calc(var(--nav-height, 72px) + 52px);
+  transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   gap: 28px;
+}
+
+@media (min-width: 961px) {
+  :global(html[data-nav-visible="false"]) .stickySidebar {
+    top: 56px;
+  }
 }
 
 @media (max-width: 960px) {
@@ -391,13 +460,13 @@
 }
 
 .tocLink:hover {
-  background: var(--blue-tint-50);
-  color: var(--color-primary, var(--blue-brand));
+  background: var(--red-50);
+  color: var(--red-600);
 }
 
 .tocLinkActive {
-  background: #e0f2fe;
-  color: var(--color-primary, var(--blue-brand));
+  background: rgba(var(--red-600-rgb), 0.08);
+  color: var(--red-600);
   font-weight: 700;
 }
 
@@ -410,8 +479,8 @@
 }
 
 .tocLinkActive .tocIndicatorMarker {
-  background: var(--color-primary, var(--blue-brand));
-  box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.18);
+  background: var(--red-600);
+  box-shadow: 0 0 0 3px rgba(var(--red-600-rgb), 0.18);
 }
 
 /* Sidebar Partner Box */
@@ -527,20 +596,20 @@
 }
 
 .pillarCard {
-  background: var(--slate-50);
-  border: 1px solid var(--slate-200);
-  border-radius: 16px;
-  padding: 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--slate-100);
+  border-radius: 0;
+  padding: 16px 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transition: transform var(--transition-fast, var(--duration-fast) ease), box-shadow var(--transition-fast, var(--duration-fast) ease);
+  gap: 10px;
 }
 
 .pillarCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.06);
-  border-color: var(--slate-300);
+  transform: none;
+  box-shadow: none;
+  border-bottom-color: rgba(var(--blue-brand-rgb), 0.3);
 }
 
 .pillarIconBox {

@@ -3,33 +3,31 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHeroShrink } from "@/lib/useHeroShrink";
 import { 
-  BookOpen,
-  CheckCircle2, 
   Link as LinkIcon, 
-  ArrowUpRight, 
-  Calendar, 
   Check,
-  UserCheck,
   Share2,
-  Video,
-  HeartPulse
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import { getArticleDetailData, ArticleDetailData, ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
 import BlogLanguageChanger from "@/components/blog/BlogLanguageChanger";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
-import ClinicalReviewedBySection, {
+import {
   ClinicalSummaryBanner,
   ClinicalEditorialFigures,
 } from "@/components/ui/ClinicalReviewedBySection";
+import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
 import { NearbySpecialistsCarousel } from "@/components/ui/NearbyClinicalCarousels";
 import ShareWidget from "@/components/ui/ShareWidget";
 import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
+import GuideFeedbackWidget from "@/components/ui/GuideFeedbackWidget";
+import DetailStickyBreadcrumb from "@/components/ui/DetailStickyBreadcrumb";
 import styles from "./ArticleDetail.module.css";
 
 interface PageProps {
@@ -44,96 +42,18 @@ export default function ArticleDetailPage({ params }: PageProps) {
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // V2: Scroll-driven section colour transition (#060c18 -> #020408 -> #f4f7fb -> #ffffff)
-  const v4Progress = useMotionValue(0);
+  // CoE-style sticky hero inset over clean white reading surface
+  const { containerRef: heroShrinkRef, wrapperStyle: heroWrapperStyle, heroMotionStyle, pageMotionStyle } =
+    useHeroShrink("detail");
 
   useEffect(() => {
-    const updateV4Transition = () => {
-      const sy = window.scrollY || 0;
-      const startScroll = 36;
-      const endScroll = 360;
-      const raw = (sy - startScroll) / (endScroll - startScroll);
-      const clamped = Math.max(0, Math.min(1, raw));
-      v4Progress.set(clamped);
-      setIsScrolled(sy > 300);
+    const updateScroll = () => {
+      setIsScrolled((window.scrollY || 0) > 300);
     };
-
-    updateV4Transition();
-    window.addEventListener("scroll", updateV4Transition, { passive: true });
-    window.addEventListener("resize", updateV4Transition, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", updateV4Transition);
-      window.removeEventListener("resize", updateV4Transition);
-    };
-  }, [v4Progress]);
-
-  const heroCanvasOpacity = useTransform(v4Progress, [0, 0.38, 0.68], [1, 0.75, 0]);
-  const heroStatNumColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
-  );
-  const heroStatLabelColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
-  );
-  const heroStatDividerColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
-  );
-
-  const v2BgColor = useTransform(
-    v4Progress,
-    [0, 0.40, 0.68, 1],
-    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
-  );
-  const v2HeadingColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
-  );
-  const v2SubtitleColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.76)", "rgba(255, 255, 255, 0.82)", "#475569", "#64748b"]
-  );
-  const v2BodyColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.84)", "rgba(255, 255, 255, 0.86)", "#334155", "#374151"]
-  );
-  const v2MutedColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.62)", "rgba(255, 255, 255, 0.68)", "#64748b", "#64748b"]
-  );
-  const v2TocLinkColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.78)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
-  );
-  const v2TocActiveColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["#38bdf8", "#38bdf8", "#034EA2", "#034EA2"]
-  );
-  const v2TocActiveBg = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
-  );
-  const v2BorderColor = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.16)", "rgba(15, 23, 42, 0.09)", "rgba(15, 23, 42, 0.08)"]
-  );
-  const v2CardBg = useTransform(
-    v4Progress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.10)", "#f8fafc", "#f8fafc"]
-  );
+    updateScroll();
+    window.addEventListener("scroll", updateScroll, { passive: true });
+    return () => window.removeEventListener("scroll", updateScroll);
+  }, []);
 
   // Exact 3 in-article cards matching Screenshot 3
   const inArticleMorePosts = React.useMemo(() => {
@@ -212,53 +132,35 @@ export default function ArticleDetailPage({ params }: PageProps) {
   return (
     <motion.div
       className={styles.detailPageContainer}
-      style={
-        {
-          backgroundColor: v2BgColor,
-          "--v2-bg": v2BgColor,
-          "--v2-heading": v2HeadingColor,
-          "--v2-subtitle": v2SubtitleColor,
-          "--v2-body": v2BodyColor,
-          "--v2-muted": v2MutedColor,
-          "--v2-toc-link": v2TocLinkColor,
-          "--v2-toc-active": v2TocActiveColor,
-          "--v2-toc-active-bg": v2TocActiveBg,
-          "--v2-border": v2BorderColor,
-          "--v2-card-bg": v2CardBg,
-          "--hero-bottom-bg": v2BgColor,
-          "--stat-num-color": heroStatNumColor,
-          "--stat-label-color": heroStatLabelColor,
-          "--stat-divider-color": heroStatDividerColor,
-        } as unknown as React.CSSProperties
-      }
+      style={pageMotionStyle}
     >
-      {/* ─── STATIONARY ATMOSPHERIC CANVAS ─────────────────────────────────── */}
-      <motion.div
-        className={styles.stationaryCanvas}
-        aria-hidden="true"
-        style={{ opacity: heroCanvasOpacity }}
-      >
-        <motion.div
-          className={styles.stationaryMotionWrapper}
-          initial={{ scale: 1.12, opacity: 0.5 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      {/* ─── DETAIL HERO (STICKY INSET SHRINK OVER WHITE READING SURFACE) ───── */}
+      <div ref={heroShrinkRef} data-nav-theme="light" style={heroWrapperStyle}>
+        <motion.section
+          className={`${styles.detailHero} ${styles.detailHeroV2}`}
+          data-nav-theme="dark"
+          style={heroMotionStyle}
         >
-          <Image
-            src={detail.heroImage}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className={styles.stationaryImage}
-          />
-        </motion.div>
-        <div className={styles.stationaryCanvasOverlay} />
-      </motion.div>
+          <div className={styles.stationaryCanvas} aria-hidden="true">
+            <motion.div
+              className={styles.stationaryMotionWrapper}
+              initial={{ scale: 1.12, opacity: 0.5 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Image
+                src={detail.heroImage}
+                alt=""
+                fill
+                priority
+                sizes="100vw"
+                className={styles.stationaryImage}
+              />
+            </motion.div>
+            <div className={styles.stationaryCanvasOverlay} />
+          </div>
 
-      {/* ─── DETAIL HERO ──────────────────────────────────────────────────── */}
-      <section className={`${styles.detailHero} ${styles.detailHeroV2}`} data-nav-theme="dark">
-        <motion.div className={styles.heroBgOverlay} style={{ opacity: heroCanvasOpacity }} />
+          <div className={styles.heroBgOverlay} />
 
         <div className={styles.heroInner}>
           {/* Top Utility Bar: Breadcrumbs on Left, Language Changer on Right (Matching OG Blog) */}
@@ -318,9 +220,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 href={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`} 
                 className={styles.heroPrimaryBtn}
               >
-                <Calendar size={15} />
                 <span>Consult Specialist</span>
-                <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
 
               <button
@@ -333,6 +233,15 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 <span>{copyToast ? "Link Copied!" : "Share Article"}</span>
               </button>
             </div>
+
+            <MobileRollingStats
+              items={[
+                { staticValue: "100%", label: "Doctor Authored" },
+                { staticValue: "Peer Reviewed", label: "Medical Advisory" },
+                { staticValue: detail.readTime, label: "Estimated Reading" },
+                { staticValue: detail.publishedDate, label: "Last Medical Review" },
+              ]}
+            />
           </motion.div>
 
           {/* Bottom Metrics Row (Below Title, Author & CTA - Matching CSR Hero) */}
@@ -370,12 +279,19 @@ export default function ArticleDetailPage({ params }: PageProps) {
             </div>
           </motion.div>
         </div>
-      </section>
+        </motion.section>
+      </div>
 
-      {/* ─── MAIN CONTENT BODY (V2 SCROLL-DRIVEN DYNAMIC CANVAS) ──────────────────── */}
-      <motion.div
+      <DetailStickyBreadcrumb
+        currentTitle={detail.title}
+        parentLabel="Health Articles & Guides"
+        motionKey={`article-sticky-breadcrumb-${detail.slug}`}
+      />
+
+      {/* ─── MAIN CONTENT BODY ON PURE WHITE READING SURFACE ───────────────── */}
+      <div
         className={`${styles.readingExperienceWrapper} ${styles.readingExperienceWrapperV2}`}
-        style={{ backgroundColor: v2BgColor }}
+        data-nav-theme="light"
       >
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
@@ -383,7 +299,6 @@ export default function ArticleDetailPage({ params }: PageProps) {
             <aside className={styles.stickySidebar}>
               <div className={styles.tocSectionSelector}>
                 <div className={styles.tocEyebrow}>
-                  <BookOpen size={13} className={styles.tocEyebrowIcon} />
                   <span>Article Contents</span>
                 </div>
                 <nav className={styles.tocNavRail} aria-label="Table of contents">
@@ -417,15 +332,15 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 </nav>
               </div>
 
-              {/* Mobile Persistent Share Pill inside sticky header */}
+              {/* Mobile Persistent Share Icon Pill inside sticky header */}
               <button
                 type="button"
                 className={styles.mobileStickyShareBtn}
                 onClick={handleShare}
                 aria-label="Share this article"
+                title="Share"
               >
-                <Share2 size={13} />
-                <span>Share</span>
+                <Share2 size={16} />
               </button>
 
               {/* Standardized Share widget */}
@@ -434,7 +349,11 @@ export default function ArticleDetailPage({ params }: PageProps) {
               {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
               <ContactCareSidebarCard 
                 subtitle={`Have questions on ${detail.category}? Speak to our clinical coordinators for specialist consultations.`}
+                theme="dynamic"
               />
+
+              {/* Compact On-Demand Feedback Widget */}
+              <GuideFeedbackWidget guideType="article" theme="dynamic" />
             </aside>
 
             {/* Reading Content Focus Canvas */}
@@ -446,6 +365,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
                   eyebrow={`${detail.category} · Article Summary`}
                   summary={`${detail.summary} ${detail.overview}`}
                   reviewerName={detail.author}
+                  theme="dynamic"
                 />
               </section>
 
@@ -455,14 +375,13 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   Essential medical advice summarized by our clinical panel for everyday health management:
                 </p>
-                <div className={styles.takeawaysBox}>
+                <ul className={styles.takeawaysBox}>
                   {detail.keyTakeaways.map((point, idx) => (
-                    <div key={idx} className={styles.takeawayItem}>
-                      <CheckCircle2 size={18} className={styles.takeawayIcon} />
+                    <li key={idx} className={styles.takeawayItem}>
                       <span className={styles.takeawayText}>{point}</span>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </section>
 
               {/* SECTION: In-Depth Sections (Natural reading typography + rich clinical demo images) */}
@@ -490,17 +409,6 @@ export default function ArticleDetailPage({ params }: PageProps) {
                   )}
                 </section>
               ))}
-
-              {/* SECTION: Dedicated Google E-E-A-T "Reviewed by Dr. ___" Section */}
-              <ClinicalReviewedBySection
-                doctorName={detail.author}
-                doctorRole={detail.authorRole}
-                speciality={detail.category}
-                hospital={detail.doctors[0]?.hospital || "Narayana Health City, Bengaluru"}
-                experience={detail.doctors[0]?.experience || "18+ Years Experience"}
-                doctorImage={detail.authorAvatar}
-                reviewDate={detail.publishedDate}
-              />
 
               {/* SECTION: Consult Specialists Carousel (Modular & Softened Gradient) */}
               <NearbySpecialistsCarousel
@@ -534,7 +442,6 @@ export default function ArticleDetailPage({ params }: PageProps) {
                         <span className={styles.moreFromNhCategory}>{art.category}</span>
                         <div className={styles.moreFromNhTitleRow}>
                           <h3 className={styles.moreFromNhItemTitle}>{art.title}</h3>
-                          <ArrowUpRight size={17} className={styles.moreFromNhArrow} />
                         </div>
                         <div className={styles.moreFromNhMetaRow}>
                           <div className={styles.moreFromNhAuthorRow}>
@@ -553,8 +460,22 @@ export default function ArticleDetailPage({ params }: PageProps) {
               <div id="related" />
             </div>
           </div>
+
+          <MedicallyReviewedBand
+            id="medically-reviewed-by"
+            theme="light"
+            fluid
+            specialityName={detail.category}
+            reviewer={{
+              name: detail.author,
+              designation: detail.authorRole,
+              specialty: detail.category,
+              image: detail.authorAvatar,
+              reviewDate: detail.publishedDate,
+            }}
+          />
         </main>
-      </motion.div>
+      </div>
 
       {/* FULL-WIDTH SECTION: More from Our Blog (Cards in Our Procedure Style + Controls) */}
       <MoreFromOurBlogCarousel

@@ -36,7 +36,11 @@ interface OrganSystemChipsCarouselProps {
   onSelectOrgan: (organValue: string | null) => void;
   eyebrow?: string;
   className?: string;
-  variant?: "circle" | "clean-tabs";
+  variant?: "circle" | "clean-tabs" | "mini-pills";
+  showHeader?: boolean;
+  showAllOption?: boolean;
+  compact?: boolean;
+  centered?: boolean;
 }
 
 export default function OrganSystemChipsCarousel({
@@ -46,6 +50,10 @@ export default function OrganSystemChipsCarousel({
   eyebrow = "Filter by Organ System",
   className = "",
   variant = "circle",
+  showHeader = true,
+  showAllOption = false,
+  compact = false,
+  centered = false,
 }: OrganSystemChipsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -79,16 +87,17 @@ export default function OrganSystemChipsCarousel({
   };
 
   const isCleanTabs = variant === "clean-tabs";
+  const isMiniPills = variant === "mini-pills";
 
   return (
     <motion.section
-      className={`${styles.carouselOuterSection} ${isCleanTabs ? styles.cleanTabsOuter : ""} ${className}`}
-      initial={{ opacity: 0, y: 10 }}
+      className={`${styles.carouselOuterSection} ${isCleanTabs ? styles.cleanTabsOuter : ""} ${isMiniPills ? styles.miniPillsOuter : ""} ${compact ? styles.carouselCompact : ""} ${centered ? styles.carouselCentered : ""} ${className}`}
+      initial={isMiniPills ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
       aria-label="Filter by Organ System"
     >
-      {!isCleanTabs && (
+      {!isCleanTabs && !isMiniPills && showHeader && (
         <div className={styles.topBarRow}>
           <span className={styles.eyebrowLabel}>{eyebrow}</span>
 
@@ -117,10 +126,10 @@ export default function OrganSystemChipsCarousel({
         </div>
       )}
 
-      <div className={`${styles.trackContainer} ${isCleanTabs ? styles.cleanTabsTrackContainer : ""}`}>
+      <div className={`${styles.trackContainer} ${isCleanTabs ? styles.cleanTabsTrackContainer : ""} ${isMiniPills ? styles.miniPillsTrackContainer : ""}`}>
         <div
           ref={trackRef}
-          className={`${styles.bubblesRow} ${isCleanTabs ? styles.cleanTabsRow : ""}`}
+          className={`${styles.bubblesRow} ${centered ? styles.bubblesRowCentered : ""} ${isCleanTabs ? styles.cleanTabsRow : ""} ${isMiniPills ? styles.miniPillsRow : ""}`}
         >
           {isCleanTabs && (
             <button
@@ -137,8 +146,61 @@ export default function OrganSystemChipsCarousel({
               <span className={styles.cleanTabLabel}>All Organs</span>
             </button>
           )}
+          {!isCleanTabs && !isMiniPills && showAllOption && (
+            <button
+              type="button"
+              className={`${styles.bubbleBtn} ${selectedOrgan === null ? styles.bubbleBtnActive : ""}`}
+              onClick={() => onSelectOrgan(null)}
+              aria-pressed={selectedOrgan === null}
+            >
+              <div className={styles.bubbleImgWrap}>
+                <span className={styles.cleanAllDotGrid} aria-hidden="true">
+                  <span /><span /><span /><span />
+                </span>
+              </div>
+              <span className={styles.bubbleLabel}>All</span>
+            </button>
+          )}
+          {isMiniPills && showAllOption && (
+            <button
+              type="button"
+              className={`${styles.miniPillBtn} ${selectedOrgan === null ? styles.miniPillBtnActive : ""}`}
+              onClick={() => onSelectOrgan(null)}
+              aria-pressed={selectedOrgan === null}
+            >
+              <span className={styles.miniPillCircle} aria-hidden="true">
+                <span className={styles.miniAllDotGrid}>
+                  <span /><span /><span /><span />
+                </span>
+              </span>
+              <span className={styles.miniPillLabel}>All</span>
+            </button>
+          )}
           {options.map((opt) => {
             const isActive = selectedOrgan === opt.value;
+            if (isMiniPills) {
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={`${styles.miniPillBtn} ${isActive ? styles.miniPillBtnActive : ""}`}
+                  onClick={() => onSelectOrgan(isActive ? null : opt.value)}
+                  aria-pressed={isActive}
+                  title={opt.label}
+                >
+                  <span className={styles.miniPillCircle} aria-hidden="true">
+                    <Image
+                      src={opt.image}
+                      alt=""
+                      width={16}
+                      height={16}
+                      className={styles.miniPillIcon}
+                    />
+                  </span>
+                  <span className={styles.miniPillLabel}>{opt.shortLabel || opt.label}</span>
+                </button>
+              );
+            }
             if (isCleanTabs) {
               return (
                 <button
@@ -167,6 +229,7 @@ export default function OrganSystemChipsCarousel({
                 className={`${styles.bubbleBtn} ${isActive ? styles.bubbleBtnActive : ""}`}
                 onClick={() => onSelectOrgan(isActive ? null : opt.value)}
                 aria-pressed={isActive}
+                title={opt.label}
               >
                 <div className={styles.bubbleImgWrap}>
                   <Image
@@ -177,13 +240,13 @@ export default function OrganSystemChipsCarousel({
                     className={styles.bubbleImg}
                   />
                 </div>
-                <span className={styles.bubbleLabel}>{opt.label}</span>
+                <span className={styles.bubbleLabel}>{opt.shortLabel || opt.label}</span>
               </button>
             );
           })}
         </div>
 
-        {isCleanTabs && (canScrollLeft || canScrollRight) && (
+        {(isCleanTabs || isMiniPills) && (canScrollLeft || canScrollRight) && (
           <div className={styles.cleanTabsArrows}>
             {canScrollLeft && (
               <button

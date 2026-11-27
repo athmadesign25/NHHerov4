@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
@@ -264,6 +265,8 @@ export default function HospitalsLibraryPage() {
                   </span>
                 </div>
               )}
+
+              <MobileRollingStats items={HERO_ANALYTICS_PARAMETERS} />
             </motion.div>
           </div>
 
@@ -482,11 +485,9 @@ export default function HospitalsLibraryPage() {
                         <div className={styles.cardBottomSlot}>
                           <div className={styles.cardRestingMeta}>
                             <span className={styles.metaBadge}>
-                              <Building size={11} className={styles.metaIcon} />
                               <span>{item.beds}</span>
                             </span>
                             <span className={styles.metaBadge}>
-                              <Activity size={11} className={styles.metaIcon} />
                               <span>{item.emergency}</span>
                             </span>
                           </div>
@@ -498,7 +499,6 @@ export default function HospitalsLibraryPage() {
 
                             <Link href={detailUrl} className={styles.cardDetailBtn}>
                               <span>Hospital info</span>
-                              <ArrowUpRight size={11.5} className={styles.pillBtnArrow} />
                             </Link>
                           </div>
                         </div>

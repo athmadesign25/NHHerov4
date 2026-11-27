@@ -70,3 +70,10 @@
     transform: translateY(0);
   }
 }
+
+/* Keep sticky single-row mobile TOC bar clean at <= 960px (compact Share pill replaces icons row) */
+@media (max-width: 960px) {
+  .shareWidgetBorderless {
+    display: none !important;
+  }
+}

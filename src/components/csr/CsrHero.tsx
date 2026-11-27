@@ -1,21 +1,24 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
-import { Award, ArrowRight } from "lucide-react";
+import { Award } from "lucide-react";
 import { CsrHeroData } from "@/data/csrData";
+import { useLibraryHeroBlendShrink } from "@/lib/useHeroShrink";
 import styles from "./CsrHero.module.css";
 
 interface CsrHeroProps {
   data: CsrHeroData;
-  canvasOpacity?: MotionValue<number>;
 }
 
-export default function CsrHero({ data, canvasOpacity }: CsrHeroProps) {
+export default function CsrHero({ data }: CsrHeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const { heroMotionStyle } = useLibraryHeroBlendShrink();
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -34,29 +37,32 @@ export default function CsrHero({ data, canvasOpacity }: CsrHeroProps) {
   const contentOpacity = useTransform(smoothProgress, [0, 0.75], [1, 0.4]);
 
   return (
-    <section ref={sectionRef} className={styles.heroSection} data-nav-theme="dark">
-      {/* Background Video & Scrim with V2 Dynamic Scroll Crossfade */}
-      <motion.div
-        className={styles.videoWrapper}
-        style={canvasOpacity ? { opacity: canvasOpacity } : undefined}
+    <div style={{ position: "relative", overflowX: "clip" }}>
+      <motion.section
+        ref={sectionRef}
+        className={styles.heroSection}
+        data-nav-theme="dark"
+        style={heroMotionStyle}
       >
-        <motion.video
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster={data.posterUrl}
-          className={styles.heroVideo}
-          style={{
-            scale: videoScale,
-            y: videoY,
-            opacity: videoOpacity,
-          }}
-        >
-          <source src={data.videoUrl} type="video/mp4" />
-        </motion.video>
-        <div className={styles.heroOverlay} />
-      </motion.div>
+        {/* Background Video & Scrim inside Shrinking Dark Card */}
+        <div className={styles.videoWrapper}>
+          <motion.video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={data.posterUrl}
+            className={styles.heroVideo}
+            style={{
+              scale: videoScale,
+              y: videoY,
+              opacity: videoOpacity,
+            }}
+          >
+            <source src={data.videoUrl} type="video/mp4" />
+          </motion.video>
+          <div className={styles.heroOverlay} />
+        </div>
 
       {/* Main Container with subtle scroll elevation */}
       <motion.div 
@@ -96,9 +102,12 @@ export default function CsrHero({ data, canvasOpacity }: CsrHeroProps) {
           <div className={styles.heroCtaRow}>
             <a href="#initiatives" className={styles.heroCtaBtn}>
               <span>Explore Initiatives</span>
-              <ArrowRight size={14} />
             </a>
           </div>
+
+          <MobileRollingStats
+            items={data.stats.map((s) => ({ staticValue: s.value, label: s.label }))}
+          />
         </motion.div>
 
         {/* Bottom Metrics & Milestone Row */}
@@ -134,6 +143,7 @@ export default function CsrHero({ data, canvasOpacity }: CsrHeroProps) {
           </div>
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
+    </div>
   );
 }

@@ -81,7 +81,7 @@
 }
 
 .helplineDynamic .phoneIcon {
-  color: var(--v2-toc-active, var(--v4-eyebrow, var(--blue-brand)));
+  color: var(--v4-eyebrow, var(--blue-brand));
 }
 
 .helplineDynamic .helplineSubtext {
@@ -107,4 +107,11 @@
 
 .helplineDark .helplineSubtext {
   color: rgba(var(--white-rgb), 0.50);
+}
+
+/* Keep sticky single-row mobile TOC bar clean at <= 960px (call CTA lives in MWeb FAB & footer) */
+@media (max-width: 960px) {
+  .helplineSection {
+    display: none !important;
+  }
 }

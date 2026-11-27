@@ -2,14 +2,14 @@
 // https://www.narayanahealth.org/center-of-excellence
 export const SERVICE_CENTRES = [
   { label: "Cardiac Sciences", href: "/centre-of-excellence/cardiology" },
-  { label: "Cancer Care", href: "/centre-of-excellence/oncology" },
+  { label: "Cancer Care", href: "/centre-of-excellence/oncology?design=2" },
   { label: "Neuro Sciences", href: "/centre-of-excellence/neurology" },
   { label: "Gastro Sciences", href: "/centre-of-excellence/gastroenterology" },
   { label: "Orthopaedics", href: "/centre-of-excellence/orthopaedics" },
-  { label: "Image Guided Therapy", href: "/search?q=Image%20Guided%20Therapy" },
-  { label: "Robotic Surgery", href: "https://www.narayanahealth.org/center-of-excellence/robotic-surgery" },
-  { label: "Solid-Organ & Bone Marrow Transplant", href: "https://www.narayanahealth.org/center-of-excellence/solid-organ-bone-marrow-transplant" },
-  { label: "Renal Sciences", href: "https://www.narayanahealth.org/center-of-excellence/renal-sciences" },
+  { label: "Image Guided Therapy", href: "/centre-of-excellence/image-guided-therapy" },
+  { label: "Robotic Surgery", href: "/centre-of-excellence/robotic-surgery" },
+  { label: "Solid-Organ & Bone Marrow Transplant", href: "/centre-of-excellence/haematology-bmt" },
+  { label: "Renal Sciences", href: "/centre-of-excellence/nephrology" },
 ];
 export const SERVICE_TILES = [
   { label: "Ambulance Service Emergency", lines: ["Ambulance", "Service", "Emergency"], href: "/emergency", image: "/navigation/services-ambulance.webp", tone: "emergency" },
@@ -36,6 +36,7 @@ export const SERVICE_MENU_SECTIONS: ServiceMenuSection[] = [
     id: "centres", label: "Centres of Excellence",
     image: "/navigation/hospitals/cardiac-sciences-original.png", imageSizes: "(min-width: 1100px) 1400px, 100vw", alt: "Narayana Health hospital campus",
     groups: [{ title: "Specialist care", links: SERVICE_CENTRES }],
+    footer: { label: "View all", href: "/centre-of-excellence" },
   },
   {
     id: "services", label: "Services", image: "/health-checkup-consultation.jpg", alt: "A specialist supporting a patient's health checkup",

@@ -4,13 +4,16 @@ import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight, Clock, Calendar } from "lucide-react";
+import { Search, X, ArrowUpRight, ArrowDownAZ, RotateCcw, Calendar } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
-import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
-import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
+import OrganSystemChipsCarousel from "@/components/ui/OrganSystemChipsCarousel";
+import RewriteHeadingText from "@/components/ui/RewriteHeadingText";
+import { LIBRARY_WHITE_PAGE_VARS } from "@/lib/useHeroShrink";
 import { ArticleItem } from "@/data/articlesDirectoryData";
 import styles from "./BlogCategoryExplore.module.css";
+
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 interface CategoryPill {
   id: string;
@@ -19,28 +22,63 @@ interface CategoryPill {
   slugMatch: string[];
 }
 
-const CATEGORIES: CategoryPill[] = [
-  { id: "all", name: "All Topics", icon: "/Specialities icons/General Surgery.jpeg", slugMatch: [] },
-  { id: "cardiology", name: "Cardiology", icon: "/Specialities icons/Cardiology.jpeg", slugMatch: ["cardiology"] },
-  { id: "gastrology", name: "Gastrology", icon: "/Specialities icons/Gastroenterology.jpeg", slugMatch: ["gastroenterology", "gastrology"] },
-  { id: "nephrology", name: "Nephrology", icon: "/Specialities icons/Nephrology.jpeg", slugMatch: ["nephrology", "renal"] },
-  { id: "neurology", name: "Neurology", icon: "/Specialities icons/Neurology.jpeg", slugMatch: ["neurology", "neuro"] },
-  { id: "oncology", name: "Oncology", icon: "/Specialities icons/Cancer Care.jpeg", slugMatch: ["oncology", "cancer"] },
-  { id: "orthopaedics", name: "Orthopaedics", icon: "/Specialities icons/Orthopedics.jpeg", slugMatch: ["orthopaedics", "orthopedics", "rheumatology"] },
-  { id: "pediatric", name: "Pediatric", icon: "/Specialities icons/Paediatrics.jpeg", slugMatch: ["paediatrics", "pediatric"] },
-  { id: "urology", name: "Urology", icon: "/Specialities icons/Urology.jpeg", slugMatch: ["urology"] },
-  { id: "diabetes", name: "Diabetes", icon: "/Specialities icons/Endocrinology.jpeg", slugMatch: ["endocrinology", "diabetes"] },
+export const BLOG_CATEGORY_PILLS: CategoryPill[] = [
+  { id: "all", name: "All", icon: "/Specialities icons/General Surgery.svg", slugMatch: [] },
+  { id: "cardiology", name: "Cardiology", icon: "/Specialities icons/Cardiology.svg", slugMatch: ["cardiology"] },
+  { id: "gastrology", name: "Gastrology", icon: "/Specialities icons/Gastro.svg", slugMatch: ["gastroenterology", "gastrology"] },
+  { id: "nephrology", name: "Nephrology", icon: "/Specialities icons/Nephrology.svg", slugMatch: ["nephrology", "renal"] },
+  { id: "neurology", name: "Neurology", icon: "/Specialities icons/Neurology.svg", slugMatch: ["neurology", "neuro"] },
+  { id: "oncology", name: "Oncology", icon: "/Specialities icons/Cancercare.svg", slugMatch: ["oncology", "cancer"] },
+  { id: "orthopaedics", name: "Orthopaedics", icon: "/Specialities icons/Orthopaedics.svg", slugMatch: ["orthopaedics", "orthopedics", "rheumatology"] },
+  { id: "pediatric", name: "Pediatric", icon: "/Specialities icons/Paedratic.svg", slugMatch: ["paediatrics", "pediatric"] },
+  { id: "urology", name: "Urology", icon: "/Specialities icons/Urology.svg", slugMatch: ["urology"] },
+  { id: "diabetes", name: "Diabetes", icon: "/Specialities icons/Diabetology.svg", slugMatch: ["endocrinology", "diabetes"] },
 ];
+
+const CATEGORIES: CategoryPill[] = BLOG_CATEGORY_PILLS;
 
 interface BlogCategoryExploreProps {
   articles: ArticleItem[];
+  selectedCategory?: string;
+  onSelectCategory?: (cat: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (q: string) => void;
+  selectedLetter?: string | null;
+  onSelectLetter?: (letter: string | null) => void;
 }
 
-export default function BlogCategoryExplore({ articles }: BlogCategoryExploreProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+export default function BlogCategoryExplore({
+  articles,
+  selectedCategory: controlledCategory,
+  onSelectCategory,
+  searchQuery: controlledSearchQuery,
+  onSearchChange,
+  selectedLetter: controlledLetter,
+  onSelectLetter,
+}: BlogCategoryExploreProps) {
+  const [internalCategory, setInternalCategory] = useState<string>("all");
+  const [internalSearchQuery, setInternalSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<"latest" | "visited" | "relevant">("latest");
-  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
+  const [internalLetter, setInternalLetter] = useState<string | null>(null);
+  const [isAlphaOpen, setIsAlphaOpen] = useState<boolean>(false);
+
+  const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
+  const setSelectedCategory = onSelectCategory ?? setInternalCategory;
+  const searchQuery = controlledSearchQuery !== undefined ? controlledSearchQuery : internalSearchQuery;
+  const setSearchQuery = onSearchChange ?? setInternalSearchQuery;
+  const selectedLetter = controlledLetter !== undefined ? controlledLetter : internalLetter;
+  const setSelectedLetter = onSelectLetter ?? setInternalLetter;
+
+  const blogOrganOptions = useMemo(
+    () =>
+      CATEGORIES.filter((c) => c.id !== "all").map((c) => ({
+        label: c.name,
+        shortLabel: c.name,
+        value: c.id,
+        image: c.icon,
+      })),
+    []
+  );
 
   // Filtered articles
   const filteredArticles = useMemo(() => {
@@ -103,7 +141,38 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
     { id: "latest", label: "Latest" },
     { id: "visited", label: "Most Visited" },
     { id: "relevant", label: "Most Relevant" },
-  ];
+  ] as const;
+
+  const activeCategoryName = useMemo(() => {
+    if (selectedCategory === "all") return null;
+    return CATEGORIES.find((c) => c.id === selectedCategory)?.name ?? null;
+  }, [selectedCategory]);
+
+  const dynamicHeadingText = useMemo(() => {
+    const base = activeCategoryName ? `${activeCategoryName} Health Articles` : "All Health Articles";
+    if (searchQuery.trim() && selectedLetter) {
+      return `${base} Matching “${searchQuery.trim()}” (Starting with ‘${selectedLetter}’)`;
+    }
+    if (searchQuery.trim()) {
+      return `${base} Matching “${searchQuery.trim()}”`;
+    }
+    if (selectedLetter) {
+      return `${base} Starting with ‘${selectedLetter}’`;
+    }
+    return base;
+  }, [activeCategoryName, searchQuery, selectedLetter]);
+
+  const hasAnyActiveFilter = Boolean(
+    selectedCategory !== "all" || searchQuery.trim() || selectedLetter || sortBy !== "latest"
+  );
+
+  const handleResetFilters = () => {
+    setSelectedCategory("all");
+    setSearchQuery("");
+    setSelectedLetter(null);
+    setSortBy("latest");
+    setIsAlphaOpen(false);
+  };
 
   // Generate Author badge text
   const getAuthorInitials = (author: string) => {
@@ -116,7 +185,12 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
   };
 
   return (
-    <section className={styles.exploreSection} data-nav-theme="light" id="explore-categories">
+    <section
+      className={styles.exploreSection}
+      style={LIBRARY_WHITE_PAGE_VARS}
+      data-nav-theme="light"
+      id="explore-categories"
+    >
       <div className={styles.container}>
         {/* Section Header (Centered with Dynamic TextSweepEffect) */}
         <div className={styles.sectionHeader}>
@@ -132,81 +206,156 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
           </p>
         </div>
 
-        {/* Search Bar Centered ABOVE Filters */}
-        <div className={styles.searchBarWrapper}>
-          <div className={styles.searchBox}>
-            <Search size={18} className={styles.searchIcon} />
-            <input
-              type="search"
-              placeholder="Search by topic, disease, treatment or doctor name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={styles.searchInput}
-              aria-label="Search articles"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className={styles.clearSearchBtn}
-                aria-label="Clear search"
-              >
-                <X size={15} />
-              </button>
-            )}
+        {/* Centered Search + Browse A–Z Pill */}
+        <div className={styles.centeredDiscoveryWrap}>
+          <div className={styles.searchBarWrapper}>
+            <div className={styles.searchBox}>
+              <Search size={18} className={styles.searchIcon} />
+              <input
+                type="search"
+                placeholder="Search by topic, disease, treatment or doctor name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.searchInput}
+                aria-label="Search articles"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className={styles.clearSearchBtn}
+                  aria-label="Clear search"
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </div>
+
+            <button
+              type="button"
+              className={`${styles.alphaTriggerBtn} ${
+                selectedLetter || isAlphaOpen ? styles.alphaTriggerBtnActive : ""
+              }`}
+              onClick={() => setIsAlphaOpen((prev) => !prev)}
+              aria-expanded={isAlphaOpen || Boolean(selectedLetter)}
+              title="Filter articles by starting letter (A–Z)"
+            >
+              <span className={styles.alphaSolidBadge} aria-hidden="true">
+                <ArrowDownAZ size={14} strokeWidth={2.4} />
+              </span>
+              <span>{selectedLetter ? `A–Z · ${selectedLetter}` : "Browse A–Z"}</span>
+              {selectedLetter && (
+                <X
+                  size={13}
+                  strokeWidth={2.3}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedLetter(null);
+                  }}
+                />
+              )}
+            </button>
           </div>
+
+          <AnimatePresence initial={false}>
+            {(isAlphaOpen || Boolean(selectedLetter)) && (
+              <motion.div
+                className={styles.alphaDrawerWrap}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                style={{ overflow: "hidden" }}
+              >
+                <div className={styles.typoAlphaRail} role="toolbar" aria-label="A to Z alphabetical jump">
+                  <button
+                    type="button"
+                    className={`${styles.typoAlphaBtn} ${selectedLetter === null ? styles.typoAlphaBtnActive : ""}`}
+                    onClick={() => setSelectedLetter(null)}
+                  >
+                    All
+                  </button>
+                  {ALPHABET.map((char) => {
+                    const isAvail = availableLetters.has(char);
+                    const isSel = selectedLetter === char;
+                    return (
+                      <button
+                        key={char}
+                        type="button"
+                        disabled={!isAvail}
+                        className={`${styles.typoAlphaBtn} ${isSel ? styles.typoAlphaBtnActive : ""} ${
+                          !isAvail ? styles.typoAlphaBtnDisabled : ""
+                        }`}
+                        onClick={() => setSelectedLetter(isSel ? null : char)}
+                      >
+                        {char}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Category Circle Selector Followed Below Search Bar */}
-        <div className={styles.categoryCircleTrack}>
-          {CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
+        {/* Centered Unified Circular Category Filters (Red Highlight Style) */}
+        <OrganSystemChipsCarousel
+          variant="circle"
+          showHeader={false}
+          showAllOption
+          centered
+          options={blogOrganOptions}
+          selectedOrgan={selectedCategory === "all" ? null : selectedCategory}
+          onSelectOrgan={(val) => setSelectedCategory(val ?? "all")}
+        />
+
+        {/* Sentinel marking where in-flow category filters exit header (for sticky search+pills handoff) */}
+        <div id="blog-filters-exit-sentinel" style={{ height: 1, width: "100%", pointerEvents: "none" }} aria-hidden="true" />
+
+        {/* Centered Sort Chips Row */}
+        <div className={styles.centeredSortRow} role="tablist" aria-label="Sort blog articles">
+          {sortTabs.map((tab) => {
+            const isActive = sortBy === tab.id;
             return (
               <button
-                key={cat.id}
+                key={tab.id}
                 type="button"
-                className={`${styles.categoryCircleBtn} ${isSelected ? styles.categoryCircleActive : ""}`}
-                onClick={() => setSelectedCategory(cat.id)}
-                aria-pressed={isSelected}
+                role="tab"
+                aria-selected={isActive}
+                className={`${styles.sortChipBtn} ${isActive ? styles.sortChipBtnActive : ""}`}
+                onClick={() => setSortBy(tab.id)}
               >
-                <div className={styles.circleImageWrap}>
-                  <Image
-                    src={cat.icon}
-                    alt={cat.name}
-                    width={56}
-                    height={56}
-                    className={styles.circleImg}
-                  />
-                  {isSelected && <div className={styles.activeRing} />}
-                </div>
-                <span className={styles.circleLabel}>{cat.name}</span>
+                <span>{tab.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Metadata & Sort Row */}
-        <div className={styles.toolbarRow}>
-          <LibrarySubFilterTabs
-            tabs={sortTabs}
-            activeTab={sortBy}
-            onTabChange={(t) => setSortBy(t as any)}
-            ariaLabel="Sort blog articles"
-            allowDeselect={false}
-          />
+        {/* Animated Dynamic Header + Reset Filters CTA on the Right */}
+        <div className={styles.dynamicHeadingRow}>
+          <h3 className={styles.dynamicResultsTitle}>
+            <RewriteHeadingText text={dynamicHeadingText} />{" "}
+            <span className={styles.dynamicResultsCount}>({filteredArticles.length})</span>
+          </h3>
 
-          <div className={styles.countBadge}>
-            <strong>{filteredArticles.length}</strong> articles found
-          </div>
+          <AnimatePresence>
+            {hasAnyActiveFilter && (
+              <motion.button
+                key="blog-reset-filters-cta"
+                type="button"
+                className={styles.resetHeaderBtn}
+                onClick={handleResetFilters}
+                initial={{ opacity: 0, scale: 0.94, x: 8 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.94, x: 8 }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <RotateCcw size={13} aria-hidden="true" />
+                <span>Reset filters</span>
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
-
-        {/* Alphabetical A–Z Filter Rail */}
-        <AlphabeticalFilterRail
-          availableLetters={availableLetters}
-          selectedLetter={selectedLetter}
-          onSelectLetter={setSelectedLetter}
-          resultCount={filteredArticles.length}
-        />
 
         {/* 3-Column Card Grid (Matching Our Standard Card Structure) */}
         {filteredArticles.length > 0 ? (
@@ -224,9 +373,8 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
                   className={styles.blogCard}
                 >
                   <div className={styles.cardLink}>
-                    {/* Top Right Date Badge from Figma 468:624 */}
+                    {/* Top Right Date Badge */}
                     <div className={styles.dateBadge}>
-                      <Calendar size={12} className={styles.dateIcon} />
                       <span>{article.publishedDate}</span>
                     </div>
 
@@ -287,13 +435,11 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
                             </div>
                             <span className={styles.authorName}>{article.author}</span>
                           </div>
-                          <ArrowUpRight size={18} className={styles.restingArrow} />
                         </div>
 
                         <div className={styles.cardActions}>
                           <Link href={`/blog/${article.slug}`} className={styles.cardDetailBtn}>
                             <span>Read more</span>
-                            <ArrowUpRight size={13} className={styles.pillBtnArrow} />
                           </Link>
                         </div>
                       </div>

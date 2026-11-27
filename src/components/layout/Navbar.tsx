@@ -127,6 +127,11 @@ export default function Navbar() {
       if (isLight !== isOverLightRef.current) {
         isOverLightRef.current = isLight;
         setIsOverLightBackground(isLight);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
+        }
+      } else if (typeof document !== "undefined" && !document.documentElement.hasAttribute("data-nav-theme-active")) {
+        document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
       }
     };
 
@@ -144,6 +149,9 @@ export default function Navbar() {
       // Always show navbar near the top
       if (currentScrollY < 120) {
         setIsVisible(true);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "true");
+        }
         lastScrollY.current = currentScrollY;
         return;
       }
@@ -158,9 +166,15 @@ export default function Navbar() {
       if (delta > 0) {
         // Sustained downward scroll
         setIsVisible(false);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "false");
+        }
       } else {
         // Sustained upward scroll
         setIsVisible(true);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "true");
+        }
       }
 
       // Update baseline after a meaningful scroll distance
@@ -168,13 +182,38 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    const lenis = (window as unknown as { lenis?: { on?: (evt: string, fn: () => void) => void; off?: (evt: string, fn: () => void) => void } }).lenis;
+    if (lenis && typeof lenis.on === "function") {
+      lenis.on("scroll", handleScroll);
+    }
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (lenis && typeof lenis.off === "function") {
+        lenis.off("scroll", handleScroll);
+      }
+    };
   }, []);
+
+  // Sync navbar visibility to <html> so child elements (like pinned breadcrumb bars)
+  // know whether to dock directly below the navbar (top: 56px / 68px) on scroll-up
+  // or at the top of the viewport (top: 0) on scroll-down.
+  const isNavActuallyVisible = isVisible || activeDropdown !== null || isMobileMenuOpen;
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-nav-visible", isNavActuallyVisible ? "true" : "false");
+    }
+  }, [isNavActuallyVisible]);
 
   // Every route uses the same scroll, section-theme and menu behavior.
   const isNavbarActive = scrolled || isMobileMenuOpen || activeDropdown !== null;
   const isNavbarLight = isOverLightBackground || activeDropdown !== null;
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-nav-theme-active", isNavbarLight ? "light" : "dark");
+    }
+  }, [isNavbarLight]);
 
   return (
     <nav

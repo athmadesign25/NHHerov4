@@ -113,6 +113,18 @@
 }
 
 @media (max-width: 640px) {
+  .carouselWrapper {
+    overflow: visible;
+  }
+
+  .track {
+    width: auto;
+    max-width: none;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    scroll-padding-inline: 16px;
+  }
+
   .cardItem {
     flex: 0 0 82vw;
     min-width: 260px;
@@ -189,14 +201,14 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(5, 13, 26, 0) 0%,
-    rgba(5, 13, 26, 0.16) 18%,
-    rgba(5, 13, 26, 0.60) 46%,
-    rgba(5, 13, 26, 0.89) 72%,
-    rgba(5, 13, 26, 0.97) 100%
+    rgba(3, 78, 162, 0) 0%,
+    rgba(3, 78, 162, 0.14) 24%,
+    rgba(4, 48, 106, 0.64) 52%,
+    rgba(5, 24, 58, 0.90) 76%,
+    rgba(4, 15, 36, 0.97) 100%
   );
   opacity: 0;
-  transition: opacity 0.42s ease;
+  transition: opacity 0.36s ease;
 }
 
 /* Top Right Date Badge from Figma 468:624 */
@@ -317,12 +329,12 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
   font-weight: 400;
-  line-height: 1.52;
-  color: rgba(var(--white-rgb), 0.86);
-  margin: 8px 0 4px 0;
+  line-height: 1.54;
+  color: rgba(var(--white-rgb), 0.84);
+  margin: 8px 0 6px 0;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
-  line-clamp: 7;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-shadow: none;

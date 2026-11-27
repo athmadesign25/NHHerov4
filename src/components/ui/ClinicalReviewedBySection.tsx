@@ -16,16 +16,8 @@ export interface ClinicalSummaryBannerProps {
 
 export function ClinicalSummaryBanner({
   summary,
-  reviewerName,
-  reviewAnchorId = "medically-reviewed-by",
   theme = "white",
 }: ClinicalSummaryBannerProps) {
-  const formattedReviewer = reviewerName
-    ? reviewerName.startsWith("Dr.")
-      ? reviewerName
-      : `Dr. ${reviewerName}`
-    : "Dr. Devi Prasad Shetty";
-
   return (
     <div 
       className={`${styles.summaryEditorialSection} ${
@@ -36,12 +28,6 @@ export function ClinicalSummaryBanner({
       role="region" 
       aria-label="Clinical Summary"
     >
-      <div className={styles.summaryHeaderRow}>
-        <a href={`#${reviewAnchorId}`} className={styles.inlineReviewerBadge}>
-          <CheckCircle2 size={13} className={styles.inlineCheckIcon} />
-          <span>Medically Reviewed by {formattedReviewer}</span>
-        </a>
-      </div>
       <p className={styles.summaryLeadText}>{summary}</p>
     </div>
   );

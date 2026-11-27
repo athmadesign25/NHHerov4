@@ -3,60 +3,17 @@
   position: relative;
   z-index: 5;
   width: 100%;
-  padding-top: clamp(100px, 12vh, 140px);
-  padding-bottom: clamp(100px, 12vh, 140px);
+  padding-top: clamp(56px, 7vh, 84px);
+  padding-bottom: clamp(48px, 6vh, 72px);
   background-color: transparent;
-  color: var(--dyn-heading, #ffffff);
+  color: var(--dyn-heading, #0f172a);
   box-sizing: border-box;
   overflow: hidden;
 }
 
-/* Atmospheric ambient glow seamlessly connecting from CsrHero */
-.topAtmosphere {
-  position: absolute;
-  top: 0;
-  left: 10%;
-  right: 10%;
-  height: 440px;
-  background: radial-gradient(
-    ellipse at 50% 0%,
-    rgba(3, 78, 162, 0.25) 0%,
-    rgba(2, 45, 97, 0.12) 45%,
-    transparent 72%
-  );
-  filter: blur(60px);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Atmospheric bottom ambient glow connecting to Transition Bridge */
-.bottomTransitionGlow {
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 280px;
-  background: radial-gradient(
-    ellipse at 50% 100%,
-    rgba(3, 78, 162, 0.22) 0%,
-    rgba(2, 45, 97, 0.10) 45%,
-    transparent 72%
-  );
-  filter: blur(55px);
-  pointer-events: none;
-  z-index: 1;
-}
-
 @media (max-width: 768px) {
   .sectionWrapper {
-    padding-top: 64px;
-    padding-bottom: 72px;
-  }
-}
-
-@media (max-width: 768px) {
-  .sectionWrapper {
-    padding-block: 54px 68px;
+    padding-block: 48px 52px;
   }
 }
 
@@ -177,13 +134,11 @@
   bottom: 0;
   height: 220px;
   max-height: 100%;
-  background: linear-gradient(
-    180deg,
-    rgba(7, 19, 34, 0) 0%,
-    rgba(7, 19, 34, 0.22) 26%,
-    rgba(7, 19, 34, 0.68) 56%,
-    rgba(7, 19, 34, 0.94) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(7, 19, 34, 0) 0%,
+      rgba(7, 19, 34, 0.22) 26%,
+      rgba(7, 19, 34, 0.68) 56%,
+      rgba(7, 19, 34, 0.94) 100%);
   pointer-events: none;
   z-index: 2;
   transition: height 0.48s var(--ease-spring);
@@ -193,16 +148,14 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(5, 13, 26, 0) 0%,
-    rgba(5, 13, 26, 0.16) 18%,
-    rgba(5, 13, 26, 0.60) 46%,
-    rgba(5, 13, 26, 0.89) 72%,
-    rgba(5, 13, 26, 0.97) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(3, 78, 162, 0) 0%,
+      rgba(3, 78, 162, 0.14) 24%,
+      rgba(4, 48, 106, 0.64) 52%,
+      rgba(5, 24, 58, 0.90) 76%,
+      rgba(4, 15, 36, 0.97) 100%);
   opacity: 0;
-  transition: opacity 0.42s ease;
+  transition: opacity 0.36s ease;
 }
 
 /* ── Content on Scrim ── */
@@ -270,12 +223,12 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
   font-weight: 400;
-  line-height: 1.52;
-  color: rgba(var(--white-rgb), 0.86);
-  margin: 8px 0 4px 0;
+  line-height: 1.54;
+  color: rgba(var(--white-rgb), 0.84);
+  margin: 8px 0 6px 0;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
-  line-clamp: 7;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-shadow: none;
@@ -301,7 +254,7 @@
   padding-top: 6px;
   border-top: 1px solid rgba(var(--white-rgb), 0.12);
   transition: opacity var(--duration-moderate) var(--ease-spring),
-              transform var(--duration-moderate) var(--ease-spring);
+    transform var(--duration-moderate) var(--ease-spring);
 }
 
 .metaBadge {
@@ -336,6 +289,7 @@
 }
 
 @media (min-width: 1025px) and (hover: hover) {
+
   .editorialCard:hover .cardGradient,
   .editorialCard:focus-within .cardGradient {
     height: 100%;
@@ -365,7 +319,7 @@
     transform: translateY(6px);
     pointer-events: none;
     transition: opacity var(--duration-moderate) var(--ease-spring),
-                transform var(--duration-moderate) var(--ease-spring);
+      transform var(--duration-moderate) var(--ease-spring);
   }
 
   .editorialCard:hover .cardRestingMeta,
@@ -383,7 +337,8 @@
   }
 }
 
-@media (max-width: 1024px), (hover: none) {
+@media (max-width: 1024px),
+(hover: none) {
   .cardSubReveal {
     display: none !important;
   }

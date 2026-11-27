@@ -1,61 +1,36 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import styles from "./CsrTransitionBridge.module.css";
 
 export default function CsrTransitionBridge() {
-  const bridgeRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: bridgeRef,
-    offset: ["start end", "end start"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 70,
-    damping: 24,
-    mass: 0.8,
-  });
-
-  // Dynamic atmospheric light beam translation & expansion on scroll
-  const glowY = useTransform(smoothProgress, [0, 1], [-80, 80]);
-  const glowScale = useTransform(smoothProgress, [0, 0.5, 1], [0.85, 1.15, 0.95]);
-  const quoteOpacity = useTransform(smoothProgress, [0.15, 0.45, 0.85], [0, 1, 0.3]);
-  const quoteY = useTransform(smoothProgress, [0.15, 0.5], [30, 0]);
-
   return (
-    <div ref={bridgeRef} className={styles.transitionBridgeWrapper} aria-hidden="false">
-      {/* Dynamic Ambient Light Glow that follows scroll */}
-      <motion.div
-        className={styles.dynamicGlow}
-        style={{
-          y: glowY,
-          scale: glowScale,
-        }}
-      />
+    <section className={styles.transitionBridgeWrapper} aria-label="Founder message on healthcare equity">
+      <div className={styles.bridgeContainer}>
+        <div className={styles.editorialRule} aria-hidden="true" />
 
-      {/* Luminous Horizon Radial Wave */}
-      <div className={styles.horizonWave} />
+        <motion.div
+          className={styles.bridgeContent}
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className={styles.bridgeEyebrow}>GRASSROOTS IMPACT ECOSYSTEM</span>
 
-      {/* Narrative Bridge Quote from Founder Dr. Devi Shetty */}
-      <motion.div
-        className={styles.bridgeContent}
-        style={{
-          opacity: quoteOpacity,
-          y: quoteY,
-        }}
-      >
-        <div className={styles.bridgeEyebrow}>
-          <span>GRASSROOTS IMPACT ECOSYSTEM</span>
-        </div>
-        <blockquote className={styles.bridgeQuote}>
-          &ldquo;Healthcare is not a privilege for the few — it is a fundamental human right we deliver to India&rsquo;s most vulnerable doorsteps.&rdquo;
-        </blockquote>
-        <div className={styles.bridgeAuthor}>
-          <span className={styles.authorName}>Dr. Devi Prasad Shetty</span>
-          <span className={styles.authorTitle}>Founder &amp; Chairman, Narayana Health</span>
-        </div>
-      </motion.div>
-    </div>
+          <blockquote className={styles.bridgeQuote}>
+            &ldquo;Healthcare is not a privilege for the few — it is a fundamental human right we deliver to India&rsquo;s most vulnerable doorsteps.&rdquo;
+          </blockquote>
+
+          <div className={styles.bridgeAuthor}>
+            <span className={styles.authorName}>Dr. Devi Prasad Shetty</span>
+            <span className={styles.authorTitle}>Founder &amp; Chairman, Narayana Health</span>
+          </div>
+        </motion.div>
+
+        <div className={styles.editorialRule} aria-hidden="true" />
+      </div>
+    </section>
   );
 }

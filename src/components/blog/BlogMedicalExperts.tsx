@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, useTransform, useMotionValue, MotionValue } from "framer-motion";
 import { ArrowRight, Award } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { useCarouselPeekHint } from "@/lib/useCarouselPeekHint";
 import styles from "./BlogMedicalExperts.module.css";
 
 interface ExpertDoctor {
@@ -57,6 +58,8 @@ const EXPERT_DOCTORS: ExpertDoctor[] = [
 ];
 
 export default function BlogMedicalExperts({ scrollYProgress }: BlogMedicalExpertsProps) {
+  const doctorsTrackRef = React.useRef<HTMLDivElement>(null);
+  useCarouselPeekHint(doctorsTrackRef, EXPERT_DOCTORS.length);
   const fallbackProgress = useMotionValue(0);
   const activeProgress = scrollYProgress || fallbackProgress;
 
@@ -113,7 +116,7 @@ export default function BlogMedicalExperts({ scrollYProgress }: BlogMedicalExper
         </div>
 
         {/* Doctor Cards Grid (Exact refDoctorCard style) */}
-        <div className={styles.doctorsGrid}>
+        <div ref={doctorsTrackRef} className={styles.doctorsGrid}>
           {EXPERT_DOCTORS.map((doc, idx) => (
             <motion.div
               key={doc.name}

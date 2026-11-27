@@ -191,94 +191,291 @@
   font-weight: 700;
 }
 
-/* ── Prominent Centered Search Bar (Above Filters) ── */
-.searchBarWrapper {
+/* ── Centered F5 Search + Browse A–Z Bar ── */
+.centeredDiscoveryWrap {
   width: 100%;
-  max-width: 680px;
+  max-width: 780px;
   margin: 0 auto;
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.searchBarWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 10px;
 }
 
 .searchBox {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
-  height: 52px;
-  background: var(--color-bg-card, var(--white));
-  border: 1px solid var(--color-border, var(--slate-300));
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  height: 48px;
+  background: var(--white);
+  border: 1px solid var(--slate-300, #cbd5e1);
   border-radius: var(--radius-full, 9999px);
-  padding-inline: 20px;
-  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.04);
-  transition: border-color var(--transition-fast, var(--duration-fast) ease), box-shadow var(--transition-fast, var(--duration-fast) ease);
+  padding-inline: 18px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.07);
+  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+
+.searchBox:hover {
+  border-color: var(--slate-400, #94a3b8);
 }
 
 .searchBox:focus-within {
-  border-color: var(--color-primary, var(--blue-brand));
-  box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.12), 0 6px 20px rgba(var(--blue-brand-rgb), 0.08);
+  border-color: var(--blue-brand, #034EA2);
+  box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.14);
 }
 
 .searchIcon {
-  color: var(--color-text-secondary, var(--slate-500));
-  margin-right: 12px;
+  color: var(--slate-600, #475569);
+  margin-right: 10px;
   flex-shrink: 0;
 }
 
 .searchInput {
   flex: 1;
+  min-width: 0;
   border: none;
   outline: none;
   background: transparent;
-  font-size: var(--font-size-base);
-  color: var(--color-text, var(--slate-900));
+  font-size: 0.9375rem;
+  color: var(--slate-900, #0f172a);
 }
 
 .searchInput::placeholder {
-  color: var(--slate-400);
+  color: var(--slate-600, #475569);
 }
 
 .clearSearchBtn {
   border: none;
   background: transparent;
-  color: var(--slate-400);
+  color: var(--slate-600, #475569);
   cursor: pointer;
   padding: 6px;
   display: flex;
   align-items: center;
   border-radius: 50%;
-  transition: color var(--transition-fast, var(--duration-fast) ease), background var(--transition-fast, var(--duration-fast) ease);
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
 }
 
 .clearSearchBtn:hover {
-  color: var(--slate-900);
-  background: var(--slate-100);
+  color: var(--slate-900, #0f172a);
+  background: var(--slate-100, #f1f5f9);
 }
 
-/* ── Results Count & Sort Controls Row ── */
-.toolbarRow {
+.alphaTriggerBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 16px 0 10px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--slate-300, #cbd5e1);
+  background: var(--white);
+  color: var(--slate-900, #0f172a);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.07);
+  transition: all 150ms ease;
+}
+
+.alphaSolidBadge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #034EA2;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.alphaTriggerBtn:hover .alphaSolidBadge {
+  transform: scale(1.06);
+}
+
+.alphaTriggerBtnActive {
+  background: #fef2f2 !important;
+  border-color: #dc2626 !important;
+  color: #b91c1c !important;
+}
+
+.alphaTriggerBtnActive .alphaSolidBadge {
+  background: #ED1C24;
+}
+
+.alphaDrawerWrap {
+  width: 100%;
+}
+
+.typoAlphaRail {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
-  padding-block: 8px 12px;
-  border-bottom: 1px solid var(--color-border-light, var(--slate-100));
+  gap: 2px;
+  width: 100%;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--slate-200);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.toolbarRight {
+.typoAlphaRail::-webkit-scrollbar {
+  display: none;
+}
+
+.typoAlphaBtn {
+  height: 28px;
+  min-width: 28px;
+  padding: 0 6px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--slate-700);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 140ms ease;
+}
+
+.typoAlphaBtn:hover:not(:disabled) {
+  background: var(--slate-100);
+  color: var(--slate-900);
+}
+
+.typoAlphaBtnActive {
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  font-weight: 700 !important;
+}
+
+.typoAlphaBtnDisabled {
+  opacity: 0.34;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.centeredSortRow {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sortChipBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--slate-300, #cbd5e1);
+  background: var(--white);
+  color: var(--slate-700);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.sortChipBtn:hover {
+  border-color: var(--slate-400);
+  color: var(--slate-900);
+}
+
+.sortChipBtnActive {
+  background: #fef2f2 !important;
+  border-color: #dc2626 !important;
+  color: #b91c1c !important;
+  font-weight: 600;
+}
+
+.dynamicHeadingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
-.countBadge {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary, var(--slate-500));
+.dynamicResultsTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(22px, 2.3vw, 28px);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--slate-900);
+  margin: 0;
 }
 
-.countBadge strong {
-  color: var(--color-text, var(--slate-900));
+.dynamicResultsCount {
+  font-weight: 500;
+  font-size: clamp(18px, 1.8vw, 22px);
+  color: var(--slate-500);
+}
+
+.resetHeaderBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  background: #fef2f2;
+  color: #b91c1c;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.resetHeaderBtn:hover {
+  background: #fee2e2;
+  border-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .searchBarWrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .alphaTriggerBtn {
+    width: fit-content;
+    align-self: center;
+    height: 38px;
+  }
+
+  .dynamicResultsTitle {
+    font-size: clamp(19px, 5vw, 22px);
+  }
 }
 
 .sortSelect {
@@ -435,14 +632,14 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(5, 13, 26, 0) 0%,
-    rgba(5, 13, 26, 0.16) 18%,
-    rgba(5, 13, 26, 0.60) 46%,
-    rgba(5, 13, 26, 0.89) 72%,
-    rgba(5, 13, 26, 0.97) 100%
+    rgba(3, 78, 162, 0) 0%,
+    rgba(3, 78, 162, 0.14) 24%,
+    rgba(4, 48, 106, 0.64) 52%,
+    rgba(5, 24, 58, 0.90) 76%,
+    rgba(4, 15, 36, 0.97) 100%
   );
   opacity: 0;
-  transition: opacity 0.42s ease;
+  transition: opacity 0.36s ease;
 }
 
 .cardContent {
@@ -532,12 +729,12 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
   font-weight: 400;
-  line-height: 1.52;
-  color: rgba(var(--white-rgb), 0.86);
-  margin: 8px 0 4px 0;
+  line-height: 1.54;
+  color: rgba(var(--white-rgb), 0.84);
+  margin: 8px 0 6px 0;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
-  line-clamp: 7;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-shadow: none;

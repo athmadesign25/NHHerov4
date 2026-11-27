@@ -1675,9 +1675,9 @@
 .filterSheetOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 9, 18, 0.76);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(var(--slate-900-rgb), 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 9998;
   display: flex;
   align-items: flex-end;
@@ -1689,11 +1689,11 @@
   right: 0;
   bottom: 0;
   max-height: 82vh;
-  background: var(--navy-900);
+  background: var(--white);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.18);
-  box-shadow: 0 -12px 36px rgba(var(--black-rgb), 0.75);
+  border-top: 1px solid var(--slate-200);
+  box-shadow: 0 -16px 40px rgba(var(--slate-900-rgb), 0.14);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -1702,7 +1702,7 @@
 
 .filterSheetHeader {
   padding: 12px 20px 14px;
-  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+  border-bottom: 1px solid var(--slate-100);
   display: flex;
   flex-direction: column;
 }
@@ -1711,7 +1711,7 @@
   width: 36px;
   height: 4px;
   border-radius: 2px;
-  background: rgba(var(--white-rgb), 0.28);
+  background: var(--slate-300);
   margin: 0 auto 10px;
 }
 
@@ -1724,14 +1724,14 @@
 .filterSheetTitle {
   font-size: var(--font-size-base);
   font-weight: 700;
-  color: var(--white);
+  color: var(--slate-900);
   margin: 0;
 }
 
 .filterSheetCloseBtn {
-  background: rgba(var(--white-rgb), 0.08);
-  border: 1px solid rgba(var(--white-rgb), 0.12);
-  color: var(--white);
+  background: var(--slate-100);
+  border: none;
+  color: var(--slate-700);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -1743,7 +1743,7 @@
 }
 
 .filterSheetCloseBtn:hover {
-  background: rgba(var(--white-rgb), 0.16);
+  background: var(--slate-200);
 }
 
 .filterSheetBody {
@@ -1764,24 +1764,25 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(var(--white-rgb), 0.04);
-  border: 1px solid rgba(var(--white-rgb), 0.08);
-  color: var(--white);
+  border-radius: 10px;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  color: var(--slate-800);
   text-align: left;
   cursor: pointer;
-  transition: all var(--duration-base) var(--ease-spring);
+  transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease;
 }
 
 .filterSheetItem:hover {
-  background: rgba(var(--white-rgb), 0.08);
-  border-color: rgba(var(--white-rgb), 0.2);
+  background: var(--slate-50);
+  border-color: var(--slate-300);
 }
 
 .filterSheetItemActive {
-  background: rgba(var(--blue-brand-rgb), 0.35) !important;
+  background: rgba(var(--blue-brand-rgb), 0.06) !important;
   border-color: var(--blue-brand) !important;
-  box-shadow: 0 0 16px rgba(var(--blue-brand-rgb), 0.4);
+  color: var(--blue-brand) !important;
+  box-shadow: none !important;
 }
 
 .filterSheetImgWrap {
@@ -1790,9 +1791,9 @@
   height: 36px;
   border-radius: 8px;
   overflow: hidden;
-  background: #060e1b;
+  background: var(--slate-100);
   flex-shrink: 0;
-  border: 1px solid rgba(var(--white-rgb), 0.12);
+  border: 1px solid var(--slate-200);
 }
 
 .filterSheetImg {
@@ -1802,7 +1803,7 @@
 .filterSheetLabel {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--white);
+  color: var(--slate-800);
   flex: 1;
 }
 
@@ -1810,15 +1811,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px 20px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.08);
-  background: var(--navy-900);
+  padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--slate-100);
+  background: var(--white);
 }
 
 .filterSheetResetBtn {
   background: none;
   border: none;
-  color: rgba(var(--white-rgb), 0.65);
+  color: var(--slate-600);
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
@@ -1829,12 +1830,13 @@
   background: var(--color-primary, var(--blue-brand));
   color: var(--white);
   border: none;
-  border-radius: 9999px;
-  padding: 10px 22px;
+  border-radius: var(--radius-md, 8px);
+  padding: 11px 22px;
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--duration-base) ease;
+  box-shadow: none;
+  transition: background var(--duration-base) ease;
 }
 
 .filterSheetApplyBtn:hover {
@@ -1845,7 +1847,7 @@
 .sheetBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 9, 18, 0.72);
+  background: rgba(var(--slate-900-rgb), 0.45);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 9998;
@@ -1857,11 +1859,11 @@
   right: 0;
   bottom: 0;
   max-height: 82vh;
-  background: var(--navy-900);
+  background: var(--white);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.18);
-  box-shadow: 0 -12px 36px rgba(var(--black-rgb), 0.7);
+  border-top: 1px solid var(--slate-200);
+  box-shadow: 0 -16px 40px rgba(var(--slate-900-rgb), 0.14);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -1872,7 +1874,7 @@
   width: 36px;
   height: 4px;
   border-radius: 2px;
-  background: rgba(var(--white-rgb), 0.28);
+  background: var(--slate-300);
   margin: 12px auto 6px;
 }
 
@@ -1881,7 +1883,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px 14px;
-  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+  border-bottom: 1px solid var(--slate-100);
 }
 
 .sheetTitleWrap {
@@ -1892,20 +1894,20 @@
 .sheetTitle {
   font-size: var(--font-size-base);
   font-weight: 700;
-  color: var(--white);
+  color: var(--slate-900);
   margin: 0;
 }
 
 .sheetSubtitle {
   font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.55);
+  color: var(--slate-500);
   margin-top: 2px;
 }
 
 .sheetCloseBtn {
-  background: rgba(var(--white-rgb), 0.08);
-  border: 1px solid rgba(var(--white-rgb), 0.12);
-  color: var(--white);
+  background: var(--slate-100);
+  border: none;
+  color: var(--slate-700);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -1936,21 +1938,21 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(var(--white-rgb), 0.04);
-  border: 1px solid rgba(var(--white-rgb), 0.1);
-  color: var(--white);
+  border-radius: 10px;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  color: var(--slate-800);
   cursor: pointer;
   text-align: left;
-  transition: all var(--duration-base) ease;
+  transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease;
   width: 100%;
   box-sizing: border-box;
 }
 
 .sheetOrganCardActive {
-  background: rgba(var(--blue-brand-rgb), 0.35);
-  border-color: var(--cyan-bright);
-  box-shadow: 0 0 14px rgba(var(--cyan-bright-rgb), 0.25);
+  background: rgba(var(--blue-brand-rgb), 0.06);
+  border-color: var(--blue-brand);
+  box-shadow: none;
 }
 
 .sheetOrganImgWrap {
@@ -1960,7 +1962,8 @@
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-  background: #060e1b;
+  background: var(--slate-100);
+  border: 1px solid var(--slate-200);
 }
 
 .sheetOrganImg {
@@ -1974,21 +1977,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(var(--white-rgb), 0.08);
-  color: var(--cyan-bright);
+  background: rgba(var(--blue-brand-rgb), 0.08);
+  color: var(--blue-brand);
   flex-shrink: 0;
 }
 
 .sheetOrganLabel {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--white);
+  color: var(--slate-800);
   flex: 1;
 }
 
 .sheetOrganCount {
   font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.45);
+  color: var(--slate-500);
   font-weight: 500;
 }
 
@@ -1996,15 +1999,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px 20px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.08);
-  background: var(--navy-900);
+  padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--slate-100);
+  background: var(--white);
 }
 
 .sheetResetBtn {
   background: none;
   border: none;
-  color: rgba(var(--white-rgb), 0.65);
+  color: var(--slate-600);
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
@@ -2015,12 +2018,13 @@
   background: var(--color-primary, var(--blue-brand));
   color: var(--white);
   border: none;
-  border-radius: 9999px;
-  padding: 10px 22px;
+  border-radius: var(--radius-md, 8px);
+  padding: 11px 22px;
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--duration-base) ease;
+  box-shadow: none;
+  transition: background var(--duration-base) ease;
 }
 
 .sheetApplyBtn:hover {

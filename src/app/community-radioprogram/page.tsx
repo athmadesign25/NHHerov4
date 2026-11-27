@@ -3,12 +3,14 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLibraryHeroBlendShrink, LIBRARY_WHITE_PAGE_VARS } from "@/lib/useHeroShrink";
 import {
   ArrowRight,
   ArrowUpRight,
   Search,
   X,
+  RotateCcw,
   Play,
   Pause,
   Clock,
@@ -25,10 +27,16 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
+import OrganSystemChipsCarousel from "@/components/ui/OrganSystemChipsCarousel";
+import PinnedStickyShell from "@/components/ui/PinnedStickyShell";
+import RewriteHeadingText from "@/components/ui/RewriteHeadingText";
+import StickyBreadcrumbBar, { HEALTH_LIBRARY_SIBLING_PAGES } from "@/components/ui/StickyBreadcrumbBar";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import dockStyles from "@/components/ui/LibraryDiscoveryDock.module.css";
 import {
   COMMUNITY_RADIO_HERO,
   RADIO_CATEGORIES,
@@ -38,6 +46,20 @@ import {
 } from "@/data/communityRadioData";
 import styles from "./CommunityRadio.module.css";
 
+const RADIO_SIBLING_PAGES = [
+  {
+    label: "CSR Overview",
+    href: "/csr",
+    description: "Narayana Health Foundation impact",
+  },
+  {
+    label: "Community Radio Program",
+    href: "/community-radioprogram",
+    description: "Namma Naadi 90.4 FM broadcasts",
+  },
+  ...HEALTH_LIBRARY_SIBLING_PAGES,
+];
+
 export default function CommunityRadioPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -45,92 +67,39 @@ export default function CommunityRadioPage() {
   const [activeEpisode, setActiveEpisode] = useState<RadioEpisode | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [isStickyPinned, setIsStickyPinned] = useState<boolean>(false);
+
+  const radioFiltersExitRef = useRef<HTMLDivElement>(null);
+  const endSentinelRef = useRef<HTMLDivElement>(null);
 
   // Carousel ref & scroll controls
   const carouselTrackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(true);
 
-  // Unified V2 detail page dynamism across the entire page (Dark -> Black -> White -> Black -> Dark at CTA)
-  const heroTransitionProgress = useMotionValue(0);
-  const unifiedWhiteProgress = useMotionValue(0);
-  const ctaSentinelRef = useRef<HTMLDivElement>(null);
+  // Blended dark landing above the fold -> hero shrinks over white & podcasts crossfade cleanly on scroll
+  const { pageMotionStyle, heroMotionStyle, dynHeading, dynSubtitle } =
+    useLibraryHeroBlendShrink();
 
   useEffect(() => {
-    const updateTransition = () => {
+    const updateScroll = () => {
       const sy = window.scrollY || 0;
       setIsScrolled(sy > 300);
 
-      const startScroll = 36;
-      const endScroll = 360;
-      const topWhite = Math.max(0, Math.min(1, (sy - startScroll) / (endScroll - startScroll)));
-      heroTransitionProgress.set(topWhite);
+      const filterExitTop = radioFiltersExitRef.current?.getBoundingClientRect().top ?? Infinity;
+      const endTop = endSentinelRef.current?.getBoundingClientRect().top ?? Infinity;
 
-      let bottomDark = 0;
-      const el = ctaSentinelRef.current;
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        const vh = window.innerHeight || 900;
-        const startY = vh * 0.72;
-        const endY = vh * 0.28;
-        const raw = (startY - rect.top) / (startY - endY);
-        bottomDark = Math.max(0, Math.min(1, raw));
-      }
-
-      unifiedWhiteProgress.set(Math.max(0, Math.min(topWhite, 1 - bottomDark)));
+      // Single clean slide-in once in-flow filters exit (consistent with LibraryDiscoveryDock)
+      setIsStickyPinned(filterExitTop <= 92 && endTop > 220);
     };
-
-    updateTransition();
-    window.addEventListener("scroll", updateTransition, { passive: true });
-    window.addEventListener("resize", updateTransition, { passive: true });
+    updateScroll();
+    window.addEventListener("scroll", updateScroll, { passive: true });
+    window.addEventListener("resize", updateScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", updateTransition);
-      window.removeEventListener("resize", updateTransition);
+      window.removeEventListener("scroll", updateScroll);
+      window.removeEventListener("resize", updateScroll);
     };
-  }, [heroTransitionProgress, unifiedWhiteProgress]);
-
-  // Single unified V2 background color transition (#060c18 -> #020408 -> #f4f7fb -> #ffffff)
-  const pageBgColor = useTransform(
-    unifiedWhiteProgress,
-    [0, 0.40, 0.68, 1],
-    ["#060c18", "#020408", "#f4f7fb", "#ffffff"]
-  );
-
-  // Smoothly crossfade hero photo into the unified dynamic canvas so there is ZERO gradient mist band or horizontal cut
-  const heroCanvasOpacity = useTransform(
-    heroTransitionProgress,
-    [0, 0.38, 0.68],
-    [1, 0.75, 0]
-  );
-
-  // Dynamic colors for Featured Podcasts title & hero metrics over changing background
-  const carouselTitleColor = useTransform(
-    unifiedWhiteProgress,
-    [0, 0.44, 0.64, 1],
-    ["#ffffff", "#ffffff", "#0f172a", "#0f172a"]
-  );
-
-  const carouselSubtitleColor = useTransform(
-    unifiedWhiteProgress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.82)", "rgba(255, 255, 255, 0.86)", "#475569", "#64748b"]
-  );
-
-  const heroStatNumColor = useTransform(
-    unifiedWhiteProgress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.80)", "rgba(255, 255, 255, 0.90)", "#0f172a", "#0f172a"]
-  );
-  const heroStatLabelColor = useTransform(
-    unifiedWhiteProgress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.50)", "rgba(255, 255, 255, 0.60)", "#64748b", "#64748b"]
-  );
-  const heroStatDividerColor = useTransform(
-    unifiedWhiteProgress,
-    [0, 0.44, 0.64, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.12)", "rgba(15, 23, 42, 0.12)"]
-  );
+  }, []);
 
   // Featured episodes for carousel
   const featuredEpisodes = useMemo(() => {
@@ -175,6 +144,42 @@ export default function CommunityRadioPage() {
     return list;
   }, [selectedCategory, searchQuery, sortBy]);
 
+  const radioOrganOptions = useMemo(
+    () =>
+      RADIO_CATEGORIES.filter((c) => c.id !== "all").map((c) => ({
+        label: c.name,
+        shortLabel: c.name,
+        value: c.id,
+        image: c.icon,
+      })),
+    []
+  );
+
+  const activeCategoryName = useMemo(() => {
+    if (selectedCategory === "all") return null;
+    return RADIO_CATEGORIES.find((c) => c.id === selectedCategory)?.name ?? null;
+  }, [selectedCategory]);
+
+  const dynamicPodcastHeading = useMemo(() => {
+    const base = activeCategoryName
+      ? `${activeCategoryName} Podcasts & Broadcasts`
+      : "All Podcasts & Broadcasts";
+    if (searchQuery.trim()) {
+      return `${base} Matching “${searchQuery.trim()}”`;
+    }
+    return base;
+  }, [activeCategoryName, searchQuery]);
+
+  const hasAnyRadioFilter = Boolean(
+    selectedCategory !== "all" || searchQuery.trim() || sortBy !== "latest"
+  );
+
+  const handleResetRadioFilters = () => {
+    setSelectedCategory("all");
+    setSearchQuery("");
+    setSortBy("latest");
+  };
+
   // Carousel scroll functions
   const checkCarouselScroll = useCallback(() => {
     const el = carouselTrackRef.current;
@@ -203,31 +208,30 @@ export default function CommunityRadioPage() {
   return (
     <motion.main
       className={styles.pageMain}
-      style={{
-        backgroundColor: pageBgColor,
-        ["--stat-num-color" as string]: heroStatNumColor,
-        ["--stat-label-color" as string]: heroStatLabelColor,
-        ["--stat-divider-color" as string]: heroStatDividerColor,
-        ["--featured-title-color" as string]: carouselTitleColor,
-      }}
+      style={pageMotionStyle}
     >
       {/* ──────────────────────────────────────────────────────────────────
           1. HERO SECTION & FEATURED PODCASTS CAROUSEL (Blog V3 Parity)
           ────────────────────────────────────────────────────────────────── */}
       <div>
-        <section className={styles.heroSection} data-nav-theme="dark">
-          <motion.div className={styles.heroBg} style={{ opacity: heroCanvasOpacity }}>
-            <Image
-              src={COMMUNITY_RADIO_HERO.image}
-              alt="Narayana Health Community Radio Broadcast"
-              fill
-              priority
-              loading="eager"
-              sizes="100vw"
-              className={styles.heroBgImage}
-            />
-            <div className={styles.scrimOverlay} />
-          </motion.div>
+        <div style={{ position: "relative", overflowX: "clip" }}>
+          <motion.section
+            className={styles.heroSection}
+            data-nav-theme="dark"
+            style={heroMotionStyle}
+          >
+            <div className={styles.heroBg}>
+              <Image
+                src={COMMUNITY_RADIO_HERO.image}
+                alt="Narayana Health Community Radio Broadcast"
+                fill
+                priority
+                loading="eager"
+                sizes="100vw"
+                className={styles.heroBgImage}
+              />
+              <div className={styles.scrimOverlay} />
+            </div>
 
           <div className={styles.heroInner}>
             <motion.div
@@ -266,9 +270,15 @@ export default function CommunityRadioPage() {
                   className={styles.exploreBtn}
                 >
                   <span>Explore More</span>
-                  <ArrowRight size={16} />
                 </a>
               </div>
+
+              <MobileRollingStats
+                items={COMMUNITY_RADIO_HERO.stats.map((s) => ({
+                  staticValue: s.value,
+                  label: s.label,
+                }))}
+              />
             </motion.div>
 
             {/* Bottom Column: Horizontal Metrics Row (Matching CSR & Blog V3 Hero) */}
@@ -290,16 +300,17 @@ export default function CommunityRadioPage() {
               </div>
             </motion.div>
           </div>
-        </section>
+          </motion.section>
+        </div>
 
         {/* ── SECTION 2: FEATURED & SUGGESTED PODCASTS CAROUSEL ── */}
-        <div id="featured-podcasts" className={styles.featuredCarouselWrapper}>
+        <div id="featured-podcasts" className={styles.featuredCarouselWrapper} data-nav-theme="light">
           <section className={styles.carouselSection}>
             <div className={styles.carouselContainer}>
               <div className={styles.carouselHeader}>
                 <motion.h2
                   className={styles.carouselTitle}
-                  style={{ color: carouselTitleColor }}
+                  style={{ color: dynHeading }}
                 >
                   <TextSweepEffect
                     words={["Featured & Suggested Podcasts"]}
@@ -309,7 +320,7 @@ export default function CommunityRadioPage() {
                 </motion.h2>
                 <motion.p
                   className={styles.carouselSubtitle}
-                  style={{ color: carouselSubtitleColor }}
+                  style={{ color: dynSubtitle }}
                 >
                   Doctor-curated broadcasts, community pulse breakthroughs, and preventive audio insights
                 </motion.p>
@@ -418,12 +429,69 @@ export default function CommunityRadioPage() {
         </div>
       </div>
 
+      {/* ── PINNED TOP STICKY BAR (CONSISTENT UNIFIED DOCK SLIDE-IN) ── */}
+      <PinnedStickyShell
+        isPinned={isStickyPinned}
+        motionKey="radio-sticky-dock"
+      >
+        <StickyBreadcrumbBar
+          currentTitle="Community Radio"
+          parentLabel="About Narayana Health"
+          activeFilterLabel={activeCategoryName}
+          siblingPages={RADIO_SIBLING_PAGES}
+          onScrollToTop={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        />
+        <div className={dockStyles.stickyPanelInner}>
+          <div className={dockStyles.filterBlockUnit}>
+            <div className={dockStyles.topUnifiedBar}>
+              <div className={dockStyles.searchContainer}>
+                <div className={dockStyles.searchRow}>
+                  <div className={dockStyles.searchBoxWrap}>
+                    <div className={dockStyles.searchBox}>
+                      <Search size={18} strokeWidth={2} className={dockStyles.searchIcon} />
+                      <input
+                        type="search"
+                        placeholder="Search by topic, condition, show or doctor name..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={dockStyles.searchInput}
+                        aria-label="Search podcasts"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchQuery("")}
+                          className={dockStyles.clearSearchBtn}
+                          aria-label="Clear search"
+                        >
+                          <X size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <OrganSystemChipsCarousel
+            variant="mini-pills"
+            showHeader={false}
+            showAllOption
+            className={dockStyles.mobileHideMiniPills}
+            options={radioOrganOptions}
+            selectedOrgan={selectedCategory === "all" ? null : selectedCategory}
+            onSelectOrgan={(val) => setSelectedCategory(val ?? "all")}
+          />
+        </div>
+      </PinnedStickyShell>
+
       {/* ── SECTIONS 2, 3, 4 & 5: DYNAMIC CONTENT CANVAS (White -> Dark for CTA Card) ── */}
       <div>
         {/* ──────────────────────────────────────────────────────────────────
             2. EXPLORE PODCASTS BY CATEGORY & LIBRARY (Universal Card Syntax)
             ────────────────────────────────────────────────────────────────── */}
-        <section className={styles.exploreSection} id="explore-podcasts">
+        <section className={styles.exploreSection} id="explore-podcasts" style={LIBRARY_WHITE_PAGE_VARS}>
         <div className={styles.exploreContainer}>
           <div className={styles.sectionHeaderCenter}>
             <h2 className={styles.sectionTitle}>
@@ -463,65 +531,75 @@ export default function CommunityRadioPage() {
             </div>
           </div>
 
-          {/* Category Circle Selector */}
-          <div className={styles.categoryCircleTrack}>
-            {RADIO_CATEGORIES.map((cat) => {
-              const isSelected = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  className={`${styles.categoryCircleBtn} ${
-                    isSelected ? styles.categoryCircleActive : ""
-                  }`}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  aria-pressed={isSelected}
-                >
-                  <div className={styles.circleImageWrap}>
-                    <Image
-                      src={cat.icon}
-                      alt={cat.name}
-                      width={58}
-                      height={58}
-                      className={styles.circleImg}
-                    />
-                    {isSelected && <div className={styles.activeRing} />}
-                  </div>
-                  <span className={styles.circleLabel}>{cat.name}</span>
-                </button>
-              );
-            })}
+          {/* Centered Unified Circular Category Selector (Same F5 Organ Style) */}
+          <OrganSystemChipsCarousel
+            variant="circle"
+            showHeader={false}
+            showAllOption
+            centered
+            options={radioOrganOptions}
+            selectedOrgan={selectedCategory === "all" ? null : selectedCategory}
+            onSelectOrgan={(val) => setSelectedCategory(val ?? "all")}
+          />
+
+          {/* Sentinel marking where in-flow category filters exit header (for sticky search+pills handoff) */}
+          <div ref={radioFiltersExitRef} style={{ height: 1, width: "100%", pointerEvents: "none" }} aria-hidden="true" />
+
+          {/* Centered Sort Chips Row */}
+          <div className={styles.centeredSortRow} role="tablist" aria-label="Sort podcasts">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={sortBy === "latest"}
+              className={`${styles.sortChipBtn} ${sortBy === "latest" ? styles.sortChipBtnActive : ""}`}
+              onClick={() => setSortBy("latest")}
+            >
+              Latest
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={sortBy === "listened"}
+              className={`${styles.sortChipBtn} ${sortBy === "listened" ? styles.sortChipBtnActive : ""}`}
+              onClick={() => setSortBy("listened")}
+            >
+              Most Listened
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={sortBy === "doctor"}
+              className={`${styles.sortChipBtn} ${sortBy === "doctor" ? styles.sortChipBtnActive : ""}`}
+              onClick={() => setSortBy("doctor")}
+            >
+              Doctor Talks
+            </button>
           </div>
 
-          {/* Toolbar (Sort Tabs + Count) */}
-          <div className={styles.toolbarRow}>
-            <div className={styles.sortTabs} role="tablist">
-              <button
-                type="button"
-                className={`${styles.sortTabBtn} ${sortBy === "latest" ? styles.sortTabActive : ""}`}
-                onClick={() => setSortBy("latest")}
-              >
-                Latest
-              </button>
-              <button
-                type="button"
-                className={`${styles.sortTabBtn} ${sortBy === "listened" ? styles.sortTabActive : ""}`}
-                onClick={() => setSortBy("listened")}
-              >
-                Most Listened
-              </button>
-              <button
-                type="button"
-                className={`${styles.sortTabBtn} ${sortBy === "doctor" ? styles.sortTabActive : ""}`}
-                onClick={() => setSortBy("doctor")}
-              >
-                Doctor Talks
-              </button>
-            </div>
+          {/* Animated Dynamic Header + Reset Filters CTA on the Right */}
+          <div className={styles.dynamicHeadingRow}>
+            <h3 className={styles.dynamicResultsTitle}>
+              <RewriteHeadingText text={dynamicPodcastHeading} />{" "}
+              <span className={styles.dynamicResultsCount}>({filteredEpisodes.length})</span>
+            </h3>
 
-            <div className={styles.countBadge}>
-              <strong>{filteredEpisodes.length}</strong> podcasts found
-            </div>
+            <AnimatePresence>
+              {hasAnyRadioFilter && (
+                <motion.button
+                  key="radio-reset-filters-cta"
+                  type="button"
+                  className={styles.resetHeaderBtn}
+                  onClick={handleResetRadioFilters}
+                  initial={{ opacity: 0, scale: 0.94, x: 8 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.94, x: 8 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <RotateCcw size={13} aria-hidden="true" />
+                  <span>Reset filters</span>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* 3-Column Episodes Grid (Universal Library Card Syntax) */}
@@ -744,12 +822,7 @@ export default function CommunityRadioPage() {
         </div>
       </section>
 
-      {/* Sentinel for smooth pre-footer CTA background return to dark */}
-      <div
-        ref={ctaSentinelRef}
-        style={{ height: "1px", width: "100%", pointerEvents: "none" }}
-        aria-hidden="true"
-      />
+      <div ref={endSentinelRef} style={{ height: 1, width: "100%", pointerEvents: "none" }} aria-hidden="true" />
 
       {/* ──────────────────────────────────────────────────────────────────
           5. PRE-FOOTER CTA BANNER (Universal Narayana Health Banner)
@@ -820,7 +893,7 @@ export default function CommunityRadioPage() {
         consultLabel={"Tune In\nOPD"}
         conditionTitle="Community Radio"
         pulseQuery="I have questions about Narayana Health's Namma Naadi 90.4 FM broadcasts, doctor podcast schedule, and preventive care programs."
-        isScrolled={isScrolled}
+        isScrolled={isScrolled && !activeEpisode}
       />
     </motion.main>
   );

@@ -4,29 +4,25 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Building,
-  CheckCircle2, 
-  Link as LinkIcon, 
-  PhoneCall, 
-  ArrowUpRight, 
-  Calendar, 
-  Activity, 
-  Plus, 
+import {
+  Link as LinkIcon,
+  PhoneCall,
+  Plus,
   Minus,
   Check,
-  MapPin,
-  ShieldCheck,
-  Clock,
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import { getHospitalDetailData, HospitalDetailData } from "@/data/hospitalsDirectoryData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
+import GuideFeedbackWidget from "@/components/ui/GuideFeedbackWidget";
+import DetailStickyBreadcrumb from "@/components/ui/DetailStickyBreadcrumb";
+import { HEALTH_LIBRARY_SIBLING_PAGES } from "@/components/ui/StickyBreadcrumbBar";
 import styles from "./HospitalDetail.module.css";
 
 interface PageProps {
@@ -154,9 +150,7 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 href={`/doctors?location=${encodeURIComponent(detail.city)}`} 
                 className={styles.heroPrimaryBtn}
               >
-                <Calendar size={15} />
                 <span>Book Hospital OPD</span>
-                <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
 
               <a href={`tel:${detail.emergencyPhone ? detail.emergencyPhone.replace(/\s+/g, "") : "18003090309"}`} className={styles.heroPhoneText}>
@@ -165,6 +159,15 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 <span className={styles.phoneMobileSpan}>Call Emergency 24×7</span>
               </a>
             </div>
+
+            <MobileRollingStats
+              items={[
+                { staticValue: detail.metrics.beds, label: "Total Bed Capacity" },
+                { staticValue: detail.metrics.icu, label: "ICU / Critical Care" },
+                { staticValue: detail.metrics.emergency, label: "Emergency Triage" },
+                { staticValue: detail.metrics.accreditation, label: "Accreditation" },
+              ]}
+            />
           </motion.div>
 
           {/* Bottom Hero Metrics (Matching CSR Hero) */}
@@ -204,6 +207,20 @@ export default function HospitalDetailPage({ params }: PageProps) {
         </div>
       </section>
 
+      <DetailStickyBreadcrumb
+        currentTitle={detail.name}
+        parentLabel="Hospitals & Centres"
+        siblingPages={[
+          {
+            label: "Hospitals & Care Centres",
+            href: "/hospitals",
+            description: "All Narayana Health units",
+          },
+          ...HEALTH_LIBRARY_SIBLING_PAGES,
+        ]}
+        motionKey={`hospital-sticky-breadcrumb-${detail.slug}`}
+      />
+
       {/* ─── MAIN CONTENT BODY ────────────────────────────────────────────── */}
       <div className={styles.readingExperienceWrapper}>
         <main className={styles.mainLayoutContainer}>
@@ -212,7 +229,6 @@ export default function HospitalDetailPage({ params }: PageProps) {
             <aside className={styles.stickySidebar}>
               <div className={styles.tocSectionSelector}>
                 <div className={styles.tocEyebrow}>
-                  <Building size={13} className={styles.tocEyebrowIcon} />
                   <span>On This Center</span>
                 </div>
                 <nav className={styles.tocNavRail} aria-label="Table of contents">
@@ -246,15 +262,15 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 </nav>
               </div>
 
-              {/* Mobile Persistent Share Pill inside sticky header */}
+              {/* Mobile Persistent Share Icon Pill inside sticky header */}
               <button
                 type="button"
                 className={styles.mobileStickyShareBtn}
                 onClick={handleShare}
                 aria-label="Share this hospital"
+                title="Share"
               >
-                <Share2 size={13} />
-                <span>Share</span>
+                <Share2 size={16} />
               </button>
 
               {/* Share widget */}
@@ -279,6 +295,9 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 title={`${detail.city} Care Helpline`}
                 subtitle="Direct contact with unit patient coordinators for OPD slots, admissions & emergency transfers."
               />
+
+              {/* Compact On-Demand Feedback Widget */}
+              <GuideFeedbackWidget guideType="hospital guide" theme="white" />
             </aside>
 
             {/* Reading Content Focus Canvas */}
@@ -309,14 +328,13 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   {detail.name} houses advanced medical institutes offering multidisciplinary inpatient and surgical care:
                 </p>
-                <div className={styles.checklistContainer}>
+                <ul className={styles.checklistContainer}>
                   {detail.keySpecialities.map((spec, idx) => (
-                    <div key={idx} className={styles.checklistItem}>
-                      <CheckCircle2 size={16} className={styles.checkIcon} />
+                    <li key={idx} className={styles.checklistItem}>
                       <span className={styles.checkText}><strong>{spec}</strong> &mdash; Comprehensive clinical departments and specialist suites</span>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </section>
 
               {/* SECTION: Infrastructure & Amenities */}
@@ -367,7 +385,6 @@ export default function HospitalDetailPage({ params }: PageProps) {
                           className={styles.docBookBtn}
                         >
                           <span>Consult Doctor</span>
-                          <ArrowUpRight size={12} />
                         </Link>
                       </div>
                     </div>
@@ -384,7 +401,6 @@ export default function HospitalDetailPage({ params }: PageProps) {
                     <span className={styles.causeTag}>{detail.city}</span>
                   </div>
                   <p className={styles.leadParagraph} style={{ marginBottom: "14px" }}>
-                    <MapPin size={15} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px", color: "#034EA2" }} />
                     {detail.address}
                   </p>
                   <p className={styles.causeDesc}>

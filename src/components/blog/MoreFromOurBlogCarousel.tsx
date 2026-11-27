@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, ArrowRight, ArrowUpRight, Calendar } from "l
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
 import { ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
+import { useCarouselPeekHint } from "@/lib/useCarouselPeekHint";
 import styles from "./MoreFromOurBlogCarousel.module.css";
 
 interface MoreFromOurBlogCarouselProps {
@@ -70,6 +71,7 @@ export default function MoreFromOurBlogCarousel({
     ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "#e2e8f0", "#f1f5f9"]
   );
   const scrollRef = useRef<HTMLDivElement>(null);
+  useCarouselPeekHint(scrollRef, articles?.length ?? 0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -211,9 +213,8 @@ export default function MoreFromOurBlogCarousel({
               return (
                 <div key={item.id} className={styles.cardItem}>
                   <div className={styles.blogCard}>
-                    {/* Top Right Date Badge from Figma 468:624 */}
+                    {/* Top Right Date Badge */}
                     <div className={styles.dateBadge}>
-                      <Calendar size={12} className={styles.dateIcon} />
                       <span>{item.publishedDate}</span>
                     </div>
 
@@ -272,13 +273,11 @@ export default function MoreFromOurBlogCarousel({
                             </div>
                             <span className={styles.authorName}>{item.author}</span>
                           </div>
-                          <ArrowUpRight size={18} className={styles.restingArrow} />
                         </div>
 
                         <div className={styles.cardActions}>
                           <Link href={`/blog/${item.slug}`} className={styles.cardDetailBtn}>
                             <span>Read more</span>
-                            <ArrowUpRight size={13} className={styles.pillBtnArrow} />
                           </Link>
                         </div>
                       </div>

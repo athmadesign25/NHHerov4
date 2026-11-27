@@ -3,8 +3,8 @@
   position: relative;
   z-index: 6;
   width: 100%;
-  padding-top: clamp(100px, 12vh, 140px);
-  padding-bottom: clamp(100px, 12vh, 140px);
+  padding-top: clamp(56px, 7vh, 84px);
+  padding-bottom: clamp(72px, 9vh, 108px);
   background: transparent;
   overflow: visible;
   box-sizing: border-box;
@@ -12,8 +12,8 @@
 
 @media (max-width: 768px) {
   .sectionWrapper {
-    padding-top: 64px;
-    padding-bottom: 60px;
+    padding-top: 48px;
+    padding-bottom: 56px;
   }
 }
 

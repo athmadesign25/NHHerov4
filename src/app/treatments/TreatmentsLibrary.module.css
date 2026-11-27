@@ -20,18 +20,19 @@
   color: var(--white);
   position: relative;
   padding-bottom: 0;
+  overflow-x: clip;
 }
 
 
-/* ─── TWO-COLUMN HERO SECTION (SPACIOUS & BREATHING) ─────────────────────── */
+/* ─── TWO-COLUMN HERO SECTION (COMPACT L1 BREATHING HERO, PUSHING SEARCH LOWER) ─── */
 .hero {
   position: relative;
-  min-height: clamp(580px, calc(100vh - 215px), 860px);
+  min-height: clamp(565px, calc(100vh - 175px), 735px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: clamp(180px, 24vh, 260px);
-  padding-bottom: 24px;
+  padding-top: clamp(175px, 23vh, 245px);
+  padding-bottom: 56px;
   overflow: hidden;
   background: transparent;
 }
@@ -41,24 +42,20 @@
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 52%,
-    rgba(0, 0, 0, 0.72) 68%,
-    rgba(0, 0, 0, 0.32) 82%,
-    rgba(0, 0, 0, 0.07) 93%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 52%,
-    rgba(0, 0, 0, 0.72) 68%,
-    rgba(0, 0, 0, 0.32) 82%,
-    rgba(0, 0, 0, 0.07) 93%,
-    transparent 100%
-  );
+  -webkit-mask-image: linear-gradient(to bottom,
+      #000 0%,
+      #000 52%,
+      rgba(0, 0, 0, 0.72) 68%,
+      rgba(0, 0, 0, 0.32) 82%,
+      rgba(0, 0, 0, 0.07) 93%,
+      transparent 100%);
+  mask-image: linear-gradient(to bottom,
+      #000 0%,
+      #000 52%,
+      rgba(0, 0, 0, 0.72) 68%,
+      rgba(0, 0, 0, 0.32) 82%,
+      rgba(0, 0, 0, 0.07) 93%,
+      transparent 100%);
 }
 
 .heroBgMotion {
@@ -166,6 +163,7 @@
   0% {
     --border-angle: 0deg;
   }
+
   100% {
     --border-angle: 360deg;
   }
@@ -191,7 +189,7 @@
   position: relative;
   flex: 1;
   min-width: 0;
-  height: 46px;
+  height: 48px;
   border-radius: var(--radius-full, 9999px);
   padding: 0;
   box-sizing: border-box;
@@ -203,16 +201,22 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
-    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
-    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
-    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
-    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
-    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
-    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
-  );
+  background: conic-gradient(from var(--border-angle, 0deg),
+      rgba(237, 28, 36, 0.95) 0deg,
+      /* NH Red */
+      rgba(255, 46, 147, 0.90) 55deg,
+      /* Pulse Pink */
+      rgba(139, 92, 246, 0.90) 115deg,
+      /* Purple */
+      rgba(3, 78, 162, 0.95) 175deg,
+      /* NH Blue */
+      rgba(0, 196, 255, 0.95) 235deg,
+      /* Pulse Cyan */
+      rgba(37, 99, 235, 0.95) 295deg,
+      /* Royal Blue */
+      rgba(237, 28, 36, 0.95) 360deg
+      /* Loop to NH Red */
+    );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -220,17 +224,17 @@
   animation: rotateBorderAngle 18s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.28;
+  opacity: var(--dyn-search-outline-opacity, 0.38);
   box-sizing: border-box;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.25s ease;
 }
 
 .searchBoxWrap:hover .animatedBorderOutline,
 .searchBoxWrap:focus-within .animatedBorderOutline {
-  opacity: 0.42;
+  opacity: var(--dyn-search-outline-hover-opacity, 0.56);
 }
 
-/* Transparent Dynamic Glass Pill Body */
+/* Transparent Dynamic Glass Pill in Dark Mode -> Clean Doctor Search White Pill in White Mode */
 .searchBox {
   position: relative;
   width: 100%;
@@ -238,46 +242,52 @@
   display: flex;
   align-items: center;
   border-radius: inherit;
-  padding: 0 16px;
-  background: var(--dyn-search-bg, rgba(255, 255, 255, 0.07));
+  padding: 0 18px;
+  background: var(--dyn-search-bg, rgba(255, 255, 255, 0.08));
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid var(--dyn-search-border, rgba(255, 255, 255, 0.22));
-  box-shadow: none !important;
+  border: 1px solid var(--dyn-search-border, rgba(255, 255, 255, 0.24));
+  box-shadow: var(--dyn-search-shadow-rest, none) !important;
   box-sizing: border-box;
-  transition: background 0.25s ease, border-color 0.25s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   z-index: 2;
 }
 
-.searchBoxWrap:hover .searchBox,
-.searchBoxWrap:focus-within .searchBox {
+.searchBoxWrap:hover .searchBox {
   background: var(--dyn-search-bg, rgba(255, 255, 255, 0.11));
-  border-color: var(--dyn-search-border, rgba(255, 255, 255, 0.34));
-  box-shadow: none !important;
+  border-color: var(--dyn-search-border-hover, var(--dyn-search-border, rgba(255, 255, 255, 0.34)));
+  box-shadow: var(--dyn-search-shadow-rest, none) !important;
 }
 
-/* Landing Page Multi-colored Gradient Search Icon */
+.searchBoxWrap:focus-within .searchBox {
+  background: var(--dyn-search-bg, rgba(255, 255, 255, 0.11));
+  border-color: var(--dyn-search-border-focus, rgba(255, 255, 255, 0.42));
+  box-shadow: var(--dyn-search-shadow-focus, none) !important;
+}
+
+/* Landing Page Multi-colored Gradient Search Icon -> Slate 500 on White Mode */
 .searchIcon {
   stroke: url(#nhSearchPillGradTreatments) !important;
-  color: #00C4FF !important;
+  color: var(--dyn-search-icon-color, #00C4FF) !important;
   filter: none;
   flex-shrink: 0;
-  margin-right: 8px;
+  margin-right: 10px;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .searchBoxWrap:hover .searchIcon,
 .searchBoxWrap:focus-within .searchIcon {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .searchInput {
   flex: 1;
+  min-width: 0;
   background: none;
   border: none;
   outline: none;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 0.9375rem;
   font-weight: 400;
   color: var(--dyn-search-text, #ffffff);
   letter-spacing: -0.01em;
@@ -298,14 +308,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 5px;
   border-radius: 50%;
   transition: color 0.15s ease, background 0.15s ease;
 }
 
 .clearSearchBtn:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.15);
+  color: var(--dyn-search-clear-hover-text, #ffffff);
+  background: var(--dyn-search-clear-hover-bg, rgba(255, 255, 255, 0.15));
 }
 
 /* Mobile Filter Trigger Button (MWEB ONLY — hidden on desktop where circular carousel is used) */
@@ -319,26 +329,26 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    height: 44px;
+    height: 48px;
     padding: 0 14px;
     border-radius: var(--radius-full, 9999px);
-    background: rgba(10, 15, 30, 0.90);
+    background: var(--dyn-filter-bg, rgba(10, 15, 30, 0.90));
     backdrop-filter: blur(24px) saturate(160%);
     -webkit-backdrop-filter: blur(24px) saturate(160%);
-    border: 1px solid rgba(var(--white-rgb), 0.20);
-    color: var(--white);
+    border: 1px solid var(--dyn-filter-border, rgba(var(--white-rgb), 0.20));
+    color: var(--dyn-heading, var(--white));
     font-size: var(--font-size-xs);
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     flex-shrink: 0;
     transition: all var(--duration-base) ease;
-    box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.35);
+    box-shadow: none;
   }
 
   .mobileFilterBtn:hover {
-    border-color: rgba(var(--white-rgb), 0.40);
-    background: rgba(var(--white-rgb), 0.12);
+    border-color: var(--dyn-border, rgba(var(--white-rgb), 0.40));
+    background: var(--dyn-filter-bg-hover, rgba(var(--white-rgb), 0.12));
     transform: translateY(-1px);
   }
 }
@@ -395,19 +405,19 @@
 .searchCountFeedback {
   margin-top: 10px;
   font-size: var(--font-size-sm);
-  color: rgba(226, 218, 255, 0.88);
+  color: var(--dyn-subtitle, rgba(226, 218, 255, 0.88));
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
   padding-left: 16px;
   letter-spacing: -0.01em;
-  text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.6);
+  text-shadow: none;
   animation: feedbackFadeIn var(--duration-base) var(--ease-spring);
 }
 
 .searchCountHighlight {
-  color: var(--white);
+  color: var(--dyn-heading, var(--white));
   font-weight: 700;
 }
 
@@ -679,12 +689,10 @@
   top: 10%;
   height: 80%;
   width: 1px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.16) 50%,
-    rgba(255, 255, 255, 0.03) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.16) 50%,
+      rgba(255, 255, 255, 0.03) 100%);
 }
 
 .glassDeckNumber {
@@ -971,16 +979,262 @@
   transform: translateY(-1px);
 }
 
-/* ─── UNBOXED FILTER & DISCOVERY ZONE (F1 / F2 / F3 / F4 / F5 + SCROLL REVEAL) ─── */
+/* ─── F5 IN-FLOW DISCOVERY HEADER + FIXED SILKY BLURRED STICKY DOCK ─── */
+.directoryStickyScope {
+  position: relative;
+  width: 100%;
+  margin-top: 44px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stickySentinel {
+  width: 100%;
+  height: 1px;
+  pointer-events: none;
+}
+
+.inFlowFilterHeader {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding: 16px 0 8px;
+}
+
+.stickyFilterHeaderInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+/* Fixed Sticky Dock glides down smoothly flush against Navbar (68px desktop / 56px mobile) with zero gap */
+.fixedStickyShell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 940;
+  pointer-events: none;
+  transform: translate3d(0, 68px, 0);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 1099px) {
+  .fixedStickyShell {
+    transform: translate3d(0, 56px, 0);
+  }
+}
+
+:global(html[data-nav-visible="false"]) .fixedStickyShell {
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.fixedStickyPanel {
+  position: relative;
+  width: 100%;
+  padding: 0 0 14px;
+  pointer-events: auto;
+  background: transparent;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+.fixedStickyPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  bottom: -44px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.97) 0%,
+    rgba(255, 255, 255, 0.92) 58%,
+    rgba(255, 255, 255, 0.72) 82%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 calc(100% - 44px),
+    rgba(0, 0, 0, 0.84) calc(100% - 30px),
+    rgba(0, 0, 0, 0.36) calc(100% - 14px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 calc(100% - 44px),
+    rgba(0, 0, 0, 0.84) calc(100% - 30px),
+    rgba(0, 0, 0, 0.36) calc(100% - 14px),
+    transparent 100%
+  );
+}
+
+.fixedStickyPanelInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding-top: 12px;
+}
+
+.fixedStickyPanel .searchBoxWrap {
+  height: 44px;
+}
+
+.fixedStickyPanel .searchBox {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.07) !important;
+}
+
+.fixedStickyPanel .searchBoxWrap:focus-within .searchBox {
+  border-color: #034EA2 !important;
+  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.14) !important;
+}
+
+.fixedStickyPanel .animatedBorderOutline {
+  opacity: 0 !important;
+}
+
+.fixedStickyPanel .searchInput {
+  color: #0f172a !important;
+}
+
+.fixedStickyPanel .searchInput::placeholder {
+  color: #475569 !important;
+}
+
+.fixedStickyPanel .searchIcon {
+  stroke: #475569 !important;
+  color: #475569 !important;
+}
+
+.fixedStickyPanel .clearSearchBtn {
+  color: #475569 !important;
+}
+
+.fixedStickyPanel .f5AlphaTriggerBtn {
+  height: 44px;
+  padding: 0 16px 0 9px;
+  font-size: 13px;
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.fixedStickyPanel .f5AlphaSolidBadge {
+  width: 24px;
+  height: 24px;
+}
+
+.fixedStickyInlineDivider {
+  width: 1px;
+  height: 24px;
+  background: #e2e8f0;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .fixedStickyInlineDivider {
+    display: none;
+  }
+}
+
+.fixedStickyPanel .f5PatientChip {
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.fixedStickyPanel .f5PatientChip:hover {
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.fixedStickyPanel .f5PatientChipActive {
+  background: #fef2f2 !important;
+  border-color: #dc2626 !important;
+  color: #b91c1c !important;
+}
+
+.fixedStickyPanel .f5TypoAlphaRail {
+  border-bottom-color: #e2e8f0;
+}
+
+.fixedStickyPanel .f5TypoAlphaBtn {
+  color: #334155;
+}
+
+.fixedStickyPanel .f5TypoAlphaBtn:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.06);
+  color: #0f172a;
+}
+
+.fixedStickyPanel .appliedFiltersBar {
+  padding: 0 0 4px;
+  border-bottom-color: #e2e8f0;
+}
+
+.fixedStickyPanel .appliedFiltersLabel {
+  color: #64748b;
+}
+
+.fixedStickyPanel .activeRedSelectionChip {
+  min-height: 26px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  background: #fef2f2;
+  border-color: #dc2626;
+  color: #b91c1c;
+}
+
+.fixedStickyPanel .clearAllAppliedBtn {
+  color: #475569;
+  font-size: 12px;
+}
+
+.secondaryFiltersSmoothWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-block: 4px;
+  width: 100%;
+}
+
+/* ─── UNBOXED FILTER & DISCOVERY ZONE (F5 UNIFIED HIERARCHY) ─── */
 .discoveryZoneWrap {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
   width: 100%;
-  padding-top: 8px;
-  padding-bottom: 24px;
+  padding-top: 6px;
+  padding-bottom: 16px;
   position: relative;
   z-index: 3;
+}
+
+@media (max-width: 768px) {
+  .inFlowFilterHeader {
+    padding: 12px 0 6px;
+  }
+
+  .discoveryZoneWrap {
+    padding-top: 4px;
+    gap: 14px;
+  }
 }
 
 .progressiveFiltersReveal {
@@ -1034,94 +1288,87 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
   flex-wrap: wrap;
 }
 
 .f5UnifiedSearch {
   flex: 1 1 360px !important;
-  max-width: 740px !important;
+  max-width: 100% !important;
 }
 
 .f5RightUtilityGroup {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
-  flex-wrap: wrap;
 }
 
-.f5L1ControlsBar {
+.f5ChipsRow {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  width: 100%;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
-/* Unified Segmented Patient Group Track (Single capsule, zero floating pill clutter) */
-.f5SegmentedGroup {
+/* Book-Appointment style standalone filter chip (Adult / Pediatric, no 'All' chip) */
+.f5PatientChip {
   display: inline-flex;
   align-items: center;
-  padding: 3px;
-  border-radius: var(--radius-full, 9999px);
-  background: var(--dyn-filter-bg, rgba(var(--white-rgb), 0.05));
-  border: 1px solid var(--dyn-filter-border, rgba(var(--white-rgb), 0.14));
-  height: 40px;
-  box-sizing: border-box;
-}
-
-.f5SegmentBtn {
-  height: 32px;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
   padding: 0 14px;
   border-radius: var(--radius-full, 9999px);
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--dyn-filter-text, rgba(var(--white-rgb), 0.76));
+  border: 1px solid var(--dyn-filter-border, rgba(var(--white-rgb), 0.22));
+  background: var(--dyn-filter-bg, rgba(var(--white-rgb), 0.06));
+  color: var(--dyn-filter-text, rgba(var(--white-rgb), 0.88));
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 500;
+  line-height: 1.25;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 150ms ease;
+  box-shadow: var(--dyn-search-shadow-rest, none);
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
 }
 
-.f5SegmentBtn:hover {
+.f5PatientChip:hover {
+  border-color: var(--dyn-search-border-hover, rgba(var(--white-rgb), 0.40));
   color: var(--dyn-filter-text-hover, #ffffff);
 }
 
-.f5SegmentBtnActive {
-  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.12)) !important;
-  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.65)) !important;
-  color: var(--dyn-red-sel-text, #ef4444) !important;
+.f5PatientChipActive {
+  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.16)) !important;
+  border-color: var(--dyn-red-sel-border, rgba(248, 113, 113, 0.80)) !important;
+  color: var(--dyn-red-sel-text, #b91c1c) !important;
   font-weight: 600;
 }
 
-/* On-Demand A-Z Toggle Pill with Solid High-Contrast Icon Badge */
 .f5AlphaTriggerBtn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 40px;
-  padding: 0 14px 0 8px;
+  height: 48px;
+  padding: 0 16px 0 10px;
   border-radius: var(--radius-full, 9999px);
-  border: 1px solid var(--dyn-filter-border, rgba(var(--white-rgb), 0.20));
-  background: var(--dyn-filter-bg, rgba(var(--white-rgb), 0.06));
-  color: var(--dyn-filter-text, #1e293b);
+  border: 1px solid var(--dyn-search-border, rgba(var(--white-rgb), 0.24));
+  background: var(--dyn-search-bg, rgba(var(--white-rgb), 0.08));
+  color: var(--dyn-heading, var(--white));
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: var(--dyn-search-shadow-rest, none);
   transition: all 150ms ease;
 }
 
 .f5AlphaSolidBadge {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: #034EA2;
   color: #ffffff;
@@ -1142,14 +1389,52 @@
 }
 
 .f5AlphaTriggerBtn:hover {
-  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.45));
-  color: var(--dyn-filter-text-hover, #ffffff);
+  border-color: var(--dyn-search-border-hover, rgba(var(--white-rgb), 0.42));
+  color: var(--dyn-heading, #ffffff);
 }
 
 .f5AlphaTriggerBtnActive {
-  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.12)) !important;
-  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.68)) !important;
-  color: var(--dyn-red-sel-text, #ef4444) !important;
+  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.14)) !important;
+  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.72)) !important;
+  color: var(--dyn-red-sel-text, #b91c1c) !important;
+}
+
+.f5AlphaDrawerWrap {
+  margin-top: 8px;
+}
+
+.appliedFiltersBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 2px 0 12px;
+  border-bottom: 1px solid var(--dyn-border, rgba(var(--white-rgb), 0.12));
+}
+
+.appliedFiltersLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dyn-muted, rgba(var(--white-rgb), 0.60));
+  margin-right: 4px;
+}
+
+.clearAllAppliedBtn {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--dyn-subtitle, rgba(var(--white-rgb), 0.78));
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 150ms ease;
+}
+
+.clearAllAppliedBtn:hover {
+  color: var(--dyn-heading, var(--white));
 }
 
 /* Lightweight Unboxed Typographic A-Z Strip (No 27 individual letter borders!) */
@@ -1647,13 +1932,13 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg,
-      rgba(5, 13, 26, 0) 0%,
-      rgba(5, 13, 26, 0.16) 18%,
-      rgba(5, 13, 26, 0.60) 46%,
-      rgba(5, 13, 26, 0.89) 72%,
-      rgba(5, 13, 26, 0.97) 100%);
+      rgba(3, 78, 162, 0) 0%,
+      rgba(3, 78, 162, 0.14) 24%,
+      rgba(4, 48, 106, 0.64) 52%,
+      rgba(5, 24, 58, 0.90) 76%,
+      rgba(4, 15, 36, 0.97) 100%);
   opacity: 0;
-  transition: opacity 0.42s ease;
+  transition: opacity 0.36s ease;
 }
 
 /* Content block pushed to bottom over the gradient */
@@ -1743,12 +2028,12 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
   font-weight: 400;
-  line-height: 1.52;
-  color: rgba(var(--white-rgb), 0.86);
-  margin: 8px 0 4px 0;
+  line-height: 1.54;
+  color: rgba(var(--white-rgb), 0.84);
+  margin: 8px 0 6px 0;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
-  line-clamp: 7;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-shadow: none;
@@ -1814,6 +2099,7 @@
 
 /* Desktop: Action buttons, scrim push-up & summary reveal appear smoothly on hover ONLY! */
 @media (min-width: 1025px) and (hover: hover) {
+
   .procedureCard:hover .cardGradient,
   .procedureCard:focus-within .cardGradient {
     height: 100%;
@@ -2276,10 +2562,23 @@
     background: #090d16;
   }
 
+  /* Soft top protective scrim so uppercase category eyebrow always stays high-contrast even on light clinical imagery */
+  .cardImageWrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+        rgba(7, 19, 34, 0.62) 0%,
+        rgba(7, 19, 34, 0.22) 28%,
+        rgba(7, 19, 34, 0) 46%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
   .cardBgImage {
     object-fit: cover;
     object-position: center 25%;
-    filter: brightness(1.05) saturate(92%);
+    filter: brightness(0.96) saturate(1.04);
   }
 
   /* Atmospheric gradient scrim (matching Figma 468:385) */
@@ -2509,11 +2808,11 @@
 
 /* Aliases for filter sheet names across library templates */
 
-/* ─── MOBILE FILTER BOTTOM SHEET DRAWER ───────────────────────────────────── */
+/* ─── MOBILE FILTER BOTTOM SHEET DRAWER (LIGHT EDITORIAL SYSTEM TOKEN) ───── */
 .sheetBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 9, 18, 0.72);
+  background: rgba(var(--slate-900-rgb), 0.45);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 9998;
@@ -2525,11 +2824,11 @@
   right: 0;
   bottom: 0;
   max-height: 82vh;
-  background: var(--navy-900);
+  background: var(--white);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.18);
-  box-shadow: 0 -12px 36px rgba(var(--black-rgb), 0.7);
+  border-top: 1px solid var(--slate-200);
+  box-shadow: 0 -16px 40px rgba(var(--slate-900-rgb), 0.14);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -2540,7 +2839,7 @@
   width: 36px;
   height: 4px;
   border-radius: 2px;
-  background: rgba(var(--white-rgb), 0.28);
+  background: var(--slate-300);
   margin: 12px auto 6px;
 }
 
@@ -2549,7 +2848,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px 14px;
-  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+  border-bottom: 1px solid var(--slate-100);
 }
 
 .sheetTitleWrap {
@@ -2560,20 +2859,20 @@
 .sheetTitle {
   font-size: var(--font-size-base);
   font-weight: 700;
-  color: var(--white);
+  color: var(--slate-900);
   margin: 0;
 }
 
 .sheetSubtitle {
   font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.55);
+  color: var(--slate-500);
   margin-top: 2px;
 }
 
 .sheetCloseBtn {
-  background: rgba(var(--white-rgb), 0.08);
-  border: 1px solid rgba(var(--white-rgb), 0.12);
-  color: var(--white);
+  background: var(--slate-100);
+  border: none;
+  color: var(--slate-700);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -2581,6 +2880,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.sheetCloseBtn:hover {
+  background: var(--slate-200);
+  color: var(--slate-900);
 }
 
 .sheetBody {
@@ -2604,21 +2909,28 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(var(--white-rgb), 0.04);
-  border: 1px solid rgba(var(--white-rgb), 0.1);
-  color: var(--white);
+  border-radius: 10px;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  color: var(--slate-800);
   cursor: pointer;
   text-align: left;
-  transition: all var(--duration-base) ease;
+  transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease, color var(--duration-fast) ease;
   width: 100%;
   box-sizing: border-box;
+  box-shadow: none;
 }
 
 .sheetOrganCardActive {
-  background: rgba(var(--blue-brand-rgb), 0.35);
-  border-color: var(--cyan-bright);
-  box-shadow: 0 0 14px rgba(var(--cyan-bright-rgb), 0.25);
+  background: rgba(var(--blue-brand-rgb), 0.06);
+  border-color: var(--blue-brand);
+  box-shadow: none;
+}
+
+.sheetOrganCardActive .sheetOrganLabel,
+.sheetOrganCardActive .sheetOrganCount {
+  color: var(--blue-brand);
+  font-weight: 600;
 }
 
 .sheetOrganImgWrap {
@@ -2628,7 +2940,8 @@
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-  background: #060e1b;
+  background: var(--slate-100);
+  border: 1px solid var(--slate-200);
 }
 
 .sheetOrganImg {
@@ -2642,37 +2955,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(var(--white-rgb), 0.08);
-  color: var(--cyan-bright);
+  background: rgba(var(--blue-brand-rgb), 0.08);
+  color: var(--blue-brand);
   flex-shrink: 0;
 }
 
 .sheetOrganLabel {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--white);
+  color: var(--slate-800);
   flex: 1;
 }
 
 .sheetOrganCount {
   font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.45);
+  color: var(--slate-500);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .sheetFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px 20px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.08);
-  background: var(--navy-900);
+  padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--slate-100);
+  background: var(--white);
 }
 
 .sheetResetBtn {
   background: none;
   border: none;
-  color: rgba(var(--white-rgb), 0.65);
+  color: var(--slate-600);
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
@@ -2683,12 +2997,13 @@
   background: var(--color-primary, var(--blue-brand));
   color: var(--white);
   border: none;
-  border-radius: 9999px;
-  padding: 10px 22px;
+  border-radius: var(--radius-md, 8px);
+  padding: 11px 22px;
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--duration-base) ease;
+  box-shadow: none;
+  transition: background var(--duration-base) ease;
 }
 
 .sheetApplyBtn:hover {
@@ -2713,18 +3028,18 @@
   /* Clear transparent window in upper photo where specialist & patient live */
   .heroBgOverlay {
     background: linear-gradient(180deg,
-        rgba(6, 14, 27, 0.45) 0%,
-        rgba(6, 14, 27, 0.12) 14%,
-        transparent 22%,
-        transparent 38%,
-        rgba(6, 14, 27, 0.70) 48%,
-        rgba(6, 14, 27, 0.96) 62%,
-        #060e1b 80%,
+        rgba(6, 14, 27, 0.58) 0%,
+        rgba(6, 14, 27, 0.20) 14%,
+        transparent 24%,
+        transparent 40%,
+        rgba(6, 14, 27, 0.70) 50%,
+        rgba(6, 14, 27, 0.96) 64%,
+        #060e1b 82%,
         #060e1b 100%) !important;
   }
 
   .heroBgImage {
-    object-position: center 8% !important;
+    object-position: 82% 16% !important;
     filter: brightness(0.98) saturate(1.10) contrast(1.02) !important;
   }
 
@@ -2836,36 +3151,6 @@
     height: 100% !important;
   }
 
-  .mobileFilterBtn {
-    height: 46px !important;
-    min-height: 46px !important;
-    max-height: 46px !important;
-    padding: 0 16px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    background: var(--dyn-search-bg, rgba(255, 255, 255, 0.07)) !important;
-    backdrop-filter: blur(20px) saturate(140%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
-    border: 1px solid var(--dyn-search-border, rgba(255, 255, 255, 0.22)) !important;
-    box-shadow: none !important;
-    color: var(--dyn-search-text, #ffffff) !important;
-    box-sizing: border-box !important;
-    border-radius: var(--radius-full, 9999px) !important;
-    flex-shrink: 0 !important;
-    font-size: var(--font-size-xs) !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease !important;
-  }
-
-  .mobileFilterBtn:hover {
-    background: var(--dyn-search-bg, rgba(255, 255, 255, 0.12)) !important;
-    border-color: var(--dyn-search-border, rgba(255, 255, 255, 0.35)) !important;
-    transform: translateY(-1px) !important;
-  }
-
   /* Hide desktop multi-column stats on mobile */
   .compactStatsWrap,
   .glassDeckWrap,
@@ -2922,7 +3207,7 @@
     width: calc(100% - 32px) !important;
     max-width: 100% !important;
     margin: 0 auto !important;
-    padding: 0 0 40px !important;
+    padding: 0 0 92px !important;
     grid-template-columns: 1fr !important;
     gap: 16px !important;
     box-sizing: border-box !important;

@@ -122,10 +122,13 @@
     scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 14px !important;
+    width: auto !important;
+    max-width: none !important;
     padding-bottom: 12px !important;
     margin: 0 -16px !important;
     padding-left: 16px !important;
     padding-right: 16px !important;
+    scroll-padding-inline: 16px !important;
     scrollbar-width: none !important;
   }
 

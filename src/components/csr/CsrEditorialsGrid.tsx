@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Download, Calendar, FileText } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { CardTitleText } from "@/components/ui/CardTitleText";
@@ -14,15 +14,6 @@ interface CsrEditorialsGridProps {
 }
 
 export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const ambientY = useTransform(scrollYProgress, [0, 1], [-40, 60]);
-  const ambientOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.4, 0.8, 0.3]);
-
   const handleDownload = (e: React.MouseEvent<HTMLAnchorElement>, title: string) => {
     // Graceful download trigger for PDF / Advisory
     e.preventDefault();
@@ -30,16 +21,7 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
   };
 
   return (
-    <section ref={sectionRef} className={styles.sectionWrapper} data-nav-theme="dark">
-      {/* Dynamic Ambient Atmosphere connecting from Hero */}
-      <motion.div 
-        className={styles.topAtmosphere}
-        style={{
-          y: ambientY,
-          opacity: ambientOpacity,
-        }}
-      />
-
+    <section className={styles.sectionWrapper} data-nav-theme="light">
       <div className={styles.container}>
         {/* Section Header (Centered with TextSweepEffect Settling to Dark Stage) */}
         <motion.div 
@@ -143,9 +125,6 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
           ))}
         </div>
       </div>
-
-      {/* Bottom Transition Zone: Gradient blend leading seamlessly into Flagship Programs */}
-      <div className={styles.bottomTransitionGlow} />
     </section>
   );
 }
